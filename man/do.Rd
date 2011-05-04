@@ -48,8 +48,8 @@ and Randall Pruim (\email{rpruim@calvin.edu})
 \examples{
 do(3) * rnorm(1)
 do(3) * "hello"
-do(3) * lm(shuffle(height) ~ sex + mother, galton)
-do(3) * summary(lm(shuffle(height) ~ sex + mother, galton))
+do(3) * lm(shuffle(height) ~ sex + mother, Galton)
+do(3) * summary(lm(shuffle(height) ~ sex + mother, Galton))
 do(3) * 1:4
 do(3) * mean(rnorm(25))
 do(3) * c(mean = mean(rnorm(25)))

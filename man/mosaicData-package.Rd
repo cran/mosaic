@@ -38,6 +38,6 @@ Randall Pruim (\url{rpruim@calvin.edu})
 %}
 
 \examples{
-data(cps)
-str(cps)
+data(CPS)
+str(CPS)
 }

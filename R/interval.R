@@ -2,7 +2,7 @@
 
 interval <- function(x, ...){UseMethod("interval", x)}
 
-interval.htest <- function (x, verbose=TRUE, ...){
+interval.htest <- function (x, verbose=FALSE, ...){
   int <- x$conf.int
   lev <- attr(int, "conf.level")
   if (verbose ) {
@@ -19,5 +19,8 @@ interval.htest <- function (x, verbose=TRUE, ...){
 	  cat( "\n" )
   	  invisible(int)
   }
+  interv <- as.vector(int) 
+  names(interv) <- c('lower','upper')
+  int <- c(x$estimate, interv )
   return(int)
 }
