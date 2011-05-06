@@ -8,6 +8,16 @@
 #   return(foo)
 # }
 
+.clean_names <- function(x) {
+	x <- gsub('\\(Intercept\\)','Intercept', x)
+	x <- gsub('resample\\(','', x)
+	x <- gsub('sample\\(','', x)
+	x <- gsub('shuffle\\(','', x)
+	x <- gsub('\\(','.', x)
+	x <- gsub('\\)','', x)
+	return(x)
+}
+
 do = function(n=1, cull=NULL, mode=NULL) {
   foo = list(n=n, cull=cull, mode=mode)
   class(foo) = 'repeater'
@@ -25,20 +35,18 @@ do = function(n=1, cull=NULL, mode=NULL) {
 .cull_for_do = function(object) {
 	if (any(class(object)=='lme')){ # for mixed effects models
 		result <- object
-		names(result) <- gsub('\\(','', names(result))
-		names(result) <- gsub('\\)','', names(result))
+		names(result) <- .clean_names(names(result))
 		return( object$coef$fixed )
 	}
 	if (any(class(object)=='lm') ) {
 		sobject <- summary(object)
 		result <-  c( coef(object), sigma=sobject$sigma, "r-squared" = sobject$r.squared ) 
-		names(result) <- gsub('\\(','', names(result))
-		names(result) <- gsub('\\)','', names(result))
+		names(result) <- .clean_names(names(result))
 		return(result)
 	}
 	if (any(class(object)=='htest') ) {
-		result <-  c( object$statistic, 
-		              object$parameter,
+		result <-  data.frame( statistic = object$statistic, 
+		              parameter = object$parameter,
 					  p.value = object$p.value,
 					  conf.level = attr(object$conf.int,"conf.level"),
 					  lower = object$conf.int[1],
@@ -86,17 +94,16 @@ do = function(n=1, cull=NULL, mode=NULL) {
 	if (class(f) != 'function') {
 		f = function(){eval.parent(fthing, n=2) }
 	}
-	res1 = cull(f());  # was (...)
-	if (n < 2) { return (res1) }
+	res1 = cull(f())  # was (...)
 
-	nm = names(res1);
+	nm = names(res1)
 
 	if (!is.null(a$mode)) { 
 		out.mode <- a$mode 
 	} else {
 		out.mode <- 'list'
 
-		if ( is.vector( res1) ) {
+		if ( is.vector( res1) || is.data.frame(res1) ) {
 			if (is.null(nm)) { 
 				out.mode <- 'matrix' 
 			} else {
@@ -105,27 +112,43 @@ do = function(n=1, cull=NULL, mode=NULL) {
 		}
 	}
 
+
 	if ( out.mode == 'list' ) {
 		result <- list()
 		result[[1]] <- res1
+		if (n < 2) return (res1) 
 		for (k in 2:n) {
-			result[[k]] <- cull(f()); # was (...)
+			result[[k]] <- cull(f()) # was (...)
 		}
 		return(result)
 	}
 
-	result <- matrix(nrow=n,ncol=length(res1));
-	if ( out.mode == 'data.frame' ){
-		result = data.frame(result);
-		names(result) = names(res1);
+	if (out.mode == 'data.frame') {
+		if ( is.vector (res1) ) {
+			result <- as.data.frame( matrix(res1, nr=1) )
+		} else {
+			result <- as.data.frame(res1)
+		}
+		if (n>1) {
+		  for (k in 2:n) {
+			result <- rbind( result, cull(f()) ) 
+		  }
+		}
+		rownames(result) <- 1:n
+		names(result) <- nm
+		return(result)
 	}
-	result[1,] = res1;
 
-	for (k in 2:n) {
-		result[k,] <- cull(f()); # was (...)
+	result <- matrix(nrow=n,ncol=length(res1))
+	result[1,] <- res1
+
+	if (n > 1) {
+		for (k in 2:n) {
+			result[k,] <- cull(f()) # was (...)
+		}
 	}
 
-	if (dim(result)[2] == 1 & is.null(nm) ) return(data.frame(result=result[,1])) else return(result);
+	if (dim(result)[2] == 1 & is.null(nm) ) return(data.frame(result=result[,1])) else return(result)
 }
 
 "*.repeater" = .do_repeats

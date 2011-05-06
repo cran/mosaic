@@ -1,18 +1,18 @@
-\name{utilities}
-\alias{utilities}
-\alias{utilities2}
+\name{Utilities}
+\alias{Utilities}
+\alias{Utilities2}
 \docType{data}
 \title{ Utilities bills }
 \description{
 Data from utility bills at a residence.
 }
 \usage{
-data(utilities)
+data(Utilities)
 
-data(utilities2)
+data(Utilities2)
 }
 \format{
-  A data frame the following variables.
+  A data frame containing the following variables.
   \describe{
     \item{\code{month}}{month (coded as a number)}
     \item{\code{day}}{day of month on which bill was calculated}
@@ -26,21 +26,21 @@ data(utilities2)
     \item{\code{gasbill}}{gas bill (in dollars)}
     \item{\code{elecbill}}{exectric bill (in dollars)}
     \item{\code{notes}}{notes about the billing period}
-    \item{\code{ccfpday}}{average gas usage per day [\code{utilities2} only]}
-    \item{\code{kwhpday}}{average electric usage per day [\code{utilities2} only]}
-    \item{\code{gasbillpday}}{gas bill divided by billing days [\code{utilities2} only]}
-    \item{\code{elecbillpday}}{electric bill divided by billing days a numeric vector [\code{utilities2} only]}
-    \item{\code{totalbillpday}}{total bill divided by billing days a numeric vector [\code{utilities2} only]}
-    \item{\code{therms}}{\code{thermsPerDay * billingDays} [\code{utilities2} only]}
-    \item{\code{monthsSinceY2K}}{months since 2000 [\code{utilities2} only]}
+    \item{\code{ccfpday}}{average gas usage per day [\code{Utilities2} only]}
+    \item{\code{kwhpday}}{average electric usage per day [\code{Utilities2} only]}
+    \item{\code{gasbillpday}}{gas bill divided by billing days [\code{Utilities2} only]}
+    \item{\code{elecbillpday}}{electric bill divided by billing days a numeric vector [\code{Utilities2} only]}
+    \item{\code{totalbillpday}}{total bill divided by billing days a numeric vector [\code{Utilities2} only]}
+    \item{\code{therms}}{\code{thermsPerDay * billingDays} [\code{Utilities2} only]}
+    \item{\code{monthsSinceY2K}}{months since 2000 [\code{Utilities2} only]}
   }
 }
 \source{
 Daniel T. Kaplan, \emph{Statistical modeling: A fresh approach}, 2009. 
 }
 \examples{
-data(utilities); data(utilities2)
-xyplot(gasbill ~ temp, utilities)
-xyplot(gasbillpday ~ temp, utilities2)
+data(Utilities); data(Utilities2)
+xyplot(gasbill ~ temp, Utilities)
+xyplot(gasbillpday ~ temp, Utilities2)
 }
 \keyword{datasets}

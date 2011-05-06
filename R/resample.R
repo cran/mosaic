@@ -107,6 +107,7 @@ sample <- function (x, size, replace=FALSE, ...) {
 
 sample.default <- function(x, size, replace=FALSE, prob=NULL, groups=NULL, orig.ids=FALSE, ...) { 
 	if (! is.null(groups) ) {
+		if (! missing(size) ) warning("'size' is ignored when groups is non-null")
 		return(.shuffle_within(x, replace=replace, prob=prob, groups=groups, 
 			orig.ids=orig.ids))
 	}
@@ -116,20 +117,40 @@ sample.default <- function(x, size, replace=FALSE, prob=NULL, groups=NULL, orig.
 }
 
 
-sample.data.frame <- function(x, size, replace = FALSE, prob = NULL, groups=NULL, orig.ids=TRUE, ...) {
-	if (! is.null(groups) ) {
-		return(
-			.shuffle_within(x, replace=replace, prob=prob, groups=groups, orig.ids=orig.ids)
-		)
-	}
+sample.data.frame <- function(x, size, replace = FALSE, prob = NULL, groups=NULL, 
+	orig.ids=TRUE, fixed=names(x), shuffled=c(), invisibly.return = nrow(x) > 50, ...) {
+	shuffled <- intersect(shuffled, names(x))
+	fixed <- setdiff(intersect(fixed, names(x)), shuffled)
 	n <- nrow(x)
-		ids <- base::sample(n, size, replace=replace, prob=prob)
-		data <-  x [ ids, , drop=FALSE] 
-		names(data) <- names(x)
-		if (orig.ids) {
-			data$orig.ids <- ids
+	ids <- base::sample(n, size, replace=replace, prob=prob, ...)
+
+	groups <- eval( substitute(groups), x )
+	if (! is.null(groups) ) {
+		ids <- base::sample(n, size, replace=replace, prob=prob, ...)
+		groups <- groups[ids]
+		idsString <- as.character(ids)
+		xsub <- x[ids,]
+		result <- x[ids,fixed]
+		for (column in shuffled) {
+			cids <- sample(ids, groups=groups)
+			result[,column] <- x[cids,column]
+			idsString <- paste(idsString, ".", cids, sep="")
 		}
-		if (length(ids) < 50) { return(data) } else {invisible(data)}
+		if (orig.ids) result$orig.ids <- idsString
+		return(result)
+	}
+
+	idsString <- as.character(ids)
+	result <-  x [ ids, union(fixed,shuffled), drop=FALSE ] 
+	for (column in shuffled) {
+		cids <- sample(ids)
+		result[,column] <- x[cids,column]
+		idsString <- paste(idsString, ".", cids, sep="")
+	}
+	if (orig.ids) {
+		result$orig.ids <- idsString
+	}
+	if (invisibly.return) { invisible(result) } else {return(result)}
 }
 
 sample.matrix <- function(x, size, replace = FALSE, prob = NULL, groups=NULL, orig.ids=FALSE, ...) {
