@@ -1,23 +1,23 @@
-binom.test <- function(
-	x, n, p = 0.5, 
+prop.test <- function(
+	x, n, p=NULL, 
 	alternative = c("two.sided", "less", "greater"), 
 	conf.level = 0.95,...) 
 {
-	UseMethod('binom.test')
+	UseMethod('prop.test')
 }
 
-binom.test.default <- function(
-	x, n, p = 0.5, 
+prop.test.default <- function(
+	x, n, p=NULL, 
 	alternative = c("two.sided", "less", "greater"), 
 	conf.level = 0.95,...) 
 {
-	stats::binom.test( x=x, n=n , p = p,
+	stats::prop.test( x=x, n=n , p = p,
 	alternative = alternative,
 	conf.level = conf.level,...) 
 }
 
-binom.test.formula <- function(
-	x, n, p = 0.5, 
+prop.test.formula <- function(
+	x, n, p=NULL, 
 	alternative = c("two.sided", "less", "greater"), 
 	conf.level = 0.95, success, data.name, data, ...) 
 {
@@ -42,6 +42,9 @@ binom.test.formula <- function(
 		data <- n
 	}
 	# now data.name should be set and data should hold the data
+
+#    groups <- eval(substitute(groups), data, environment(formula))
+#    subset <- eval(substitute(subset), data, environment(formula))
     groups <- form$groups
     subscr <- form$subscr
     cond <- form$condition
@@ -50,25 +53,24 @@ binom.test.formula <- function(
         cond <- list(gl(1, length(x)))
     }
 
-
-	binom.test(x, p=p, alternative=alternative, 
+	prop.test(x, p=p, alternative=alternative, 
 		conf.level=conf.level, success=success, data.name=data.name, ...)
 }
 
-binom.test.numeric <- function(
-	x,  n, p = 0.5, 
+prop.test.numeric <- function(
+	x,  n, p=NULL, 
 	alternative = c("two.sided", "less", "greater"), 
 	conf.level = 0.95, success, data.name, ...) 
 {
 	if ( length(x) == 1 ) {
-		result <-  stats::binom.test(x=x, n=n, p=p, alternative=alternative,
+		result <-  stats::prop.test(x=x, n=n, p=p, alternative=alternative,
 			conf.level=conf.level) 
 		result$data.name <- paste( deparse(substitute(x)), "and", deparse(substitute(n)) )
 		return(result)
 	}
 
 	if ( length(x) == 2 ) {
-		result <-  stats::binom.test(x=x[1], n=sum(x), p=p, alternative=alternative,
+		result <-  stats::prop.test(x=x[1], n=sum(x), p=p, alternative=alternative,
 			conf.level=conf.level) 
 		result$data.name <- deparse(substitute(x))
 		return(result)
@@ -78,43 +80,43 @@ binom.test.numeric <- function(
 		data.name <- deparse(substitute(x)) 
 	}
 
-	binom.test(x=factor(x), p=p, alternative=alternative, 
+	prop.test(x=factor(x), p=p, alternative=alternative, 
 		conf.level=conf.level, 
 		success=success, 
 		data.name=data.name, ...)
 }
 
-binom.test.character <- function(
-	x,  n, p = 0.5, 
+prop.test.character <- function(
+	x,  n, p=NULL, 
 	alternative = c("two.sided", "less", "greater"), 
 	conf.level = 0.95, success, data.name, ...) 
 {
 	if (missing(data.name)) { 
 		data.name <- deparse(substitute(x)) 
 	}
-	binom.test(x=factor(x), p=p, alternative=alternative, 
+	prop.test(x=factor(x), p=p, alternative=alternative, 
 		conf.level=conf.level, 
 		success=success, 
 		data.name=data.name, ...)
 }
 
-binom.test.logical <- function(
-	x,  n, p = 0.5, 
+prop.test.logical <- function(
+	x,  n, p=NULL, 
 	alternative = c("two.sided", "less", "greater"), 
 	conf.level = 0.95, success, data.name, ...) 
 {
 	if (missing(data.name)) { 
 		data.name <- deparse(substitute(x)) 
 	}
-	binom.test(x=factor(x, levels=c('TRUE','FALSE')), p=p, alternative=alternative, 
+	prop.test(x=factor(x, levels=c('TRUE','FALSE')), p=p, alternative=alternative, 
 		conf.level=conf.level, 
 		success=success, 
 		data.name=data.name, ...)
 }
 
 
-binom.test.factor <- function(
-	x,  n, p = 0.5, 
+prop.test.factor <- function(
+	x,  n, p=NULL, 
 	alternative = c("two.sided", "less", "greater"), 
 	conf.level = 0.95, success, data.name, ...) 
 {
@@ -127,7 +129,7 @@ binom.test.factor <- function(
 	x <- x [!is.na(x)]
 	count <- sum(x==success)
 	n <- length(x)
-	result <- stats::binom.test( x=count, n=n , p = p,
+	result <- stats::prop.test( x=count, n=n , p = p,
 		alternative = alternative,
 		conf.level = conf.level, ...) 
 	result$data.name <- data.name

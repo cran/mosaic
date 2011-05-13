@@ -3,13 +3,7 @@
 \alias{panel.dotPlot}
 \alias{surround}
 \alias{adapt_seq}
-\alias{CPS}
-\alias{Galton}
-\alias{Gestation}
-\alias{KidsFeet}
-\alias{Marriage}
 \alias{SAT1}
-\alias{Whickham}
 \alias{latlon2xyz}
 \alias{xyz2latlon}
 \alias{rad2deg}

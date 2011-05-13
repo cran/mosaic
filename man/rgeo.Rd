@@ -45,7 +45,9 @@ to the sphere.  This method must oversample to allow for the discarded points.
 \author{
 Randall Pruim (\email{rpruim@calvin.edu})
 }
-
+\seealso{
+\code{\link{googleMap}}
+}
 \examples{
 rgeo(4)
 # sample from a region that contains the continental US

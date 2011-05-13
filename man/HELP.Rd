@@ -67,7 +67,9 @@ occasions.
 \references{
 Samet JH, Larson MJ, Horton NJ, Doyle K, Winter M, and Saitz R.  Linking alcohol and 
 drug-dependent adults to primary medical care: 
-A randomized controlled trial of a multi-disciplinary health intervention in a detoxification unit.  {Addiction}, 2003; 98(4):509-516.
+A randomized controlled trial of 
+a multi-disciplinary health intervention in a detoxification unit.  
+\emph{Addiction}, 2003; 98(4):509-516.
 }
 \examples{
 data(HELP)

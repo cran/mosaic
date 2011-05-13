@@ -29,8 +29,8 @@ and secondary schools, 1994-95 (in thousands of US dollars)}
 http://www.amstat.org/publications/jse/secure/v7n2/datasets.guber.cfm
 }
 \references{
-Deborah Lynn Guber (1999) "Getting what you pay for: the debate over equity in
-public school expenditures" Journal of Statistics Education 7(2)
+Deborah Lynn Guber, "Getting what you pay for: the debate over equity in
+public school expenditures" (1999), \emph{Journal of Statistics Education} 7(2).
 }
 \examples{
 data(SAT)

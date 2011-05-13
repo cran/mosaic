@@ -1,7 +1,9 @@
 dotPlot <-
-function (x, ..., panel = panel.dotPlot) 
+function (x, 
+	nint = if (is.factor(x)) nlevels(x) else round(1.3* log2(length(x)) + 4),
+	..., panel = panel.dotPlot) 
 {
-    histogram(x, type = "count", panel = panel, ...)
+    histogram(x, type = "count", panel = panel, nint=nint, ...)
 }
 
 panel.dotPlot <-

@@ -6,7 +6,7 @@
 \alias{stat.htest}
 \alias{interval.htest}
 
-\title{Confidence Interval}
+\title{Extract summary statistics}
 \description{
 Extract a confidence intervals, test statistics or p-values from an 
 \code{htest} object.
