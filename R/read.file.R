@@ -2,10 +2,11 @@ read.file <-
 function (file, header = T, na.strings = c("NA", "", ".", "na", 
     "-"), comment.char = "#", ...) 
 {
-    if (!file.exists(file)) {
-        return(NULL)
-        message(paste("Missing file: ", file))
-    }
+# this doesn't work for URLs
+#    if (!file.exists(file)) {
+#        message(paste("Missing file: ", file))
+#        return(NULL)
+#    }
     if (regexpr("\\.csv", file) > 0) {
         return(read.csv(file, header = header, na.strings = na.strings, 
             comment.char = comment.char, ...))

@@ -2,7 +2,7 @@
 \alias{Utilities}
 \alias{Utilities2}
 \docType{data}
-\title{ Utilities bills }
+\title{ Utility bills }
 \description{
 Data from utility bills at a residence.
 }
@@ -12,7 +12,7 @@ data(Utilities)
 data(Utilities2)
 }
 \format{
-  A data frame containing the following variables.
+  A data frame containing 117 observations for the following variables.
   \describe{
     \item{\code{month}}{month (coded as a number)}
     \item{\code{day}}{day of month on which bill was calculated}
