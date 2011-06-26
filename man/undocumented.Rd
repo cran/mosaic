@@ -9,6 +9,11 @@
 \alias{rad2deg}
 \alias{deg2rad}
 \alias{statTally}
+\alias{mosaic.getOption}
+\alias{mosaic.options} 
+\alias{mosaic.par.get} 
+\alias{mosaic.par.set}
+\alias{updateList}
 
 \title{Undocumented Objects}
 

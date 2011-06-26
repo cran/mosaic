@@ -1,4 +1,4 @@
-antiD <-
+.oldAntiD <-
 function(f, input0=0, val0=0, init = c(input0,val0), ...){
   # find the antiderivative of a function
   # make sure init.x is a reasonable starting point

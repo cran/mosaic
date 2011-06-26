@@ -1,19 +1,16 @@
 \name{xtras}
-\alias{xchisq.test}
 \alias{xhistogram}
 \alias{xqqmath}
 \alias{panel.xqqmath}
 \alias{panel.xhistogram}
 \title{
-Augmented functions
+Augmented lattice functions
 }
 \description{
 These functions all behave similarly to the functions with the initial \code{x}
 removed from their names.
 }
 \usage{
-xchisq.test(...)
-
 xhistogram(x, data=NULL, panel=panel.xhistogram, type="density", ...)
 
 xqqmath(x, data=NULL, panel="panel.xqqmath", ...)
@@ -122,19 +119,12 @@ Randall Pruim
 
 \seealso{
 \code{\link{histogram}}, 
-\code{\link{chisq.test}}, 
 \code{\link{pnorm}}, 
 \code{\link{qnorm}}, 
 \code{\link{qqmath}}, and
 \code{\link{plot}}. 
 }
 \examples{
-# Physicians' Health Study data
-phs <- cbind(c(104,189),c(10933,10845)) 
-rownames(phs) <- c("aspirin","placebo") 
-colnames(phs) <- c("heart attack","no heart attack") 
-phs 
-xchisq.test(phs) 
 x <- rnorm(200)
 xhistogram(~ x, groups = x > 2, n=20, density=TRUE )
 }

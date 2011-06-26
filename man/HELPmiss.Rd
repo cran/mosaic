@@ -1,5 +1,5 @@
-\name{HELP}
-\alias{HELP}
+\name{HELPmiss}
+\alias{HELPmiss}
 \docType{data}
 \title{Health Evaluation and Linkage to Primary Care}
 \description{
@@ -9,10 +9,10 @@ to receive a multidisciplinary assessment and a brief motivational intervention
 or usual care, with the goal of linking them to primary medical care.
 }
 \usage{
-data(HELP)
+data(HELPmiss)
 }
 \format{
-  Data frame with 453 observations on the following variables.  
+  Data frame with 470 observations on the following variables.  
   
   \describe{
     \item{\code{age}}{subject age at baseline (in years)}
@@ -61,11 +61,10 @@ years.  A variety of continuous, count, discrete, and survival time
 predictors and outcomes were collected at each of these five
 occasions.
 
-This dataset is a subset of the HELPmiss data which includes an
-additional 17 subjects with 
+This dataset is a superset of the HELP data with 17 subjects with 
 partially observed data on some of the baseline variables.  This is
-also a subset of the HELPfull data which includes 5 timepoints and many
-additional variables for all subjects.
+a subset of the HELPfull data which includes 5 timepoints and many
+additional variables.
 }
 \source{
 \url{http://www.math.smith.edu/help}
@@ -83,6 +82,6 @@ a multi-disciplinary health intervention in a detoxification unit.
 }
 
 \examples{
-data(HELP)
+data(HELPmiss)
 }
 \keyword{datasets}
