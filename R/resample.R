@@ -4,10 +4,12 @@
 deal    <- function(x, size, replace=FALSE, prob=NULL, groups=NULL, orig.ids=FALSE) {
 	sample(x, size, replace=replace, prob=prob, groups=groups, orig.ids=orig.ids )
 }
+
 resample <- function(x, size, replace=TRUE, prob=NULL, groups=NULL, orig.ids=FALSE, ...) {
-	sample(x, size, replace=replace, prob=prob, groups=groups, orig.ids=orig.ids, ...)
+	sample(x, size=size, replace=replace, prob=prob, groups=groups, orig.ids=orig.ids, ...)
 }
-shuffle <- function(x, replace=TRUE, prob=NULL, groups=NULL, orig.ids=FALSE) 
+
+shuffle <- function(x, replace=FALSE, prob=NULL, groups=NULL, orig.ids=FALSE) 
 {
 	if (!is.null(groups)){
 		return( .shuffle_within(x, groups=groups, replace=replace) )
@@ -55,7 +57,8 @@ print.cointoss <- function(x, ...) {
 
 	if (attributes(x)$verbose) {
 			cat('\n')
-			cat(paste(other$sequence, sep=" "))
+			#print(other$sequence)
+			cat(strwrap( paste(other$sequence, sep=" ")))
 			cat('\n')
 			cat(paste('\nResult: ', heads, ' heads.\n\n', sep=""))
 	}
@@ -118,7 +121,10 @@ sample.default <- function(x, size, replace=FALSE, prob=NULL, groups=NULL, orig.
 
 
 sample.data.frame <- function(x, size, replace = FALSE, prob = NULL, groups=NULL, 
-	orig.ids=TRUE, fixed=names(x), shuffled=c(), invisibly.return = nrow(x) > 50, ...) {
+      orig.ids=TRUE, fixed=names(x), shuffled=c(),
+      invisibly.return = NULL, ...) {
+        if( missing(size) ) size = nrow(x)
+        if( is.null(invisibly.return) ) invisibly.return = size>50 
 	shuffled <- intersect(shuffled, names(x))
 	fixed <- setdiff(intersect(fixed, names(x)), shuffled)
 	n <- nrow(x)

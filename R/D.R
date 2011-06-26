@@ -1,4 +1,4 @@
-D <- function(f, n=1L, h=1e-4) {
+.oldD <- function(f, n=1L, h=1e-4) {
   	n <- as.integer(n)
   	if ( ! is.integer(n) || n < 0 ) {
 		stop( 'n must be a non-negative integer')
@@ -16,6 +16,6 @@ D <- function(f, n=1L, h=1e-4) {
 			}
 		)
 	}
-	return ( D(D(f,n-1,h/2)) )
+	return ( .oldD(.oldD(f,n-1,h/2)) )
 }
 

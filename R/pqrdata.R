@@ -14,7 +14,10 @@
 	return(TRUE)
 }
 
-qdata <- function(p, vals, ... ) {
+qdata <- function(p, vals, data=NULL, ... ) {
+        if( !is.null(data) ) { # handle data= style of passing values
+            vals = eval( substitute(vals), data, enclos=parent.frame())
+        }
 	.check_for_quant_input(vals)
 	if (any(p > 1) | any(p < 0) ) {
 		stop("Prob outside of range 0 to 1.  Do you perhaps want pdata?")
@@ -22,7 +25,10 @@ qdata <- function(p, vals, ... ) {
 	quantile(vals, probs=p, na.rm=TRUE, ... )
 }
 
-pdata = function(q, vals, lower.tail=TRUE, ... ) {
+pdata = function(q, vals, lower.tail=TRUE, data=NULL, ... ) {
+   if( !is.null(data) ) {
+         vals = eval( substitute(vals), data, enclos=parent.frame())
+   }
   .check_for_quant_input(vals)
 #  L = length(q)
 #  res = rep(0,L)
@@ -35,13 +41,19 @@ pdata = function(q, vals, lower.tail=TRUE, ... ) {
   }
 }
 
-rdata = function(n, vals, replace=TRUE, ... ) {
+rdata = function(n, vals, replace=TRUE, data=NULL, ... ) {
+   if( !is.null(data) ) {
+         vals = eval( substitute(vals), data, enclos=parent.frame())
+   }
   sample( vals, n, replace=replace, ...)
 }
 
-ddata = function(x, vals, log=FALSE, ...) {
+ddata = function(x, vals, log=FALSE, data=NULL, ...) {
+        if( !is.null(data) ) {
+         vals = eval( substitute(vals), data, enclos=parent.frame())
+        }
 	n <- sum( ! is.na(vals) )
-	print(n)
+	# print(n)
 	probs <- sapply(x, function(x) { sum( vals == x, na.rm=TRUE ) / n } )
 	if (log) { probs <- log(probs) }
 	return (probs)

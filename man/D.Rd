@@ -1,16 +1,16 @@
-\name{D}
-\alias{D}
-\alias{antiD}
+\name{.oldD}
+\alias{.oldD}
+\alias{.oldAntiD}
 \title{
-Derivative and Anti-derivative operators 
+Old Versions of Derivative and Anti-derivative operators 
 }
 \description{
 Operators for computing numerical derivatives and anti-derivatives as 
-functions.
+functions.  Use the new \code{D} and \code{antiD} instead.
 }
 \usage{
-D(f, n=1, h = 1e-04)
-antiD(f, input0 = 0, val0 = 0, init = c(input0, val0), ...) 
+.oldD(f, n=1, h = 1e-04)
+.oldAntiD(f, input0 = 0, val0 = 0, init = c(input0, val0), ...) 
 }
 \arguments{
   \item{f}{a function that returns a numerical vector 
@@ -18,7 +18,7 @@ antiD(f, input0 = 0, val0 = 0, init = c(input0, val0), ...)
   All values are required to be finite.
 }
   \item{h}{ horizontal distance between points used for secant slope
-  calculation in D() 
+  calculation in \code{.oldD()}.
   }
   \item{n}{order of derivative}
   \item{input0}{initial input to \code{f} unless \code{init} is used instead }
@@ -40,10 +40,10 @@ Randall Pruim (\email{rpruim@calvin.edu})
 }
 
 \examples{
-fplot(D(sin),xlim=c(-2*pi,2*pi))
-fplot(antiD(sin),xlim=c(-2*pi,2*pi))
-fplot( list( sin, D(sin), D(sin,2) ), xlim=c(-2*pi, 2*pi) )
-f <- antiD(cos)
+fplot(mosaic:::.oldD(sin),xlim=c(-2*pi,2*pi))
+fplot(mosaic:::.oldAntiD(sin),xlim=c(-2*pi,2*pi))
+fplot( list( sin, mosaic:::.oldD(sin), mosaic:::.oldD(sin,2) ), xlim=c(-2*pi, 2*pi) )
+f <- mosaic:::.oldAntiD(cos)
 f(1)
 sin(1)
 }

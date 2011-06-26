@@ -23,7 +23,7 @@ residence and union membership.
     \item{\code{hispanic}}{a factor with levels \code{Hisp} \code{NH}}
     \item{\code{south}}{a factor with levels \code{NS} \code{S}}
     \item{\code{married}}{a factor with levels \code{Married} \code{Single}}
-    \item{\code{exper}}{number of years of work experience (inferred from \code{sex} and
+    \item{\code{exper}}{number of years of work experience (inferred from \code{age} and
 \code{educ})}
     \item{\code{union}}{a factor with levels \code{Not} \code{Union}}
     \item{\code{age}}{age in years}

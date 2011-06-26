@@ -25,7 +25,7 @@ sample(x, size, replace = FALSE, ...)
 
 \method{sample}{data.frame}(x, size, replace = FALSE, prob = NULL, groups = NULL,
                  orig.ids = TRUE, fixed = names(x), shuffled = c(),
-                 invisibly.return = nrow(x) > 50, ...)
+                 invisibly.return = NULL, ...)
 
 \method{sample}{factor}(x, size, replace = FALSE, prob = NULL, 
 	groups = NULL, orig.ids = FALSE, drop.unused.levels=FALSE, ...)
@@ -35,7 +35,7 @@ sample(x, size, replace = FALSE, ...)
 
 resample (x, size, replace=TRUE, prob=NULL, groups=NULL, orig.ids=FALSE, ...) 
 
-shuffle(x, replace = TRUE, prob = NULL, 
+shuffle(x, replace = FALSE, prob = NULL, 
 	groups = NULL, orig.ids = FALSE)
 deal(x, size, replace = FALSE, prob = NULL, 
 	groups = NULL, orig.ids = FALSE)
@@ -72,7 +72,7 @@ nflip(n=1, prob=.5, ...)
 	\item{drop.unused.levels}{a logical. Remove unused levels from factors?}
 	\item{fixed}{vector of columns that are not permuted}
 	\item{shuffled}{vector of columns that are permuted}
-    \item{invisibly.return}{a logical indicating whether result should be returned invisibly}
+    \item{invisibly.return}{a logical indicating whether result should be returned invisibly.}
 	\item{\dots}{ Additional arguments.}
 }
 \value{
