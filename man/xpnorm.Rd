@@ -9,10 +9,13 @@ These functions all behave similarly to the functions with the initial \code{x}
 removed from their names but add more verbose output and graphics.
 }
 \usage{
-xpnorm(q, mean = 0, sd = 1, plot = TRUE, verbose = TRUE, invisible = FALSE, 
-    digits = 4, lower.tail = TRUE, log.p = FALSE, xlim, ylim, 
-    vlwd = 2, vcol = trellis.par.get("add.line")$col, rot = 45, 
-    ...) 
+xpnorm( q, mean = 0, sd = 1, plot = TRUE, verbose = TRUE,
+        invisible = FALSE, digits = 4, lower.tail = TRUE,
+        log.p = FALSE, xlim = mean + c(-4, 4) * sd, 
+		ylim = c(0, 1.4 * dnorm(mean, mean, sd)), 
+		vlwd = 2, vcol = trellis.par.get("add.line")$col, 
+		rot = 45, manipulate = FALSE, ...)
+
 
 xqnorm(p, mean = 0, sd = 1, plot = TRUE, verbose = TRUE, digits = 4, 
     lower.tail = TRUE, log.p = FALSE, xlim, ylim, invisible = FALSE, 
@@ -31,8 +34,10 @@ xqnorm(p, mean = 0, sd = 1, plot = TRUE, verbose = TRUE, digits = 4,
 \item{lower.tail}{logical.  If FALSE, use upper tail probabilities.}
 \item{log.p}{logical.  If TRUE, uses the log of probabilities.}
 \item{xlim, ylim}{limits for plotting.}
-\item{vlwd, vcol}{line width and color for vertical lines}
-\item{rot}{angle of rotation for text labels}
+\item{vlwd, vcol}{line width and color for vertical lines.}
+\item{rot}{angle of rotation for text labels.}
+\item{manipulate}{logical.  If TRUE and in RStudio,
+	then sliders are added for ineractivity.}
 \item{...}{additional arguments.}
 }
 
