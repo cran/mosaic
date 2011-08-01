@@ -1,4 +1,4 @@
-surround <-
+.surround <-
 function (x, pre = " ", post = " ", width = 8, ...) 
 {
     x <- format(as.vector(x), ...)

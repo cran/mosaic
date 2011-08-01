@@ -129,7 +129,7 @@ plotFun = function(expr, ..., add=FALSE,
     if( ndims == 1 ){
       npts = ifelse( is.null(npts), 200, npts)
       # create a function of that one variable
-      #   the "bogus" arg is to make things work with adapt_seq
+      #   the "bogus" arg is to make things work with .adapt_seq
       pfun = function(.x){
         vals[[..f..$names]] = .x
         # PUT AN assign HERE
@@ -161,7 +161,7 @@ plotFun = function(expr, ..., add=FALSE,
       }
       # Evaluate the function.
       if( require(mosaic) )
-        .xset = adapt_seq(min(xlim2), max(xlim2), 
+        .xset = .adapt_seq(min(xlim2), max(xlim2), 
              f=function(xxqq,bogus){pfun(xxqq)}, length=npts)
       else
         .xset = seq(min(xlim2),max(xlim2),length=npts)
@@ -170,7 +170,7 @@ plotFun = function(expr, ..., add=FALSE,
       if( length(.yset) != length(.xset) ){
         .yset == rep(0, length(.xset)) 
         for (k in 1:length(.xset) ) {
-          .yset[k] = pfun(.xset[k]) # NULL for compatibility with adapt_seq
+          .yset[k] = pfun(.xset[k]) # NULL for compatibility with .adapt_seq
         }
       }
       if (add) {

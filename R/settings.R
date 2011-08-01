@@ -1,6 +1,6 @@
 
 ## copied from lattice
-updateList <- function(x, val)
+.updateList <- function(x, val)
 {
     if (is.null(x)) x <- list()
     modifyList(x, val)
@@ -29,7 +29,7 @@ mosaic.options <- function (...)
     retVal <- old[nm]
     names(retVal) <- nm
     nm <- nm[isNamed]
-    .mosaicEnv$mosaic.options <- updateList(old, new[nm])
+    .mosaicEnv$mosaic.options <- .updateList(old, new[nm])
     invisible(retVal)
 }
 
@@ -66,7 +66,7 @@ mosaic.par.set <- function (name, value, ..., theme, warn = TRUE, strict = FALSE
             mosaic.theme <- theme
         else mosaic.theme[names(theme)] <- theme
     }
-    else mosaic.theme <- updateList(mosaic.theme, theme)
+    else mosaic.theme <- .updateList(mosaic.theme, theme)
     assign("mosaic.theme", mosaic.theme, envir = .mosaicEnv)
     invisible(old.mosaic.theme)
 }

@@ -60,7 +60,7 @@ fplot.default <- function(x, xlim, ylim, n=200, args=list(), type='l', xlab, yla
 	id <- 0
 	for (f in fList) {
 		id <- id+1
-		x <- adapt_seq(xlim[1], xlim[2], f=f, args=args, length.out=n)
+		x <- .adapt_seq(xlim[1], xlim[2], f=f, args=args, length.out=n)
 		x <- unique(x)
 		y <- do.call(f, args=c(list(x), args))
 		ddd <- rbind(ddd, 

@@ -123,10 +123,22 @@
 
 xpnorm <-
 function (q, mean = 0, sd = 1, plot = TRUE, verbose = TRUE, invisible=FALSE, digits = 4, 
-    lower.tail = TRUE, log.p = FALSE, xlim, ylim, 
+    lower.tail = TRUE, log.p = FALSE, xlim = mean + c(-4,4) * sd, ylim = c(0, 1.4 * dnorm(mean,mean,sd)), 
     vlwd=2, vcol=trellis.par.get('add.line')$col,
-	rot=45, ...) 
+	rot=45, manipulate=FALSE, ...) 
 {
+	if ( manipulate && require(manipulate) ) {
+		return(manipulate( 
+			xpnorm(q=Q, mean=MEAN, sd=SD, plot=TRUE, verbose=FALSE, invisible=invisible,
+						   digits=digits, lower.tail=lower.tail, log.p=log.p, xlim=xlim,
+						   ylim=ylim, vlwd=vlwd, vcol=vcol, rot=rot, manipulate=FALSE,
+						   ...),
+				   Q = slider(mean-4*sd, mean+4*sd, initial=q, step=8*sd/200, label='q'),
+				   MEAN = slider(mean-4*sd, mean+4*sd, initial=mean, step=8*sd/200, label='mean'),
+				   SD = slider(0, 4*sd, initial=sd, step=4*sd/100, label='st dev')
+				   )
+		)
+	}
     p = pnorm(q, mean = mean, sd = sd) 
     z = (q - mean)/sd
     if (verbose) {

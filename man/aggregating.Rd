@@ -1,34 +1,65 @@
 \name{aggregating}
+\docType{methods}
 \alias{mean}
-\alias{mean.default}
-\alias{mean.factor}
-\alias{mean.formula}
+\alias{mean-methods}
+\alias{mean,ANY-method}
+\alias{mean,data.frame-method}
+\alias{mean,formula-method}
+\alias{mean,numeric-method}
+
 \alias{median}
-\alias{median.default}
-\alias{median.factor}
-\alias{median.formula}
+\alias{median-methods}
+\alias{median,ANY-method}
+\alias{median,data.frame-method}
+\alias{median,formula-method}
+\alias{median,numeric-method}
+
 \alias{sd}
-\alias{sd.formula}
-\alias{sd.default}
-\alias{sd.factor}
+\alias{sd-methods}
+\alias{sd,ANY-method}
+\alias{sd,data.frame-method}
+\alias{sd,formula-method}
+\alias{sd,numeric-method}
+
 \alias{var}
-\alias{var.formula}
-\alias{var.default}
-\alias{var.factor}
-\alias{IQR}
-\alias{IQR.formula}
-\alias{IQR.default}
-\alias{IQR.factor}
+\alias{var-methods}
+\alias{var,ANY,ANY,ANY,ANY,ANY-method}
+\alias{var,data.frame,ANY,ANY,ANY,ANY-method}
+\alias{var,matrix,ANY,ANY,ANY,ANY-method}
+\alias{var,formula,data.frame,ANY,ANY,missing-method}
+\alias{var,formula,missing,ANY,ANY,data.frame-method}
+\alias{var,numeric,ANY,ANY,ANY,ANY-method}
+\alias{var,numeric,numeric,ANY,ANY,ANY-method}
+
+\alias{max}
+\alias{max-methods}
+\alias{max,ANY-method}
+\alias{max,data.frame-method}
+\alias{max,formula-method}
+\alias{max,numeric-method}
+
+\alias{min}
+\alias{min-methods}
+\alias{min,ANY-method}
+\alias{min,data.frame-method}
+\alias{min,formula-method}
+\alias{min,numeric-method}
+
 \alias{prop}
-\alias{prop.logical}
-\alias{prop.factor}
-\alias{prop.formula}
-\alias{prop.default}
+\alias{prop-methods}
+\alias{prop,ANY-method}
+\alias{prop,data.frame-method}
+\alias{prop,formula-method}
+\alias{prop,logical-method}
+\alias{prop,factor-method}
+
 \alias{count}
-\alias{count.logical}
-\alias{count.factor}
-\alias{count.formula}
-\alias{count.default}
+\alias{count-methods}
+\alias{count,ANY-method}
+\alias{count,data.frame-method}
+\alias{count,formula-method}
+\alias{count,logical-method}
+\alias{count,factor-method}
 
 \title{
 Aggregating summary statistics
@@ -39,58 +70,67 @@ formula-aware and allow the use of simple names within data frames.
 When given formulas, they call \code{\link{aggregate}} using the
 formula.
 }
-\usage{
-mean(x, ..., na.rm=TRUE)
-\method{mean}{default}(x, ..., na.rm=TRUE)
-\method{mean}{formula}(x, data, ...,  na.rm=TRUE)
-\method{mean}{factor}(x,  ..., na.rm=TRUE)
 
-median(x, ..., na.rm=TRUE)
-\method{median}{default}(x, ..., na.rm=TRUE)
-\method{median}{formula}(x, data, ...,  na.rm=TRUE)
-\method{median}{factor}(x, ..., na.rm=TRUE)
 
-sd(x, data=NULL, ...)
-\method{sd}{formula}(x, data, na.rm=TRUE, ...)
-\method{sd}{default}(x, na.rm=TRUE, ...)
-\method{sd}{factor}(x, na.rm=TRUE, ...)
 
-var(x, data=NULL, ...)
-\method{var}{formula}(x, data, na.rm=TRUE, ...)
-\method{var}{default}(x, na.rm=TRUE, ...)
-\method{var}{factor}(x, na.rm=TRUE, ...)
+\section{Methods}{
+\describe{
 
-IQR(x, data=NULL, ...)
-\method{IQR}{formula}(x, data, na.rm=TRUE, ...)
-\method{IQR}{default}(x, na.rm=TRUE, ...)
-\method{IQR}{factor}(x, na.rm=TRUE, ...)
-
-prop(x, data=NULL, ...)
-\method{prop}{logical}(x, level=TRUE, na.rm=TRUE, ...)
-\method{prop}{factor}(x, level=levels(x)[1], na.rm=TRUE, ...)
-\method{prop}{formula}(x, data, na.rm=TRUE, ...)
-\method{prop}{default}(x, na.rm=TRUE, ...)
-
-count(x, data=NULL, ...)
-\method{count}{logical}(x, level=TRUE, na.rm=TRUE, ...)
-\method{count}{factor}(x, level=levels(x)[1], na.rm=TRUE, ...)
-\method{count}{formula}(x, data, na.rm=TRUE, ...)
-\method{count}{default}(x, na.rm=TRUE, ...)
+\item{\code{signature(x = "data.frame")}}{
+%%  ~~describe this method here~~
 }
+
+\item{\code{signature(x = "formula")}}{
+%%  ~~describe this method here~~
+}
+
+\item{\code{signature(x = "numeric")}}{
+%%  ~~describe this method here~~
+}
+}}
+
+\usage{
+mean(x, ..., na.rm = TRUE, trim = 0)
+
+median(x, ..., na.rm = TRUE)
+
+sd(x, ..., na.rm = TRUE)
+
+var(x, y = NULL, na.rm = TRUE, use, data = NULL) 
+
+max(x, ..., na.rm = TRUE) 
+
+min(x, ..., na.rm = TRUE) 
+
+prop(x, ..., level=TRUE, na.rm = TRUE) 
+
+count(x, ..., level=TRUE, na.rm = TRUE) 
+
+}
+
+
 
 \arguments{
   \item{x}{ an R object, possibly a formula }
+  \item{y}{ an R object, typically a numeric vector, possibly a data frame }
 
   \item{data}{ a data frame for the formula methods}
 
   \item{na.rm}{ a logical indicating whether missing data should be removed 
-  before calculation.  
+  before calculation.    Defaults to \code{TRUE}.
   }
+  \item{trim}{ proportion of timming (each tail) for a trimmed mean}
   \item{level}{ a level of a factor }
+  \item{use}{see \code{\link[stats]{var}}}
   \item{\dots}{additional arguments}
 }
 \details{
-The default value for \code{na.rm} is reversed from the functions in \code{stats}.
+These methods are wrappers around functions and methods in the \code{base} and \code{stats} 
+packages and provide additional interfaces.
+
+The default value for \code{na.rm} is reversed from the functions in \code{base} and \code{stats}.
+Also, \code{na.rm}, \code{use}, and \code{trim} follow \code{\dots} so must be named using
+their full names.
 }
 \author{
 Randall Pruim (\email{rpruim@calvin.edu})
@@ -99,6 +139,33 @@ Randall Pruim (\email{rpruim@calvin.edu})
 \code{link{aggregate}}
 }
 \examples{
+mean(age, data=HELP)
+mean(~age, data=HELP)
+mean(age ~ ., data=HELP)
+mean(age ~ 1, data=HELP)
+mean(age ~ NULL, data=HELP)
+mean(HELP$age)
+mean(age ~ sex, data=HELP)
+mean( age ~ sex + treat, data=HELP)
+
+median(age, data=HELP)
+median(~age, data=HELP)
+median(age ~ ., data=HELP)
+median(age ~ 1, data=HELP)
+median(age ~ NULL, data=HELP)
+median(HELP$age)
+median(age ~ sex, data=HELP)
+median( age ~ sex + treat, data=HELP)
+
+max(age, data=HELP)
+max(~age, data=HELP)
+max(age ~ ., data=HELP)
+max(age ~ 1, data=HELP)
+max(age ~ NULL, data=HELP)
+max(HELP$age)
+max(age ~ sex, data=HELP)
+max( age ~ sex + treat, data=HELP)
+
 sd(age, data=HELP)
 sd(~age, data=HELP)
 sd(age ~ ., data=HELP)
@@ -107,9 +174,22 @@ sd(age ~ NULL, data=HELP)
 sd(HELP$age)
 sd(age ~ sex, data=HELP)
 sd( age ~ sex + treat, data=HELP)
-sd(age ~ sex, data=HELP, overall=TRUE )
-mosaic.par.set(aggregate.overall=TRUE)
-sd(age ~ sex, data=HELP)
+
+var(age, data=HELP)
+var(~age, data=HELP)
+var(age ~ ., data=HELP)
+var(age ~ 1, data=HELP)
+var(age ~ NULL, data=HELP)
+var(HELP$age)
+var(age ~ sex, data=HELP)
+var( age ~ sex + treat, data=HELP)
+
+count(sex, data=HELP)
+count(sex, data=HELP, level='male')
+count(HELP$sex)
+
+prop(sex, data=HELP)
+prop(sex, data=HELP, level='male')
+prop(HELP$sex)
 }
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{ methods }

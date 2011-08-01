@@ -1,5 +1,5 @@
 
-adapt_seq <-function(from, to, 
+.adapt_seq <-function(from, to, 
 	length.out=100, 
 	f=function(x,...){ 1 }, 
 	args=list(),

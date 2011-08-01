@@ -1,14 +1,19 @@
 D = function(expr, ..., ..h..=NULL, numerical=FALSE, method=c("center","right")){
-  vals = list(...)
+  #vals = list(...)
   sexpr = substitute(expr)
-  fm = .createMathFun(sexpr=sexpr, ...)
-  # see if the expression is simple enough to use the symbolic method
+  fm = mosaic:::.createMathFun(sexpr=sexpr, ...)
+
+  .doD(fm, numerical=numerical, method=method, ..h..=..h..,...)
+}
+
+.doD = function( fm, ..h..=NULL, numerical=FALSE, method="center",...){
+   vals = list(...)
+   # see if the expression is simple enough to use the symbolic method
   .ops = setdiff( unique(all.names(fm$sexpr)), unique(all.vars(fm$sexpr)))
   .allowed.ops = c("+","-","*","/","^","(", "exp", "log", "sin", "cos",
     "tan", "sinh", "cosh", "sqrt", "pnorm", "dnorm", "asin", "acos", "atan",
     "gamma", "lgamma", "digamma", "trigamma")
   .can.do.symbolic = all(.ops %in% .allowed.ops)
-  
   if (!numerical & .can.do.symbolic) {
     .df = tryCatch(.d.symbolic(fm), error=function(e){NULL})
     if( !is.null(.df) ) return(.df)
