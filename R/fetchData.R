@@ -70,7 +70,7 @@ fetchData = function(name=NULL,
     # This is just for convenience.  Strip .csv from the end of the string if it's there
     foo = gsub(".csv$|.CSV$","",name)
     suppressWarnings( data(list=c(foo)) )
-    if (exists(foo)) return(foo) 
+    if (exists(foo)) return(get(foo)) 
     if (is.null(res) | class(res) == "try-error" )
       stop("Can't locate file ",name )
   }

@@ -1,9 +1,9 @@
 dotPlot <-
 function (x, 
 	nint = if (is.factor(x)) nlevels(x) else round(1.3* log2(length(x)) + 4),
-	..., panel = panel.dotPlot) 
+	breaks, ..., panel = panel.dotPlot) 
 {
-    histogram(x, type = "count", panel = panel, nint=nint, ...)
+    histogram(x, type = "count", panel = panel, nint = nint, breaks = breaks, ...)
 }
 
 panel.dotPlot <-
@@ -32,10 +32,10 @@ function (x, breaks, equal.widths = TRUE, groups = NULL, nint = round(log2(lengt
 	}
 
     if (length(x) > 0) {
-        if (is.null(breaks)) {
+        if (missing(breaks)) {
             breaks <- if (equal.widths) 
                 do.breaks(range(x, finite = TRUE), nint)
-            else quantile(x, 0:nint/nint, na.rm = TRUE)
+            else quantile(x, (0:nint)/nint, na.rm = TRUE)
         }
         h <- hist(x, breaks = breaks, plot = FALSE, warn.unused=FALSE, ...)
         y <- h$counts

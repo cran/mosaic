@@ -34,7 +34,7 @@ Daniel Kaplan (\email{kaplan@macalester.edu})
 }
 
 \examples{
-kids = fetchData("kidsfeet.csv")
+kids = fetchData("KidsFeet.csv")
 carbon = fetchData("CO2")
 fetchData(add.to.path=TRUE)
 fetchData(add.to.path=TRUE,name="http://www.macalester.edu/~kaplan/ISM/datasets/")
