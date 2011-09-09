@@ -1,0 +1,9 @@
+cleaning up for JSM
+--This line, and those below, will be ignored--
+
+M    R/surround.R
+M    R/fplot.R
+M    R/plt.R
+M    R/settings.R
+M    R/adapt_seq.R
+M    R/xchisq.test.R

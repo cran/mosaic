@@ -11,7 +11,7 @@
 \usage{
 dotPlot(x, 
 	nint = if (is.factor(x)) nlevels(x) else round(1.3 * log2(length(x)) + 4), 
-	..., panel = panel.dotPlot)
+	breaks, ..., panel = panel.dotPlot)
 
 panel.dotPlot(x, breaks, equal.widths = TRUE, groups = NULL, 
 	nint = round(log2(length(x)) + 1), 

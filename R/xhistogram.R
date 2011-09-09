@@ -152,6 +152,21 @@ function (x,
         if (tolower(fit) == "poisson") {
             dmath = dpois
         }
+        if (tolower(fit) == "beta") {
+            dmath = dbeta
+        }
+        if (tolower(fit) == "geometric") {
+            dmath = dgeom
+        }
+        if (tolower(fit) == "t") {
+            dmath = dt
+        }
+        if (tolower(fit) == "weibull") {
+            dmath = dweibull
+        }
+        if (tolower(fit) == "cauchy") {
+            dmath = dcauchy
+        }
         if (tolower(fit) == "gamma") {
             dmath = dgamma
         }

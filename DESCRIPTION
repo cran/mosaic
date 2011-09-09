@@ -2,10 +2,10 @@ Package: mosaic
 Type: Package
 Title: Project MOSAIC (mosaic-web.org) math and stats teaching
         utilities
-Version: 0.1-49
-Date: 2011-07-31
+Version: 0.1-51
+Date: 2011-09-08
 Depends: lattice, grid, methods, Hmisc
-Suggests: MASS, manipulate
+Suggests: MASS,manipulate
 Author: Randall Pruim <rpruim@calvin.edu>, Daniel Kaplan
         <kaplan@macalester.edu>, Nicholas Horton <nhorton@smith.edu>
 Maintainer: Randall Pruim <rpruim@calvin.edu>
@@ -20,6 +20,6 @@ Description: Data sets and utilities from Project MOSAIC
 License: GPL
 LazyLoad: yes
 LazyData: yes
-Packaged: 2011-08-01 03:28:15 UTC; rpruim
+Packaged: 2011-09-08 21:04:51 UTC; rpruim
 Repository: CRAN
-Date/Publication: 2011-08-01 05:25:16
+Date/Publication: 2011-09-09 03:33:49
