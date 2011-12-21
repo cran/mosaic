@@ -1,6 +1,6 @@
-\name{mosaica-package}
-\alias{mosaica-package}
-\alias{mosaica}
+\name{mosaic-package}
+\alias{mosaic-package}
+\alias{mosaic}
 \docType{package}
 \title{Project MOSAIC (mosaic-web.org) math and stats teaching utilities}
 \description{
@@ -16,18 +16,18 @@ but which are usually taught in isolation, if at all.
   \tabular{ll}{
 	Package: \tab mosaic\cr
 	Type: \tab Package\cr
-	Version: \tab 0.1-51\cr
-	Date: \tab 2011-9-08\cr
+	Version: \tab 0.2-3\cr
+	Date: \tab 2011-12-21\cr
 	License: \tab GPL\cr
 	LazyLoad: \tab yes\cr
 	LazyData: \tab yes\cr
 }
 
 \tabular{ll}{
-Overview\tab \code{file.show(system.file("README", package = "mosaica"))}\cr
-News\tab \code{RShowDoc("NEWS", package = "mosaica")}\cr
-Acknowledgements\tab \code{RShowDoc("THANKS", package = "mosaica")}\cr
-This File\tab \code{?mosaica}\cr
+Overview\tab \code{file.show(system.file("README", package = "mosaic"))}\cr
+News\tab \code{RShowDoc("NEWS", package = "mosaic")}\cr
+Acknowledgements\tab \code{RShowDoc("THANKS", package = "mosaic")}\cr
+This File\tab \code{?mosaic}\cr
 }
 
 }

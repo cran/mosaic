@@ -179,11 +179,11 @@ plotFun = function(expr, ..., add=FALSE,
             all(.yset < min(..currentAxisLimitY)) )
             warning("New values are outside of the y-axis range.")
          
-        lines(.xset, .yset, lwd=lwd, col=col)      }
+        graphics::lines(.xset, .yset, lwd=lwd, col=col)      }
       else { # draw a new plot
         ..currentAxisLimitX = xlim2
         ..currentAxisNames = c(..f..$names, "")
-        plot( .xset, .yset, type=type, 
+        graphics::plot( .xset, .yset, type=type, 
          lwd=lwd, col=col, xlim=xlim, ylim=ylim,
          xlab=xlab,ylab=ylab,main=main)
         goo = par("usr") # get the limits of the plot
@@ -271,12 +271,12 @@ plotFun = function(expr, ..., add=FALSE,
         nlevels=2
       }
       if( filled) {
-       image( .xset, .yset, zvals, col=fillcolors,add=add,
+       graphics::image( .xset, .yset, zvals, col=fillcolors,add=add,
          xlab=xlab,ylab=ylab,main=main )
-       contour(.xset, .yset, zvals, col=col,lwd=lwd,add=TRUE, nlevels=nlevels)
+       graphics::contour(.xset, .yset, zvals, col=col,lwd=lwd,add=TRUE, nlevels=nlevels)
       }
       else {
-       contour(.xset,.yset,zvals,nlevels=nlevels,add=add,lwd=lwd,col=col,
+       graphics::contour(.xset,.yset,zvals,nlevels=nlevels,add=add,lwd=lwd,col=col,
          xlab=xlab,ylab=ylab,main=main)
       } 
      }

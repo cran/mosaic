@@ -64,14 +64,14 @@ prop.test.numeric <- function(
 {
 	if ( length(x) == 1 ) {
 		result <-  stats::prop.test(x=x, n=n, p=p, alternative=alternative,
-			conf.level=conf.level) 
+			conf.level=conf.level,...) 
 		result$data.name <- paste( deparse(substitute(x)), "and", deparse(substitute(n)) )
 		return(result)
 	}
 
 	if ( length(x) == 2 ) {
 		result <-  stats::prop.test(x=x[1], n=sum(x), p=p, alternative=alternative,
-			conf.level=conf.level) 
+			conf.level=conf.level,...) 
 		result$data.name <- deparse(substitute(x))
 		return(result)
 	}

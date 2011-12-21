@@ -1,4 +1,8 @@
 
+.SD <- function(x) {
+	sqrt(stats::var(x))
+}
+
 .mosaic_aggregate <- function(x, data, FUN, overall=mosaic.par.get("aggregate.overall"), ...) {
 	if (length(x) == 2 ) {
 		return( data.frame( FUN (eval( x[[2]], data, enclose=parent.frame()) ) ) )
@@ -6,7 +10,7 @@
 		return( as.data.frame( 
 			Hmisc::summary.formula( x, data, fun=FUN, overall=overall, method='cross',...) ) )
 	}
-	result <- summary(x, data, fun=FUN, overall=overall, method=method, ...)
+	result <- Hmisc::summary.formula(x, data, fun=FUN, overall=overall, method=method, ...)
 	result <- as.data.frame(oldUnclass(result))
 	return(result)
 }
@@ -182,7 +186,7 @@ setMethod(
 		if( .is.simple.formula(x) ) {
 			return( sd( eval( .simple.part(x), data, enclos=parent.frame()), ..., na.rm=na.rm ) )
 		} else {
-			return( .mosaic_aggregate( x, data, FUN=stats::sd, na.rm=na.rm) )
+			return( .mosaic_aggregate( x, data, FUN=.SD, na.rm=na.rm) )
 		} 
 	}
 )
