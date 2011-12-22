@@ -1,4 +1,5 @@
 \name{undocumented}
+\docType{methods}
 \alias{adapt_seq}
 \alias{latlon2xyz}
 \alias{xyz2latlon}
@@ -9,6 +10,34 @@
 \alias{mosaic.options} 
 \alias{mosaic.par.get} 
 \alias{mosaic.par.set}
+
+\alias{project}
+\alias{project-methods}
+\alias{project,numeric-method}
+\alias{project,matrix-method}
+\alias{project,formula-method}
+
+\alias{print.function}
+\alias{connector}
+\alias{dot}
+\alias{flowPlot}
+\alias{graphPaper}
+\alias{interpolatingFunction}
+\alias{jacobianAtPoint}
+\alias{linearModel}
+\alias{mat}
+\alias{makeFun}
+\alias{rfun}
+\alias{rkintegrate}
+\alias{rpoly2}
+\alias{showNullclines}
+\alias{showTraj}
+\alias{singvals}
+\alias{smoother}
+\alias{solnPlot}
+\alias{solveDE}
+\alias{spliner}
+\alias{trajPlot}
 
 \title{Undocumented Objects}
 
@@ -25,4 +54,14 @@ print(statTally(golfballs, rgolfballs, max))
 print(statTally(golfballs, rgolfballs, min))
 print(statTally(golfballs, rgolfballs, function(x) { diff( range(x)) } ))
 print(statTally(golfballs, rgolfballs, sd))
+distPlot('beta', params=list(shape1=3, shape2=1/3), kind='density')
+distPlot('beta', params=list(shape1=3, shape2=1/3), kind='cdf')
+dot(1:10, 1)  
+project(1:10, 1)  
+project(1:10, 1, type='length')  
+g = rfun(~x, seed=833)
+curve(g, from=-5,to=5) 
+plotFun( g(x)~x, x=range(-5,5))
+g = rfun(~x&y, seed=93232, n=2)
+plotFun(g(x,y)~x&y, x=range(-3,3), y=range(-3,3))
 }
