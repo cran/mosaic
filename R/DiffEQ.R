@@ -58,7 +58,7 @@ trajPlot <- function(soln, n=1001, col="red") {
   t <- seq( soln$tlim[1], soln$tlim[2], length=n )
   one <- soln[[1]](t)
   two <- soln[[2]](t)
-  flow.plot( soln$dynfun,
+  flowPlot( soln$dynfun,
             xlim=range(one, na.rm=TRUE),
             ylim=range(two, na.rm=TRUE) )
   llines( one, two, col=col )
@@ -184,7 +184,7 @@ solveDE <- function(fun, init=NULL, tlim=c(0,1), dataframe=FALSE ) {
   if( "t" %in% dyn.args ) {
     if (dyn.init["t"] == 0) dyn.init["t"] <- min(tlim)
   }  
-  foo <- rk( fcall, dyn.init, tstart=tlim[1],tend=tlim[2] )
+  foo <- rkintegrate( fcall, dyn.init, tstart=tlim[1],tend=tlim[2] )
   # return interpolating functions
   res <- list()
   for (k in 1:length(dyn.init) ) res[[k]] <- approxfun( foo$t, foo$x[,k])

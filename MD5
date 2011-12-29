@@ -1,7 +1,8 @@
-f20ec311b85b21a2efd58c9328f86e36 *DESCRIPTION
+d4785595a0cc904531daae5f21a677c4 *DESCRIPTION
 5ba0e23d7e024c3c6cb91bbe93c8607c *NAMESPACE
+8c30dd0e7732d394d656735c6b2066e2 *R/CIsim.R
 f700d3575d7213647b96cbe06c00dff4 *R/D.R
-4a2b041c189e15559b8610d551e4fffa *R/DiffEQ.R
+4d435ab82058ab94a208caaf24238f6a *R/DiffEQ.R
 42b9464fc98ba9227bd993786e329a17 *R/adapt_seq.R
 82731675d8b1a2313fcfb519f192ecd1 *R/aggregating.R
 e2d38d490ede1c8cb492aa93ee42bb77 *R/antiD.R
@@ -10,7 +11,7 @@ e2d38d490ede1c8cb492aa93ee42bb77 *R/antiD.R
 0a033fd26d17151d893635da2ba4a363 *R/confint.R
 7d2bfe0906e8bc85059691ed51f1c83a *R/cross.R
 6cbd851d4c59de7055f33d96adb02813 *R/dfapply.R
-86c3846d3e173d04e28cd64c8777251c *R/distPlot.R
+26aeed7db6ffe74de5d50f3de7dfa30e *R/distPlot.R
 bbbe50a35cd46ad604c9d8636a9e1d9a *R/do.R
 313e35627826cc8855b335fe0a2d1354 *R/dotPlot.R
 2f36c22142d52c1debdb54efc6f9972f *R/enterxtab.R
@@ -18,7 +19,7 @@ c7b8766730f1e29058c4fb160e0193a0 *R/favstats.R
 24acf0d5dddfbda57b8f2f66340e4cb3 *R/fetchData.R
 b4c11ecef59066ded109ca043b71fa8e *R/findZeros.R
 dfafacff82bbd48ca7ba1565ff789938 *R/fplot.R
-dfbdc36a66d8e35bf55ff4e0adb8f91d *R/functions.R
+ae2087d4e09596c15008437f385b79f6 *R/functions.R
 c1046900551256fda89740fe3387dc48 *R/graphPaper.R
 0fbb7812bda38fdf651b3758bdd099d2 *R/interval.R
 7a7e68aac9bc68fd9828293f61619758 *R/ladd.R
@@ -34,13 +35,14 @@ e3244221f6daf3f31f8a21f251bc54fe *R/prop.test.R
 72ad22df5ca318346ca375d4366d0cb2 *R/rand.R
 b0831d6885ca1722826130025181ba16 *R/read.file.R
 2a6115c914ffb3eba5a39609b2fb4de7 *R/resample.R
-fc915b9e9a32a23325855d7c8dc0f6fc *R/rfun.R
+f299dfc01a2b6c67bdfb5b08b9901c03 *R/rfun.R
 623c937fcebf3022e254f1b47afafec7 *R/rgeo.R
 2911577973662c480db621d8608ce16a *R/rpoly2.R
 765ac4a3bd1bd7243e130f9108c7f4d2 *R/settings.R
-71aa9979f516028c8a9f3be005190378 *R/smoothers.R
+22fcb653129738bf6e57e4da61dd3b48 *R/smoothers.R
 ad5854b0adf65bf2f43e0d0aaeab0262 *R/statTally.R
 e1a4475358ff086dd410adfe48785dce *R/surround.R
+d9d439bdf447630711d76827eb5e32c1 *R/utils.R
 88e5141ac5d1095c0ff6cdbf889c630b *R/xchisq.test.R
 b86d77a1a79095622c777d55b0d30ae5 *R/xhistogram.R
 bc9ea7c16dbfaeb43eb77dc023973e80 *R/xpnorm.R
@@ -67,7 +69,8 @@ da5a080ca6dd327a0dea285ff6ef41b0 *data/Whickham.rda
 31d9f6c96cde6be27887abe5fa410d03 *demo/histogram.R
 4b075179664923872e8db3b8721316e8 *demo/phaseplane.R
 91199378526de69e3cb2bb0b8b216aa8 *demo/regression.R
-7e09cdbef7f90d7ce702bcd94ae54eaa *inst/doc/plt-explain.pdf
+6b5232425ed9e06b6e2c72497c409736 *inst/doc/plt-explain.Rnw
+8c6f0b75b5a4fabc36110722079f3469 *inst/doc/plt-explain.pdf
 a6cf2bd2326ffd8821aa71c90b247ddc *inst/google/googlemap.html
 2188686712be352d26015aa3ad57a5a4 *inst/google/googlemap3.html
 22fbaa5db72161ba95ec8100901b6c48 *man/CPS.Rd
@@ -102,7 +105,7 @@ ae37428bf8300701cb0428f22a1d13be *man/favstats.Rd
 d3fde246df26896893d21d37a160986c *man/interval.Rd
 46a467c112be0611974c1d419c15a69a *man/ladd.Rd
 058be35eea47a780da0e870dc760b51a *man/logit.Rd
-1990b4dce6c27d49079f202b0185ad55 *man/mosaic-package.Rd
+be13f77c11471aa357a13dfea6a6ac93 *man/mosaic-package.Rd
 be3887487c153515047392517b3cf802 *man/perctable.Rd
 53a2a79dddefdac27253bd4eddc5e3fa *man/plotFun.Rd
 aecf2f7329594afda8a2ab99675d89a1 *man/pqrdata.Rd
@@ -111,7 +114,7 @@ aecf2f7329594afda8a2ab99675d89a1 *man/pqrdata.Rd
 ded67f96e64a4db07e2932f874507355 *man/repeater-class.Rd
 2c3d0be7eb81db06663d4f2775c5bde3 *man/rgeo.Rd
 a8f51eddd210d02439e6d3b40b6aa329 *man/sampling.Rd
-f671af80beec3748b320bc924564d1b4 *man/undocumented.Rd
+e71b285af1cd03a3e4daaffcfeec7eda *man/undocumented.Rd
 d4ffd3752b7a8ba991fde1cd5b0beadc *man/xchisq.test.Rd
 3c60896d4fbcf5a80980c0d578c8ce41 *man/xpnorm.Rd
 b2d32be9560b9bc4e0a43f6b52580c07 *man/xtras.Rd

@@ -1,4 +1,5 @@
 rfun <- function(vars=~x&y, seed=NULL, n=0) {
+  if( !is.null(seed) ) set.seed(seed)
   if( class(vars) != "formula" )
     stop("Must provide a formula, e.g. ~x&y, to identify the variables")
   nmaxes <- ifelse(n==0, ceiling( runif(1,min=4,max=10)), n)
