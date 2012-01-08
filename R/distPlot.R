@@ -43,11 +43,11 @@ distPlot <- function( dist, params=list(), kind=c('density','cdf','qq','histogra
 	}
 
 	switch(kind, 
-		   density = xyplot( do.call( ddist, c(list(x=fewerValues), params) ) ~ fewerValues, 
+		   density = lattice::xyplot( do.call( ddist, c(list(x=fewerValues), params) ) ~ fewerValues, 
 							type=type, xlab=xlab, ylab=ylab, ...),
-		   cdf = xyplot( cdfy ~ cdfx, type=type, xlab=xlab, ylab=ylab, ...),
-		   qq = qqmath( ~ values, type=type, xlab=xlab, ylab=ylab, ...),
-		   histogram = histogram( ~ values, type=type, xlab=xlab, breaks=breaks, ...)
+		   cdf = lattice::xyplot( cdfy ~ cdfx, type=type, xlab=xlab, ylab=ylab, ...),
+		   qq = lattice::qqmath( ~ values, type=type, xlab=xlab, ylab=ylab, ...),
+		   histogram = lattice::histogram( ~ values, type=type, xlab=xlab, breaks=breaks, ...)
 		   )
 }
 

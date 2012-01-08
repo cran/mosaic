@@ -24,6 +24,13 @@ print.function = function(x, useSource=TRUE, default=FALSE, ...) {
       formals(x) = hoo
       body(x) = paste(kind,"on", deparse(goo$sexpr), "with respect to", goo$names  )
     }
+    else if( kind == "Fitted Linear Model") {
+      vals = x(showcoefs=TRUE) # get the coefficients
+      nms = names(vals)
+      cc = as.numeric(vals)
+      if( nms[1] == "(Intercept)" ) nms[1] = "1"
+      body(x) = parse(text=paste(cc, nms, sep="*",collapse="+"))
+    }
   }
   base::print.function(x, useSource=useSource, ...)
 }

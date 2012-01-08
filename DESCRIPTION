@@ -2,8 +2,8 @@ Package: mosaic
 Type: Package
 Title: Project MOSAIC (mosaic-web.org) math and stats teaching
         utilities
-Version: 0.2-3
-Date: 2011-12-21
+Version: 0.2-6
+Date: 2011-12-29
 Depends: R (>= 2.10), lattice, grid, methods, Hmisc
 Suggests: MASS,manipulate
 Author: Randall Pruim <rpruim@calvin.edu>, Daniel Kaplan <kaplan@macalester.edu>, Nicholas Horton <nhorton@smith.edu>
@@ -12,6 +12,6 @@ Description: Data sets and utilities from Project MOSAIC (mosaic-web.org) used t
 License: GPL
 LazyLoad: yes
 LazyData: yes
-Packaged: 2011-12-21 21:20:27 UTC; rpruim
+Packaged: 2011-12-30 14:10:31 UTC; rpruim
 Repository: CRAN
-Date/Publication: 2011-12-22 13:01:59
+Date/Publication: 2012-01-08 16:04:59

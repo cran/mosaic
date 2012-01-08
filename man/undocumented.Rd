@@ -1,6 +1,7 @@
 \name{undocumented}
 \docType{methods}
 \alias{adapt_seq}
+\alias{CIsim}
 \alias{latlon2xyz}
 \alias{xyz2latlon}
 \alias{rad2deg}
@@ -64,4 +65,6 @@ curve(g, from=-5,to=5)
 plotFun( g(x)~x, x=range(-5,5))
 g = rfun(~x&y, seed=93232, n=2)
 plotFun(g(x,y)~x&y, x=range(-3,3), y=range(-3,3))
+h = linearModel(wage~age*educ, data=CPS)
+h(age=20,educ=12)
 }

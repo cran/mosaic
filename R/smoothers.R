@@ -17,12 +17,16 @@ linearModel <- function(formula, data, ...) {
   L <- lm(formula, data, ...)
   makeDF <- paste( "data.frame( ", paste(input.names,collapse=",",sep=""),")")
   F <- function() {
-    D <- eval(parse(text=makeDF))
-    predict(L, newdata=D)
+    if( showcoefs ) coef(L)
+    else { # evaluate the function 
+      D <- eval(parse(text=makeDF))
+      predict(L, newdata=D)
+    }
   }
-  tmp <- paste("alist( ", paste(input.names, "=", collapse = ",", sep = ""), ")")
+  tmp <- paste("alist( ", paste(input.names, "=", collapse = ",", sep = ""), ",showcoefs=FALSE)")
   tmp <- eval(parse(text = tmp))
   formals(F) <- tmp
+  attr(F,"mosaicType") <- "Fitted Linear Model"
   return(F)
 }
 # =============================
@@ -49,9 +53,9 @@ interpolatingFunction <- function(formula, data, method="fmm",monotonic=FALSE,co
 }
 # ==============
 spliner <- function(formula, data,method="fmm",monotonic=FALSE) {
-  interpolating.function(formula, data, method=method, monotonic=monotonic)
+  interpolatingFunction(formula, data, method=method, monotonic=monotonic)
 }
 # ==============
 connector <- function(formula, data, method="linear") {
-  interpolating.function(formula, data, connect=TRUE)
+  interpolatingFunction(formula, data, connect=TRUE)
 }
