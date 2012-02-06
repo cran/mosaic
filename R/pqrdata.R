@@ -1,8 +1,5 @@
-##################
-# p,q,r for data sets
-# Creates a parallelism between the functions for distributions and the
-# functions for data
-# Written June 14, 2009
+
+
 .check_for_quant_input <- function(x) {
 	if (is.data.frame(x) ) {
 		stop("Give a variable, not a data frame.")
@@ -13,6 +10,31 @@
 	}
 	return(TRUE)
 }
+
+#' The Data Distribution
+#' 
+#' Density, distribution function, quantile function, and random generation
+#' from data.
+#'
+#' 
+#' @export
+#' 
+#' @keywords distribution 
+#'
+#'\code{qdata} is a wrapper around \code{\link{quantile}} that makes the syntax more like 
+#' the syntax for quantiles from theoretical distributions
+#'
+#' @param p a vector of probabilities
+#' @param vals a vector containing the data
+#' @param data a data frame in which to evaluate vals
+#' @param \dots additional arguments passed to \code{quantile} or \code{sample}
+#' @return For \code{qdata}, a vector of quantiles
+#' @rdname pqrdata
+#'
+#' @examples
+#' data(iris)
+#' qdata(.5, iris$Sepal.Length)
+#' qdata(.5, Sepal.Length, data=iris)
 
 qdata <- function(p, vals, data=NULL, ... ) {
         if( !is.null(data) ) { # handle data= style of passing values
@@ -25,7 +47,19 @@ qdata <- function(p, vals, data=NULL, ... ) {
 	quantile(vals, probs=p, na.rm=TRUE, ... )
 }
 
-pdata = function(q, vals, lower.tail=TRUE, data=NULL, ... ) {
+
+#' \code{pdata} computes cumulative probabilities from data.
+#'
+#' @param q a vector of quantiles
+#' @param lower.tail a logical indicating whether to use the lower or upper tail probability
+#' @return For \code{pdata}, a vector of probabilities
+#' @rdname pqrdata
+#' @examples
+#' data(iris)
+#' pdata(3:6, iris$Sepal.Length)
+#' pdata(3:6, Sepal.Length, data=iris)
+#'
+pdata = function(q, vals, data=NULL, lower.tail=TRUE, ... ) {
    if( !is.null(data) ) {
          vals = eval( substitute(vals), data, enclos=parent.frame())
    }
@@ -41,19 +75,44 @@ pdata = function(q, vals, lower.tail=TRUE, data=NULL, ... ) {
   }
 }
 
-rdata = function(n, vals, replace=TRUE, data=NULL, ... ) {
+#' \code{rdata} randomly samples from data. It is a wrapper around \code{sample} that unifies syntax.
+#'
+#' @param n number of values to sample
+#' @param replace  a logical indicating whether to sample with replacement
+#' @return For \code{rdata}, a vector of values sampled from \code{vals} 
+#' @rdname pqrdata
+#'
+#' @examples
+#' data(iris)
+#' rdata(10,iris$Species)
+#' rdata(10, Species, data=iris)
+#'
+
+rdata = function(n, vals, data=NULL, replace=TRUE, ... ) {
    if( !is.null(data) ) {
          vals = eval( substitute(vals), data, enclos=parent.frame())
    }
   sample( vals, n, replace=replace, ...)
 }
 
-ddata = function(x, vals, log=FALSE, data=NULL, ...) {
+
+#' \code{ddata} computes a probability mass function from data.
+#'
+#' @param x a vector of quantiles
+#' @param log  a logical indicating whether the result should be log transformed
+#' @return For \code{ddata}, a vector of probabilities (empirical densities)
+#' @rdname pqrdata
+#' @examples
+#' data(iris)
+#' ddata('setosa', iris$Species)
+#' ddata('setosa', Species, data=iris)
+#'
+
+ddata = function(x, vals, data=NULL, log=FALSE, ...) {
         if( !is.null(data) ) {
          vals = eval( substitute(vals), data, enclos=parent.frame())
         }
 	n <- sum( ! is.na(vals) )
-	# print(n)
 	probs <- sapply(x, function(x) { sum( vals == x, na.rm=TRUE ) / n } )
 	if (log) { probs <- log(probs) }
 	return (probs)

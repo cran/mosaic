@@ -1,3 +1,35 @@
+#' Dotplots
+#' 
+#' A high level function and panel function for producing
+#' 	a variant of a histogram called a dotplot.
+#'
+#' @param x  a vector of values or a formula 
+#'
+#' @param nint  the number of intervals to use 
+#'
+#' @param panel  a panel function 
+#'
+#' @param breaks,equal.widths,groups,pch,col,lty,lwd,col.line,type,alpha  
+#'     as in \code{\link{histogram}} 
+#'
+#' @param \dots  additional arguments 
+#' 
+#' @return a trellis object
+#'
+#' @author Randall Pruim (\email{rpruim@@calvin.edu})
+#' 
+#' @seealso \code{\link{histogram}}
+#' 
+#' 
+#' @export
+#' @examples
+#' dotPlot( ~ height | voice.part, data = singer, nint = 17,
+#'           endpoints = c(59.5, 76.5), layout = c(2,4), aspect = 1,
+#'           xlab = "Height (inches)")
+#' 
+#' @keywords graphics 
+#' 
+
 dotPlot <-
 function (x, 
 	nint = if (is.factor(x)) nlevels(x) else round(1.3* log2(length(x)) + 4),
@@ -5,6 +37,9 @@ function (x,
 {
     histogram(x, type = "count", panel = panel, nint = nint, breaks = breaks, ...)
 }
+
+#' @param cex  a ratio by which to increase or decrease the dot size
+#' @rdname dotPlot
 
 panel.dotPlot <-
 function (x, breaks, equal.widths = TRUE, groups = NULL, nint = round(log2(length(x)) + 1), 

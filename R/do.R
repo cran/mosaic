@@ -1,24 +1,71 @@
-##############################################################
-# The repeater
-# - DTK, May 22, 2008, based on repeattrials.
-##############################################################
-# .as_repeater = function(n=1){ 
-#   foo = list(n=n)
-#   class(foo) = 'repeater'
-#   return(foo)
-# }
+#' Do Things Repeatedly
+#' 
+#' \code{do()} provides a natural syntax for repetition tuned to assist 
+#' with replication and resampling methods.
+#'
+#' @param n  number of times to repeat 
+#'
+#' @param cull  function for culling output of objects being repeated.  If NULL,
+#'   a default culling function is used.  The default culling function is 
+#'   currently aware of objects of types
+#'   \code{lme},
+#'   \code{lm},
+#'   \code{htest},
+#'   \code{table},
+#'   \code{cointoss}, and 
+#'   \code{matrix}.
+#'   
+#' @param mode  target mode for value returned
+#' 
+#' @return \code{do} returns an object of class \code{repeater} which is only useful in
+#' the context of the operator \code{*}.  See the examples.
+#' @author Daniel Kaplan (\email{kaplan@@macalaster.edu})
+#' and Randall Pruim (\email{rpruim@@calvin.edu})
+#'
+#' @seealso \code{\link{replicate}}
+#' 
+#' @export
+#' @examples
+#' do(3) * rnorm(1)
+#' do(3) * "hello"
+#' do(3) * lm(shuffle(height) ~ sex + mother, Galton)
+#' do(3) * summary(lm(shuffle(height) ~ sex + mother, Galton))
+#' do(3) * 1:4
+#' do(3) * mean(rnorm(25))
+#' do(3) * c(mean = mean(rnorm(25)))
+#' 
+#' @keywords iteration 
+#' 
+
+do <- function(n=1L, cull=NULL, mode=NULL) {
+	new( 'repeater', n=n, cull=cull, mode=mode )
+}
+
+#' @rdname mosaic-internal
+#' @keywords internal
+#' @details
+#' \code{.make.data.frame} converts things to a data frame
+#' @param x object to be converted
+#' @return a data frame
 
 .make.data.frame <- function( x ) {
 	if (is.data.frame(x)) return(x)
 	if (is.vector(x)) {
 		nn <- names(x)
-		result <- as.data.frame( matrix(x, nr=1) )
+		result <- as.data.frame( matrix(x, nrow=1) )
 		if (! is.null(nn) ) names(result) <- nn
 		return(result)
 	}
 	return(as.data.frame(x))
 	}
 
+#' @rdname mosaic-internal
+#' @keywords internal
+#' @details
+#' \code{.clean_names} removes unwanted characters from character vector
+#' @param x a character vector
+#' @return a character vector
+ 
 .clean_names <- function(x) {
 	x <- gsub('\\(Intercept\\)','Intercept', x)
 	x <- gsub('resample\\(','', x)
@@ -29,14 +76,31 @@
 	return(x)
 }
 
+#' Repeater objects
+#'
+#' Repeater objects can be used with the \code{*} operator to repeat
+#' things multiple time using a different syntax and different output
+#' format from that used by, for example, \code{\link{replicate}}.
+#'
+#' Each object contains slots for 
+#' \itemize{
+#' \item{\code{n}} number of times to repeat something
+#' \item{\code{cull}} a function used to cull output
+#' \item{\code{mode}} the mode used for results (NULL or data frame or matrix)
+#' }
+#' @rdname repeater-class
+#' @name repeater-class
+#' @exportClass repeater
+#' @seealso \code{\link{do}}
+
 setClass('repeater', 
-	representation(n='numeric', cull='ANY', mode='ANY')
+	representation = representation(n='numeric', cull='ANY', mode='ANY'),
+	prototype = prototype(n=1, cull=NULL, mode=NULL)
 )
 
-do = function(n=1L, cull=NULL, mode=NULL) {
-	new( 'repeater', n=n, cull=cull, mode=mode )
-}
 
+# old version
+if(FALSE) {
 .merge_data_frames <- function(a, b) {
   a <- .make.data.frame(a)
   b <- .make.data.frame(b)
@@ -50,7 +114,17 @@ do = function(n=1L, cull=NULL, mode=NULL) {
 	result <- result[, -w]
 	return(result)
 }
+}
 
+
+#' @rdname mosaic-internal
+#' @keywords internal
+#' @details \code{.merge_data_frames} is a wrapper around merge
+#'
+#' @param a a data frame
+#' @param b a data frame
+#'
+#' @return a data frame 
 
 .merge_data_frames = function(a,b) {
   a <- .make.data.frame(a)
@@ -65,7 +139,16 @@ do = function(n=1L, cull=NULL, mode=NULL) {
 }
 
 
-# squash names of a data frame into a single string
+#' @rdname mosaic-internal
+#' @keywords internal
+#' @details 
+#' \code{.squash_names} squashes names of a data frame into a single string
+#'
+#' @param object an object
+#' @param sep a character
+#'
+#' @return a character vector
+
 .squash_names <- function(object,sep=":") {
 	if ( ncol(object) < 1 ) {return(rep("",nrow(object)))}
 
@@ -79,7 +162,13 @@ do = function(n=1L, cull=NULL, mode=NULL) {
 		
 }
 
-# handle objects like models to do the right thing
+#' @rdname mosaic-internal
+#' @keywords internal
+#' @details
+#' \code{.cull_for_do} handles objects like models to do the right thing for \code{do}
+# 
+#' @return an object reflecting some of the information contained in \code{object}
+
 .cull_for_do = function(object) {
 
 	if (any(class(object)=='aggregated.stat')) {
@@ -139,6 +228,8 @@ do = function(n=1L, cull=NULL, mode=NULL) {
 	}
 	return(object) }
 
+#' @rdname do
+#' @aliases print,repeater-method
 setMethod("print",
     signature(x = "repeater"),
     function (x, ...) 
@@ -148,6 +239,8 @@ setMethod("print",
     }
 )
 
+#' @rdname do
+#' @aliases *,repeater,ANY-method
 setMethod("*",
     signature(e1 = "repeater", e2="ANY"),
     function (e1, e2) 

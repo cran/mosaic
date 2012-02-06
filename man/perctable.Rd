@@ -1,34 +1,33 @@
 \name{perctable}
 \alias{perctable}
 \alias{proptable}
-\title{
-Cross tabulation displayed as percents or proportions
-}
-\description{
-\code{perctable} and \code{proptable} use the cross-classifying factors to build a 
-contingency table of the percents or proportions at each combination of factor levels.
-}
+\title{Cross tabulation displayed as percents or proportions}
 \usage{
-perctable(...)
+  perctable(...)
 
-proptable(...)
+  proptable(...)
 }
 \arguments{
-  \item{...}{ 
-  arguments passed directly to \code{\link{table}};  typically
-  one or more objects which can be interpreted as factors (including character strings), 
-  or a list (or data frame) whose components can be so interpreted. 
-}
-}
-\details{
-See \code{\link{table}}.
+  \item{\dots}{arguments passed directly to
+  \code{\link{table}}; typically one or more objects which
+  can be interpreted as factors (including character
+  strings), or a list (or data frame) whose components can
+  be so interpreted.}
 }
 \value{
-returns a contingency table, an object of class "table", an array of percentage or proportion
-values. Note that unlike S the result is always an array, a 1D array if one factor is given.
+  a contingency table, an object of class "table", an array
+  of percentage or proportion values. Note that unlike S
+  the result is always an array, a 1D array if one factor
+  is given.
 }
-\author{
-Randall Pruim (\email{rpruim@calvin.edu})
+\description{
+  \code{perctable} and \code{proptable} use the
+  cross-classifying factors to build a contingency table of
+  the percents or proportions at each combination of factor
+  levels.
+}
+\details{
+  See \code{\link{table}}.
 }
 \examples{
 perctable(rbinom(1000,10,.5))
@@ -37,4 +36,8 @@ with(airquality,
 with(airquality,
    perctable(OzHi=Ozone > 80, Month, useNA="always"))
 }
-\keyword{ manipulate }
+\author{
+  Randall Pruim (\email{rpruim@calvin.edu})
+}
+\keyword{manipulate}
+
