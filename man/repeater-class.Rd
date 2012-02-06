@@ -1,42 +1,19 @@
 \name{repeater-class}
-\Rdversion{1.1}
-\docType{class}
 \alias{repeater-class}
-\alias{*,repeater,ANY-method}
-\alias{print,repeater-method}
-
-\title{Class \code{"repeater"}}
+\title{Repeater objects}
 \description{
-Repeater objects store information about a desired number
-of replications of other code.
+  Repeater objects can be used with the \code{*} operator
+  to repeat things multiple time using a different syntax
+  and different output format from that used by, for
+  example, \code{\link{replicate}}.
 }
-\section{Objects from the Class}{
-Objects can be created by calls of the form \code{new("repeater", ...)},
-but \code{do(...)} is the recommended call for creating these objects
-as it makes the resulting syntax much nicer.
+\details{
+  Each object contains slots for \itemize{ \item{\code{n}}
+  number of times to repeat something \item{\code{cull}} a
+  function used to cull output \item{\code{mode}} the mode
+  used for results (NULL or data frame or matrix) }
 }
-\section{Slots}{
-  \describe{
-    \item{\code{n}:}{number of replications }
-    \item{\code{cull}:}{function for culling output of each replication }
-    \item{\code{mode}:}{desired mode of object returned }
-  }
-}
-\section{Methods}{
-  \describe{
-    \item{*}{\code{signature(e1 = "repeater", e2 = "ANY")}: ... }
-    \item{print}{\code{signature(x = "repeater")}: ... }
-	 }
-}
-\author{
-Randall Pruim (\email{rpruim@calvin.edu}), 
-Daniel Kaplan (\email{kaplan@macalester.edu})
+\seealso{
+  \code{\link{do}}
 }
 
-\seealso{
-\code{\link{do}}
-}
-\examples{
-showClass("repeater")
-}
-\keyword{classes}

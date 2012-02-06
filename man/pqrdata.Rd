@@ -1,52 +1,96 @@
-\name{pqrdata}
+\name{qdata}
+\alias{ddata}
 \alias{pdata}
 \alias{qdata}
 \alias{rdata}
-\alias{ddata}
-\title{ The Data Distribution
+\title{The Data Distribution}
+\usage{
+  qdata(p, vals, data = NULL, ...)
+
+  pdata(q, vals, data = NULL, lower.tail = TRUE, ...)
+
+  rdata(n, vals, data = NULL, replace = TRUE, ...)
+
+  ddata(x, vals, data = NULL, log = FALSE, ...)
+}
+\arguments{
+  \item{p}{a vector of probabilities}
+
+  \item{vals}{a vector containing the data}
+
+  \item{data}{a data frame in which to evaluate vals}
+
+  \item{\dots}{additional arguments passed to
+  \code{quantile} or \code{sample}}
+
+  \item{q}{a vector of quantiles}
+
+  \item{lower.tail}{a logical indicating whether to use the
+  lower or upper tail probability}
+
+  \item{n}{number of values to sample}
+
+  \item{replace}{a logical indicating whether to sample
+  with replacement}
+
+  \item{x}{a vector of quantiles}
+
+  \item{log}{a logical indicating whether the result should
+  be log transformed}
+}
+\value{
+  For \code{qdata}, a vector of quantiles
+
+  For \code{pdata}, a vector of probabilities
+
+  For \code{rdata}, a vector of values sampled from
+  \code{vals}
+
+  For \code{ddata}, a vector of probabilities (empirical
+  densities)
 }
 \description{
-Density, distribution function, quantile function, and random generation
-from data.
+  Density, distribution function, quantile function, and
+  random generation from data.
+
+  \code{pdata} computes cumulative probabilities from data.
+
+  \code{rdata} randomly samples from data. It is a wrapper
+  around \code{sample} that unifies syntax.
+
+  \code{ddata} computes a probability mass function from
+  data.
 }
-
-\usage{
-rdata(n, vals, replace = TRUE, data=NULL, ...)
-pdata(q, vals, lower.tail=TRUE,data=NULL, ...) 
-qdata(p, vals, data=NULL, ...)
-ddata(x, vals, log=FALSE, data=NULL, ...)
-}
-
-\arguments{
-\item{x,q}{vector of quantiles.}
-\item{p}{vector of probabilities.}
-\item{n}{number of observations. If length(n) > 1, the length is taken to be the number required.}
-\item{vals}{data values.}
-\item{replace}{logical; if TRUE, sample with replacement.}
-\item{log}{logical; if TRUE (default), probabilities p are given as log(p).}
-\item{lower.tail}{logical; if TRUE (default), probabilities are P[X <= x] otherwise, P[X > x].}
-\item{data}{Handles the \code{data=} style of referring to variables in data frames.}
-\item{\dots}{additional arguments.}
-}
-
-
-\value{
-\code{ddata} gives the (log) density, \code{pdata} gives the distribution function, 
-\code{qdata} gives the quantile function, and \code{rdata} generates random deviates
-treating \code{vals} as an enumeration of the population.
-For \code{rdata}, the sampling can be either with or without replacement.
-}
-
 \examples{
+data(iris)
+qdata(.5, iris$Sepal.Length)
+qdata(.5, Sepal.Length, data=iris)
+data(iris)
+pdata(3:6, iris$Sepal.Length)
+pdata(3:6, Sepal.Length, data=iris)
 data(iris)
 rdata(10,iris$Species)
 rdata(10, Species, data=iris)
-ddata('setosa',iris$Species)
+data(iris)
+ddata('setosa', iris$Species)
 ddata('setosa', Species, data=iris)
-pdata(3:6, iris$Sepal.Length)
-pdata(3:6, Sepal.Length, data=iris)
-qdata(.5, iris$Sepal.Length)
-qdata(.5, Sepal.Length, data=iris)
 }
+\keyword{\code{\link{quantile}}}
+\keyword{\code{qdata}}
+\keyword{a}
+\keyword{around}
+\keyword{distribution}
+\keyword{distributions}
+\keyword{for}
+\keyword{from}
+\keyword{is}
+\keyword{like}
+\keyword{makes}
+\keyword{more}
+\keyword{quantiles}
+\keyword{syntax}
+\keyword{that}
+\keyword{the}
+\keyword{theoretical}
+\keyword{wrapper}
 
-\keyword{ distribution }

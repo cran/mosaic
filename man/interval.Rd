@@ -1,36 +1,43 @@
 \name{interval}
 \alias{interval}
+\alias{interval.htest}
 \alias{pval}
 \alias{pval.htest}
 \alias{stat}
 \alias{stat.htest}
-\alias{interval.htest}
-
 \title{Extract summary statistics}
-\description{
-Extract a confidence intervals, test statistics or p-values from an 
-\code{htest} object.
-}
-
 \usage{
-interval(x, ...)
+  interval(x, ...)
 
-pval(x, ...)
+  \method{interval}{htest} (x, verbose = FALSE, ...)
 
-stat(x, ...)
+  pval(x, ...)
+
+  \method{pval}{htest} (x, digits = 4, verbose = FALSE,
+    ...)
+
+  stat(x, ...)
+
+  \method{stat}{htest} (x, ...)
 }
-
 \arguments{
   \item{x}{An object of class \code{htest}.}
+
   \item{\dots}{Additional arguments.}
+
+  \item{verbose}{a logical}
+
+  \item{digits}{number of digits to display in verbose
+  output}
 }
-
-
-\author{
-Randall Pruim (\email{rpruim@calvin.edu})
+\value{
+  the extracted p-value, confidence interval, or test
+  statistic
 }
-
-
+\description{
+  Extract confidence intervals, test statistics or p-values
+  from an \code{htest} object.
+}
 \examples{
 interval(t.test(rnorm(100)))
 pval(t.test(rnorm(100)))
@@ -42,6 +49,9 @@ stat( t.test (age ~ shuffle(sex), HELP) )
 # Compare to test statistic computed with permuted values of sex.
 do(10) * stat( t.test (age ~ shuffle(sex), HELP) )
 }
+\author{
+  Randall Pruim (\email{rpruim@calvin.edu})
+}
+\keyword{stats}
+\keyword{univar}
 
-\keyword{ univar }
-\keyword{ stats }

@@ -1,49 +1,52 @@
-
-.SD <- function(x) {
-	sqrt(stats::var(x))
-}
-
-.mosaic_aggregate <- function(x, data, FUN, overall=mosaic.par.get("aggregate.overall"), ...) {
-	if (length(x) == 2 ) {
-		return( data.frame( FUN (eval( x[[2]], data, enclose=parent.frame()) ) ) )
-	} else {
-		return( as.data.frame( 
-			Hmisc::summary.formula( x, data, fun=FUN, overall=overall, method='cross',...) ) )
-	}
-	result <- Hmisc::summary.formula(x, data, fun=FUN, overall=overall, method=method, ...)
-	result <- as.data.frame(oldUnclass(result))
-	return(result)
-}
-
-# returns TRUE for a formula, FALSE otherwise, even if evaluation throws an error
-.is.formula <- function(x)  
-	tryCatch( inherits(x, 'formula'), error = function(e) {FALSE} )
-
-# check for formula with no left-hand side or a simple right-hand side, e.g. NULL, ., 1, or 0
-.is.simple.formula <-  function(x){
-     inherits(x, "formula") &&
-         (length(x)==2 || is.null(x[[3]]) ||
-          (length(x[[3]])==1 &&
-          ((is.numeric(x[[3]]) && (x[[3]]==0 || x[[3]]==1)) ||  (all.names(x[[3]]) %in% c(".")))))
-}
-
-.simple.part <- function(x) {
-	if (! .is.simple.formula(x) ) {
-		return(NULL) 
-	} else {
-		return(x[[2]])
-	}
-}
-
-
-.flatten <- function(x) {
-    .x <- c()
-  for (item in x) .x <- c(.x,item)
-  return(.x)
-}
-
+#' Aggregating summary statistics
+#' 
+#' These drop-in replacements and new summary statistics functions are 
+#' formula-aware and allow the use of simple names within data frames.  
+#' When given formulas, they call \code{\link{aggregate}} using the
+#' formula.
+#' 
+#' @details
+#' These methods are wrappers around functions and methods in the \code{base} and \code{stats} 
+#' packages and provide additional interfaces.
+#' 
+#' The default value for \code{na.rm} is reversed from the functions in \code{base} and \code{stats}.
+#' Also, \code{na.rm}, \code{use}, and \code{trim} follow \code{\dots} so must be named using
+#' their full names.
+#'
+#' @docType methods
+#' @rdname aggregating-methods
+#' @name aggregating-methods
+#'
+#' @author Randall Pruim (\email{rpruim@@calvin.edu})
+#'
+#' @seealso 
+#' \code{\link[stats]{aggregate}},
+#' \code{\link[stats]{sd}},
+#' \code{\link[stats]{var}},
+#' \code{\link[stats]{median}},
+#' \code{\link[base]{mean}},
+#' \code{\link[base]{max}},
+#' \code{\link[base]{min}},
+#' \code{\link[base]{sum}}
+#' 
+#' @keywords methods 
+#' @keywords stats 
 
 ##########################################################################################
+
+#' @examples
+#' mean(age, data=HELPrct)
+#' mean(~age, data=HELPrct)
+#' mean(age ~ ., data=HELPrct)
+#' mean(age ~ 1, data=HELPrct)
+#' mean(age ~ NULL, data=HELPrct)
+#' mean(HELPrct$age)
+#' mean(age ~ sex, data=HELPrct)
+#' mean(age ~ sex + treat, data=HELPrct)
+
+#' @rdname aggregating-methods
+#' @export
+#' @usage mean(x, ..., na.rm=TRUE, trim=0)
 
 setGeneric( 
 	"mean", 
@@ -57,6 +60,14 @@ setGeneric(
 	}
 )
 
+#' @rdname aggregating-methods
+#' @aliases mean,ANY-method
+#' @param x a vector
+#' @param na.rm logical indicating whether NAs should be removed before calculating 
+#' @param \dots additional arguments
+# @param trim a numeric indicating the proportion to be trimmed from each tail before calculating mean
+#' @export
+
 setMethod(
 	'mean',
 	'ANY',
@@ -64,6 +75,10 @@ setMethod(
 		c( mean=base::mean( .flatten(c(x,list(...))), na.rm=na.rm, trim=trim ) )
 	
 )
+
+#' @rdname aggregating-methods
+#' @aliases mean,numeric-method
+#' @export
 
 setMethod(
 	'mean',
@@ -73,6 +88,9 @@ setMethod(
 	
 )
 
+#' @rdname aggregating-methods
+#' @aliases mean,data.frame-method
+#' @export
 setMethod( 
 	"mean", 
 	signature=c("data.frame"),
@@ -81,6 +99,9 @@ setMethod(
 	
 )
 
+#' @rdname aggregating-methods
+#' @aliases mean,formula-method
+#' @export
 setMethod( 
 	"mean", 
 	signature=c("formula"),
@@ -97,6 +118,21 @@ setMethod(
 ##########################################################################################
 
 
+#' @export
+#' @docType methods
+#' @rdname aggregating-methods
+#'
+#'
+#' @examples
+#' median(age, data=HELPrct)
+#' median(~age, data=HELPrct)
+#' median(age ~ ., data=HELPrct)
+#' median(age ~ 1, data=HELPrct)
+#' median(age ~ NULL, data=HELPrct)
+#' median(HELPrct$age)
+#' median(age ~ sex, data=HELPrct)
+#' median(age ~ sex + treat, data=HELPrct)
+
 setGeneric( 
 	"median", 
 	function(x, ..., na.rm=TRUE)  {
@@ -109,6 +145,9 @@ setGeneric(
 	}
 )
 
+#' @rdname aggregating-methods
+#' @aliases median,ANY-method
+#' @export
 setMethod(
 	'median',
 	'ANY',
@@ -117,6 +156,9 @@ setMethod(
 	
 )
 
+#' @rdname aggregating-methods
+#' @aliases median,numeric-method
+#' @export
 setMethod(
 	'median',
 	'numeric',
@@ -125,12 +167,18 @@ setMethod(
 	
 )
 
+#' @rdname aggregating-methods
+#' @aliases median,data.frame-method
+#' @export
 setMethod( 
 	"median", 
 	signature=c("data.frame"),
 	function(x, ..., na.rm=TRUE) sapply( x, stats::median, na.rm=na.rm)
 )
 
+#' @rdname aggregating-methods
+#' @aliases median,formula-method
+#' @export
 setMethod( 
 	"median", 
 	signature=c("formula"),
@@ -146,6 +194,21 @@ setMethod(
 
 ##########################################################################################
 
+#' @export
+#' @docType methods
+#' @rdname aggregating-methods
+#'
+#'
+#' @examples
+#' sd(age, data=HELPrct)
+#' sd(~age, data=HELPrct)
+#' sd(age ~ ., data=HELPrct)
+#' sd(age ~ 1, data=HELPrct)
+#' sd(age ~ NULL, data=HELPrct)
+#' sd(HELPrct$age)
+#' sd(age ~ sex, data=HELPrct)
+#' sd(age ~ sex + treat, data=HELPrct)
+
 setGeneric( 
 	"sd", 
 	function(x, ..., na.rm=TRUE)  {
@@ -158,6 +221,9 @@ setGeneric(
 	}
 )
 
+#' @rdname aggregating-methods
+#' @aliases sd,ANY-method
+#' @export
 setMethod(
 	'sd',
 	'ANY',
@@ -165,6 +231,9 @@ setMethod(
 		c( sd=stats::sd( .flatten(c(x,list(...))), na.rm=na.rm) )
 )
 
+#' @rdname aggregating-methods
+#' @aliases sd,numeric-method
+#' @export
 setMethod(
 	'sd',
 	'numeric',
@@ -173,12 +242,18 @@ setMethod(
 	
 )
 
+#' @rdname aggregating-methods
+#' @aliases sd,data.frame-method
+#' @export
 setMethod( 
 	"sd", 
 	signature=c("data.frame"),
 	function(x, ..., na.rm=TRUE) sapply( x, stats::sd, na.rm=na.rm)
 )
 
+#' @rdname aggregating-methods
+#' @aliases sd,formula-method
+#' @export
 setMethod( 
 	"sd", 
 	signature=c("formula"),
@@ -186,7 +261,7 @@ setMethod(
 		if( .is.simple.formula(x) ) {
 			return( sd( eval( .simple.part(x), data, enclos=parent.frame()), ..., na.rm=na.rm ) )
 		} else {
-			return( .mosaic_aggregate( x, data, FUN=.SD, na.rm=na.rm) )
+			return( .mosaic_aggregate( x, data, FUN=SD, na.rm=na.rm) )
 		} 
 	}
 )
@@ -245,6 +320,9 @@ setMethod(
 #.make.Maxlike.generic( 'Min', base::min )
 
 ###############################################################
+# Because min and max are primatives, we need a work-around.  
+# min and max are reassigned after creating .Min and .Max
+# 
 setGeneric( 
 	'.Max', 
 	function(x, ..., na.rm=TRUE)  {
@@ -353,6 +431,22 @@ setMethod(
 
 
 
+#' @export
+#' @docType methods
+#' @rdname aggregating-methods
+# @param y second vector allows for computation of covariances
+#'
+#'
+#' @examples
+#' var(age, data=HELPrct)
+#' var(~age, data=HELPrct)
+#' var(age ~ ., data=HELPrct)
+#' var(age ~ 1, data=HELPrct)
+#' var(age ~ NULL, data=HELPrct)
+#' var(HELPrct$age)
+#' var(age ~ sex, data=HELPrct)
+#' var(age ~ sex + treat, data=HELPrct)
+
 setGeneric( 
 	"var", 
 	function(x, y=NULL, na.rm=TRUE, use, data=NULL)  {
@@ -370,6 +464,9 @@ setGeneric(
 )
 
 
+#' @rdname aggregating-methods
+#' @aliases var,ANY,ANY,ANY,ANY,ANY-method
+#' @export
 setMethod(
 	'var',
 	c('ANY','ANY'),
@@ -377,6 +474,9 @@ setMethod(
 		stats::var( x, y, na.rm=na.rm, use=use) 
 )
 
+#' @rdname aggregating-methods
+#' @aliases var,numeric,numeric,ANY,ANY,ANY-method
+#' @export
 setMethod(
 	'var',
 	c('numeric','numeric'),
@@ -384,6 +484,9 @@ setMethod(
 		c( var=stats::var( x, y, na.rm=na.rm, use=use) )
 )
 
+#' @rdname aggregating-methods
+#' @aliases var,numeric,ANY,ANY,ANY,ANY-method
+#' @export
 setMethod(
 	'var',
 	c('numeric'),
@@ -391,6 +494,9 @@ setMethod(
 		c( var=stats::var( x, y, na.rm=na.rm, use=use) )
 )
 
+#' @rdname aggregating-methods
+#' @aliases var,matrix,ANY,ANY,ANY,ANY-method
+#' @export
 setMethod(
 	'var',
 	c('matrix'),
@@ -398,12 +504,18 @@ setMethod(
 		stats::var( x, y, na.rm=na.rm, use=use) 
 )
 
+#' @rdname aggregating-methods
+#' @aliases var,data.frame,ANY,ANY,ANY,ANY-method
+#' @export
 setMethod( 
 	"var", 
 	signature=c("data.frame"),
 	function(x, y, na.rm=TRUE, use=use) stats::var(x, y, na.rm=na.rm, use=use)
 )
 
+#' @rdname aggregating-methods
+#' @aliases var,formula,missing,ANY,ANY,data.frame-method
+#' @export
 setMethod( 
 	"var", 
 	signature=c(x="formula", y="missing", na.rm='ANY', use='ANY', data="data.frame"),
@@ -416,6 +528,9 @@ setMethod(
 	}
 )
 
+#' @rdname aggregating-methods
+#' @aliases var,formula,data.frame,ANY,ANY,missing-method
+#' @export
 setMethod( 
 	"var", 
 	signature=c(x="formula", y="data.frame", na.rm='ANY', use='ANY', data="missing"),
@@ -430,10 +545,35 @@ setMethod(
 )
 ##########################################################################################
 
+#' @rdname aggregating-methods
+#' @examples
+#' min(age, data=HELPrct)
 min <- .Min
+
+#' @rdname aggregating-methods
+#' @examples
+#' max(age, data=HELPrct)
+#' max(~age, data=HELPrct)
+#' max(age ~ ., data=HELPrct)
+#' max(age ~ 1, data=HELPrct)
+#' max(age ~ NULL, data=HELPrct)
+#' max(HELPrct$age)
+#' max(age ~ sex, data=HELPrct)
+#' max(age ~ sex + treat, data=HELPrct)
+
 max <- .Max
 
 ##########################################################################################
+#' @export
+#' @docType methods
+#' @rdname aggregating-methods
+# @param level  level for which the count or proportion is desired
+#'
+#' @examples
+#' count(sex, data=HELPrct)
+#' count(sex, data=HELPrct, level='male')
+#' count(HELPrct$sex)
+
 setGeneric('count',
 	function(x, ..., level=TRUE, na.rm=TRUE) {
 		dots <- list(...)
@@ -445,6 +585,9 @@ setGeneric('count',
 	}
 )
 
+#' @rdname aggregating-methods
+#' @aliases count,ANY-method
+#' @export
 setMethod(
 	'count',
 	'ANY',
@@ -452,12 +595,18 @@ setMethod(
 		c( count=callGeneric( as.factor( .flatten(c(x,list(...))) ), level=level, na.rm=na.rm) )
 )
 
+#' @rdname aggregating-methods
+#' @aliases count,logical-method
+#' @export
 setMethod('count',
 	signature = c('logical'),
 	function(x, ..., level=TRUE, na.rm=TRUE) 
 		callGeneric( as.factor(.flatten(c(x, list(...)))), level=level, na.rm=na.rm ) 
 )
 
+#' @rdname aggregating-methods
+#' @aliases count,factor-method
+#' @export
 setMethod('count',
 	signature = 'factor',
 	function(x, ..., level=TRUE, na.rm=TRUE) {
@@ -470,6 +619,9 @@ setMethod('count',
 	}
 )
 
+#' @rdname aggregating-methods
+#' @aliases count,data.frame-method
+#' @export
 setMethod( 
 	"count", 
 	signature=c("data.frame"),
@@ -477,6 +629,9 @@ setMethod(
 		sapply(x, sum, level=level, na.rm=na.rm)
 )
 
+#' @rdname aggregating-methods
+#' @aliases count,formula-method
+#' @export
 setMethod( 
 	"count", 
 	signature=c("formula"),
@@ -498,6 +653,16 @@ setMethod(
 
 ##########################################################################
 
+#' @export
+#' @docType methods
+#' @rdname aggregating-methods
+#'
+#' @examples
+#' prop(sex, data=HELPrct)
+#' prop(sex, data=HELPrct, level='male')
+#' prop(HELPrct$sex)
+ 
+#' @export
 setGeneric('prop',
 	function(x, ..., level=TRUE, na.rm=TRUE) {
 		dots <- list(...)
@@ -509,6 +674,9 @@ setGeneric('prop',
 	}
 )
 
+#' @rdname aggregating-methods
+#' @aliases prop,ANY-method
+#' @export
 setMethod(
 	'prop',
 	'ANY',
@@ -516,12 +684,18 @@ setMethod(
 		c( prop=callGeneric( as.factor( .flatten(c(x,list(...))) ), level=level, na.rm=na.rm) )
 )
 
+#' @rdname aggregating-methods
+#' @aliases prop,logical-method
+#' @export
 setMethod('prop',
 	signature = c('logical'),
 	function(x, ..., level=TRUE, na.rm=TRUE) 
 		callGeneric( as.factor( .flatten(c(x,list(...))) ), level=level, na.rm=na.rm ) 
 )
 
+#' @rdname aggregating-methods
+#' @aliases prop,factor-method
+#' @export
 setMethod('prop',
 	signature = 'factor',
 	function(x, ..., level=TRUE, na.rm=TRUE) {
@@ -534,6 +708,9 @@ setMethod('prop',
 	}
 )
 
+#' @rdname aggregating-methods
+#' @aliases prop,data.frame-method
+#' @export
 setMethod( 
 	"prop", 
 	signature=c("data.frame"),
@@ -541,6 +718,9 @@ setMethod(
 		sapply(x, prop, level=level, na.rm=na.rm)
 )
 
+#' @rdname aggregating-methods
+#' @aliases prop,formula-method
+#' @export
 setMethod( 
 	"prop", 
 	signature=c("formula"),
@@ -555,3 +735,109 @@ setMethod(
 	}
 )
 
+#' Compute standard deviation
+#'
+#' This computes the standard deviation as the square root of variance to avoid
+#' direct use of \code{\link[stats]{sd}}.
+#'
+#' @seealso \code{\link[mosaic]{sd}}
+#'
+#' @param x a vector or formula
+#'
+#' @return a numeric containing the standard deviaiton
+#'
+#' @note The primary reason for this function is that \code{\link[stats]{sd}} generates warnings
+#' when used with \code{\link[Hmisc]{summary.formula}} from the \code{lattice} package.
+#'
+#' @examples
+#' x <- rnorm(10)
+#' SD(x)
+#' sd(x)
+#' summary(age ~ substance, data=HELPrct, fun=SD)
+#' @export
+
+SD <- function(x) {
+	sqrt(stats::var(x))
+}
+
+
+#' Check if formula
+#' 
+#' @param x an object
+#' @return TRUE for a formula, FALSE otherwise, even if evaluation throws an error
+#'
+#' @rdname mosaic-internal
+#' @keywords internal
+
+.is.formula <- function(x)  
+	tryCatch( inherits(x, 'formula'), error = function(e) {FALSE} )
+
+#' Check for simple formula
+#'
+#' @param x a formula
+#'
+#' @return TRUE if formula has no left-hand side or a simple right-hand side 
+#' (e.g., \code{NULL}, ., 1,  or 0)
+#'
+#' @rdname mosaic-internal
+#' @keywords internal
+.is.simple.formula <-  function(x){
+     inherits(x, "formula") &&
+         (length(x)==2 || is.null(x[[3]]) ||
+          (length(x[[3]])==1 &&
+          ((is.numeric(x[[3]]) && (x[[3]]==0 || x[[3]]==1)) ||  (all.names(x[[3]]) %in% c(".")))))
+}
+
+# This could use a better name and a better desription
+
+#' Extract simple part from formula
+#'
+#' @param x a formula
+#'
+#' @return simple part of formula or NULL if formula is not simple
+#'
+#' @rdname mosaic-internal
+#' @keywords internal
+
+.simple.part <- function(x) {
+	if (! .is.simple.formula(x) ) {
+		return(NULL) 
+	} else {
+		return(x[[2]])
+	}
+}
+
+#' Extract simple part from formula
+#'
+#' @param x an R container object
+#' @return a vector containing items in \code{x}
+#'
+#' @rdname mosaic-internal
+#' @keywords internal
+
+.flatten <- function(x) {
+    result <- c()
+  for (item in x) result <- c(result, item)
+  return(result)
+}
+
+
+#' Aggregate for mosaic
+#'
+#' Wrapper to modify aggregating behavior of \code{\link[Hmisc]{summary.formula}}
+#'
+#' @return  a data frame
+#'
+#' @rdname mosaic-internal
+#' @keywords internal
+.mosaic_aggregate <- function(x, data, FUN, overall=mosaic.par.get("aggregate.overall"), ...) {
+	if (length(x) == 2 ) {
+		return( data.frame( FUN (eval( x[[2]], data, enclos=parent.frame()) ) ) )
+	} else {
+		return( as.data.frame( 
+			Hmisc::summary.formula( x, data, fun=FUN, overall=overall, method='cross',...) ) )
+	}
+	result <- Hmisc::summary.formula(x, data, fun=FUN, overall=overall, method=method, ...)
+	result <- as.data.frame(oldUnclass(result))
+	return(result)
+}

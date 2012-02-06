@@ -1,44 +1,86 @@
 \name{plotFun}
 \alias{plotFun}
-\title{
-Plotting mathematical expressions (EXPERIMENTAL)
-}
-\description{
-Plots out mathematical functions of one or two variables.
-}
+\title{Plotting mathematical expressions}
 \usage{
-plotFun(expr, ..., add=FALSE, xlim=NULL, ylim=NULL, npts=NULL, ylab=NULL, xlab=NULL, zlab=NULL, main=NULL, lwd=1, col="black",filled=TRUE, nlevels=10, surface=FALSE, colorscheme=topo.colors,type="l",transparency=NULL)
+  plotFun(object, ..., add = FALSE, xlim = NULL,
+    ylim = NULL, npts = NULL, ylab = NULL, xlab = NULL,
+    zlab = NULL, main = NULL, lwd = 1, col = "black",
+    filled = TRUE, levels = NULL, nlevels = 10,
+    surface = FALSE, colorscheme = topo.colors, type = "l",
+    transparency = NULL)
 }
 \arguments{
-  \item{expr}{A formula of the same sort used in \code{newD} and \code{newAntiD}.}
-  \item{\dots}{Values for the variables and parameters contained in the expression.}
-  \item{add}{If \code{add=TRUE}, add the new plot over the existing plot.}
-  \item{xlim,ylim}{Limits for the x- and y-axes (or set using the independent variables)}
-  \item{npts}{Approximately granularity of the plot.}
-  \item{ylab,xlab,zlab,main}{Labels for the axes and the plot itself.}
-  \item{lwd}{Line width for line plots}
-  \item{col}{Color for line plots}
-  \item{filled}{If \code{filled=TRUE}, then shade contour plots.}
-  \item{nlevels}{Number of contour levels for contour plots.}
-  \item{surface}{For functions of two variables, do a surface rather than a contour plot.}
-  \item{colorscheme}{How to shade surface plots}
-  \item{type}{Plotting type, e.g. "l", "p", as in \code{plot}}
-  \item{transparency}{When overlaying a contour plot, the transparency of the overfill}
-}
-\details{
-\code{plotFun} provides a way to plot out mathematical expressions.  All variables and parameters contained in the expression must be given specific numerical values.  The variables being plotted can be given a range of values.
+  \item{object}{a mathematical expression (see examples)}
+
+  \item{...}{additional assignments to parameters and
+  limits}
+
+  \item{add}{if TRUE, then overlay an existing plot}
+
+  \item{xlim}{limits for x axis (or use variable names, see
+  examples)}
+
+  \item{ylim}{limits for y axis (or use variable names, see
+  examples)}
+
+  \item{npts}{number of points for plotting.}
+
+  \item{xlab}{label for x axis}
+
+  \item{ylab}{label for y axis}
+
+  \item{zlab}{label for z axis (when in surface-plot mode)}
+
+  \item{main}{main label for plot}
+
+  \item{lwd}{line width for line graphs and contours}
+
+  \item{col}{color for line graphs and contours}
+
+  \item{filled}{fill with color between the contours
+  (\code{TRUE} by default)}
+
+  \item{levels}{levels at which to draw contours}
+
+  \item{nlevels}{number of contours to draw (if
+  \code{levels} not specified)}
+
+  \item{surface}{draw a surface plot rather than a contour
+  plot}
+
+  \item{colorscheme}{function (\code{topo.colors} by
+  default) for choosing colors for fill}
+
+  \item{type}{type of plot (\code{"l"} by default)}
+
+  \item{transparency}{number from 0 (transparent) to 1
+  (opaque) for the fill colors}
 }
 \value{
-A function that encapsulates the mathematical expression.
+  an R function for the expression being plotted (not a
+  graphics object)
+}
+\description{
+  Plots mathematical expressions in one and two variables.
+}
+\details{
+  makes plots of mathematical expressions using the formula
+  syntax.  Will draw both line plots and contour/surface
+  plots (for functions of two variables) In RStudio, the
+  surface plot comes with sliders to set orientation. If
+  the colors in filled surface plots are two blocky,
+  increase \code{npts} beyond the default of 50.
+  \code{npts=300} is as much as you're likely to every need
+  See examples for overplotting a constraint function on an
+  objective function.
+}
+\examples{
+plotFun(a*sin(x^2)~x, xlim=range(-5,5), a=2)
+f <- rfun( ~ u & v)
+plotFun( f(u=u,v=v) ~ u & v, u.lim=range(-3,3), v.lim=range(-3,3) )
+plotFun( u^2 + v < 3 ~ u & v, add=TRUE, npts=200)
 }
 \author{
-Daniel Kaplan (\email{kaplan@macalester.edu}) and 
+  Daniel Kaplan (\email{kaplan@macalester.edu})
 }
 
-\examples{
-plotFun(A*sin(2*pi*t/P) ~ t, t=range(0,50), P=20, A=5)
-f = plotFun(A*exp(-k*t)*sin(2*pi*t/P) ~ t & k, t=range(0,50), k=range(.01,.1), P=20, A=5)
-% A slice of the above function
-plotFun(f(t=7,A=3,P=5,k=k) ~ k, k=range(0.01,0.2))
-}
-\keyword{ calculus }
