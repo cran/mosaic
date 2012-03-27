@@ -22,19 +22,15 @@
 }
 \note{
   These two functions are identical.  \code{col.mosaic} is
-  named in similarity to
-  \code{\link[lattice]{col.whitebg}}, but since more just
-  colors are set, \code{theme.mosaic} seems like a
-  preferable name.
+  named similarly to \code{\link[lattice]{col.whitebg}},
+  but since more than just colors are set,
+  \code{theme.mosaic} is a preferable name.
 }
 \examples{
-trellis.par.set(theme=theme.mosaic(bw=TRUE))
-show.settings()
 trellis.par.set(theme=theme.mosaic())
 show.settings()
-}
-\author{
-  Randall Pruim (\email{rpruim@calvin.edu})
+trellis.par.set(theme=theme.mosaic(bw=TRUE))
+show.settings()
 }
 \seealso{
   \code{\link{trellis.par.set}},

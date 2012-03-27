@@ -19,8 +19,8 @@
   files, this indicates whether the first line of the file
   includes variables names.}
 
-  \item{na.strings}{character: stings that indicate missing
-  data.}
+  \item{na.strings}{character: strings that indicate
+  missing data.}
 
   \item{comment.char}{character: a character vector of
   length one containing a single character or an empty
@@ -49,9 +49,6 @@
   the file.  If \code{file} ends in \code{.csv}, then
   \code{\link{read.csv}} is used.  Otherwise,
   \code{\link{read.table}} is used.
-}
-\author{
-  Randall Pruim (\email{rpruim@calvin.edu})
 }
 \seealso{
   \code{\link{read.table}}, \code{\link{read.csv}},

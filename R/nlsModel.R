@@ -6,7 +6,6 @@
 #' least-squares fit.
 #'
 #' @return a function
-#' @author Daniel Kaplan (\email{kaplan@@macalester.edu})
 #' 
 #' @param formula formula specifying the model
 #' @param data dataframe containing the data to be used
@@ -27,9 +26,9 @@
 #' @seealso \code{\link{linearModel}}, \code{\link{nls}}
 #'
 #' @examples
-#' stan <- fetchData("stan-data.csv")
-#' f <- nlsModel(temp ~ A+B*exp(-k*time), data=stan,A=50,B=50,k=1/20)
-#' f(time=50)
+#' \dontrun{stan <- fetchData("stan-data.csv")}
+#' \dontrun{f <- nlsModel(temp ~ A+B*exp(-k*time), data=stan,A=50,B=50,k=1/20)}
+#' \dontrun{f(time=50)}
 #'
 nlsModel <- function(formula, data, ..., options) {
   input.names <- all.vars(formula)[-1]

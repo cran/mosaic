@@ -1,4 +1,4 @@
-#' Function from data.
+#' Create function from data
 #'
 #' These functions create mathematical functions from data, by smoothing, splining, or linear
 #' combination (fitting).  Each of them takes a formula and a data frame as an argument
@@ -28,25 +28,21 @@
 #' currently work for only one input variable.
 #'
 #' @seealso \code{\link{project}} method for formulas
-#' @author Daniel Kaplan (\email{kaplan@@macalester.edu})
 #'
 #' @examples
-#' cps <- fetchData("CPS.csv")
-#' f <- smoother(wage~age,span=.9, data=cps)
+#' data(CPS)
+#' f <- smoother(wage ~ age, span=.9, data=CPS)
 #' f(40)
-#' df <- D(f(age)~age)
+#' df <- D(f(age) ~ age)
 #' df(40)
-#' g <- linearModel(log(wage)~age+educ+1,data=cps)
-#' g(age=40,educ=12)
-#' dgdeduc <- D(g(age=age,educ=educ)~educ)
-#' dgdeduc(age=40,educ=12)
-#' x<-1:5; y=c(1,2,4,8,8.2)
-#' f1 <- spliner(y~x)
+#' g <- linearModel(log(wage) ~ age+educ+1, data=CPS)
+#' g(age=40, educ=12)
+#' dgdeduc <- D(g(age=age, educ=educ) ~ educ)
+#' dgdeduc(age=40, educ=12)
+#' x<-1:5; y=c(1, 2, 4, 8, 8.2)
+#' f1 <- spliner(y ~ x)
 #' f1(x=8:10)
-#' # f2 <- spliner(x~y, monotonic=TRUE)
-#' # f2(x=8:10)
-#' f3 <- connector(x~y)
-#' # f2(x=8:10)
+#' f2 <- connector(x~y)
 
 # ==============
 spliner <- function(formula, data=NULL,method="fmm",monotonic=FALSE) {

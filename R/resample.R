@@ -49,8 +49,6 @@ rflip <- function(n=1, prob=.5, quiet=FALSE, verbose = !quiet) {
 #' @rdname rflip
 #' @param x an object 
 #' @param \dots additional arguments
-#' @export 
-
 
 print.cointoss <- function(x, ...) {
 	heads <- as.numeric(x)
@@ -104,7 +102,7 @@ resample <- function(x, size, replace=TRUE, prob=NULL, groups=NULL, orig.ids=FAL
 #' @rdname resample
 #' @export
 #' @examples
-#' deal(Cards,13)    # A Bridge hand
+#' deal(Cards, 13)    # A Bridge hand
  
 deal    <- function(x, size, replace=FALSE, prob=NULL, groups=NULL, orig.ids=FALSE) {
 	sample(x, size, replace=replace, prob=prob, groups=groups, orig.ids=orig.ids )

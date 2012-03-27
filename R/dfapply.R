@@ -6,9 +6,8 @@
 #'   a function to apply to (some) variables in the data frame
 #' @param select 
 #'   function used to select variables to which \code{FUN} is applied.  See examples.
-#' @param \dots  arguments passed allong to \code{FUN} 
+#' @param \dots arguments passed along to \code{FUN} 
 #' 
-#' @author Randall Pruim (\email{rpruim@@calvin.edu})
 #' @seealso \code{\link{apply}},
 #' \code{\link{sapply}},
 #' \code{\link{tapply}},

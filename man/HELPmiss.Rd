@@ -64,7 +64,7 @@ past 30 days (measured at baseline)}
   and outcomes were collected at each of these five
   occasions.
 
-  This dataset is a superset of the HELP data with 17
+  This dataset is a superset of the HELPrct data with 17
   subjects with partially observed data on some of the
   baseline variables.  This is a subset of the HELPfull
   data which includes 5 timepoints and many additional
@@ -82,7 +82,7 @@ data(HELPmiss)
   98(4):509-516.
 }
 \seealso{
-  \code{\link{HELP}} , and \code{\link{HELPfull}}.
+  \code{\link{HELPrct}} , and \code{\link{HELPfull}}.
 }
 \keyword{datasets}
 

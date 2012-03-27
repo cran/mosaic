@@ -2,10 +2,10 @@ Package: mosaic
 Type: Package
 Title: Project MOSAIC (mosaic-web.org) statistics and mathematics
         teaching utilities
-Version: 0.3-13
-Date: 2012-02-06
-Depends: R (>= 2.10), lattice, grid, methods, Hmisc, utils
-Suggests: MASS, reshape2, manipulate, testthat
+Version: 0.4-1
+Date: 2012-03-27
+Depends: R (>= 2.10), lattice, grid, methods, Hmisc, utils, RCurl
+Suggests: MASS, reshape2, manipulate, vcd, testthat
 Author: Randall Pruim <rpruim@calvin.edu>, Daniel Kaplan
         <kaplan@macalester.edu>, Nicholas Horton <nhorton@smith.edu>
 Maintainer: Randall Pruim <rpruim@calvin.edu>
@@ -20,16 +20,18 @@ License: GPL
 LazyLoad: yes
 LazyData: yes
 Collate: 'favstats.R' 'CIsim.R' 'adapt_seq.R' 'aggregating.R'
-        'binom.test.R' 'confint.R' 'cross.R' 'dfapply.R' 'distPlot.R'
-        'do.R' 'dotPlot.R' 'fetchData.R' 'findZeros.R' 'functions.R'
-        'interval.R' 'ladd.R' 'linear-algebra.R' 'logit.R'
-        'perctable.R' 'pqrdata.R' 'prop.test.R' 'rand.R' 'read.file.R'
-        'resample.R' 'rfun.R' 'rgeo.R' 'settings.R' 'smoothers.R'
-        'statTally.R' 'surround.R' 'utils.R' 'xchisq.test.R'
-        'xhistogram.R' 'xpnorm.R' 'xqqmath.R' 'zzz.R' 'Calculus.R'
-        'mosaic-package.R' 'datasets.R' 'themes.R' 'createFun.R'
+        'binom.test.R' 'confint.R' 'cross.R' 'dfapply.R' 'do.R'
+        'dotPlot.R' 'fetchData.R' 'findZeros.R' 'interval.R' 'ladd.R'
+        'linear-algebra.R' 'logit.R' 'perctable.R' 'pqrdata.R'
+        'prop.test.R' 'rand.R' 'read.file.R' 'resample.R' 'rfun.R'
+        'rgeo.R' 'settings.R' 'smoothers.R' 'statTally.R' 'surround.R'
+        'utils.R' 'xchisq.test.R' 'xhistogram.R' 'xpnorm.R' 'xqqmath.R'
+        'zzz.R' 'Calculus.R' 'mosaic-package.R' 'datasets.R' 'themes.R'
         'integrateODE.R' 'is.wholenumber.R' 'parseFormula.R'
-        'plotFun.R' 'nlsModel.R' 'bargraph.R' 'makeFunction.R'
-Packaged: 2012-02-06 17:11:53 UTC; rpruim
+        'plotFun.R' 'nlsModel.R' 'bargraph.R' 'as.xtabs.R'
+        'plotCumfreq.R' 'oddsRatio.R' 'plotDist.R' 'compareMean.R'
+        'compareProportion.R' 'numD.R' 'symbolicD.R' 'fetchGoogle.R'
+        'makeFun.R' 'tally.R'
+Packaged: 2012-03-27 13:35:31 UTC; rpruim
 Repository: CRAN
-Date/Publication: 2012-02-06 21:06:47
+Date/Publication: 2012-03-27 14:25:35

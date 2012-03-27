@@ -1,7 +1,7 @@
 \docType{data}
 \name{CPS}
 \alias{CPS}
-\title{Data from the Current Population Survey (CPS)}
+\title{Data from the 1985 Current Population Survey (CPS)}
 \format{A data frame with 534 observations on the following variables.
   \itemize{
     \item{\code{wage}} {wage (US dollars per hour)}

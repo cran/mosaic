@@ -61,6 +61,13 @@
   \code{ddata} computes a probability mass function from
   data.
 }
+\details{
+
+
+  \code{qdata} is a wrapper around \code{\link{quantile}}
+  that makes the syntax more like the syntax for quantiles
+  from theoretical distributions
+}
 \examples{
 data(iris)
 qdata(.5, iris$Sepal.Length)
@@ -75,22 +82,5 @@ data(iris)
 ddata('setosa', iris$Species)
 ddata('setosa', Species, data=iris)
 }
-\keyword{\code{\link{quantile}}}
-\keyword{\code{qdata}}
-\keyword{a}
-\keyword{around}
 \keyword{distribution}
-\keyword{distributions}
-\keyword{for}
-\keyword{from}
-\keyword{is}
-\keyword{like}
-\keyword{makes}
-\keyword{more}
-\keyword{quantiles}
-\keyword{syntax}
-\keyword{that}
-\keyword{the}
-\keyword{theoretical}
-\keyword{wrapper}
 

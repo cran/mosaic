@@ -36,8 +36,5 @@ with(airquality,
 with(airquality,
    perctable(OzHi=Ozone > 80, Month, useNA="always"))
 }
-\author{
-  Randall Pruim (\email{rpruim@calvin.edu})
-}
 \keyword{manipulate}
 

@@ -1,9 +1,10 @@
 \name{favstats}
 \alias{favstats}
+\alias{favstats,ANY,data.frame-method}
+\alias{favstats,formula,ANY-method}
+\alias{favstats,matrix,ANY-method}
+\alias{favstats,numeric,ANY-method}
 \title{Some favorite statistical summaries}
-\usage{
-  favstats(x, na.rm = TRUE)
-}
 \arguments{
   \item{x}{numeric vector}
 
@@ -14,8 +15,8 @@
   A vector of statistical summaries
 }
 \description{
-  Computes mean, standard deviation, and quartiles of a
-  data vector.
+  Computes mean, standard deviation, quartiles, sample size
+  and number of missing values for a data vector.
 }
 \examples{
 favstats(1:10)

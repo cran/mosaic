@@ -1,3 +1,25 @@
+#' US Births in 1978
+#'
+#' A day by day record of the number of births in the United States in 1978.
+#' 
+#' @docType data
+#' @name Births78
+#' @usage data(Births78)
+#' @format 
+#'   A data frame with 365 observations on the following variables.
+#'   \itemize{
+#'     \item{\code{date}}{date in 1978}
+#'     \item{\code{births}} {number of US births}
+#'     \item{\code{dayofyear}} {sequential number of days from 1 to 365}
+#'   }
+#' 
+#' @examples
+#' data(Births78)
+#' xyplot(births ~ dayofyear, Births78)
+#' xyplot(births ~ dayofyear, Births78, groups=dayofyear%%7)
+
+NA 
+
 #' Standard Deck of Cards
 #' 
 #' A character vector with two or three character representations of 
@@ -22,7 +44,7 @@
 NA 
 
 
-#' Data from the Current Population Survey (CPS)
+#' Data from the 1985 Current Population Survey (CPS)
 #' 
 #' The Current Population Survey (CPS) is used to supplement census
 #' information between census years. These data consist of a random
@@ -33,7 +55,7 @@ NA
 #' 
 #' @docType data
 #' @name CPS
-#' @usage CPS
+#' @usage data(CPS)
 #' @format 
 #'   A data frame with 534 observations on the following variables.
 #'   \itemize{
@@ -78,7 +100,7 @@ NA
 #' @docType data
 #' @keywords datasets
 #' @name Galton
-#' @usage Galton
+#' @usage data(Galton)
 #' @format 
 #'   A data frame with 898 observations on the following variables.
 #'   \itemize{
@@ -122,7 +144,7 @@ NA
 #' also recorded.  
 #' 
 #' @name Gestation
-#' @usage Gestation
+#' @usage data(Gestation)
 #' @docType data
 #' 
 #' @format 
@@ -169,8 +191,8 @@ NA
 #' The data were presented by Nolan and Speed to address the question of whether there is a link between maternal smoking and the baby's health.
 #' 
 #' @source 
-#' The admirable book by Deborah Nolan and Terry Speed
-#' describes the data in some detail 
+#' The book by Nolan and Speed
+#' describes the data in more detail 
 #' and provides an Internet site for accessing them: 
 #' \url{http://www.stat.berkeley.edu/users/statlabs/}
 #' 
@@ -195,7 +217,7 @@ NA
 #' 
 #' @keywords datasets
 #' @name HELP
-#' @usage HELP
+#' @usage data(HELP)
 #' @docType data
 #' 
 #' @format 
@@ -248,11 +270,8 @@ NA
 #' predictors and outcomes were collected at each of these five
 #' occasions.
 #' 
-#' This dataset is a subset of the HELPmiss data which includes an
-#' additional 17 subjects with 
-#' partially observed data on some of the baseline variables.  This is
-#' also a subset of the HELPfull data which includes 5 timepoints and many
-#' additional variables for all subjects.
+#' This dataset is equivalent to the less confusingly named \code{\link{HELPrct}}
+#' dataset.
 #' 
 #' @source 
 #' \url{http://www.math.smith.edu/help}
@@ -264,7 +283,7 @@ NA
 #' a multi-disciplinary health intervention in a detoxification unit.  
 #' \emph{Addiction}, 2003; 98(4):509-516.
 #' 
-#' @seealso \code{\link{HELP}} , and \code{\link{HELPfull}}.
+#' @seealso \code{\link{HELPrct}}.
 #' 
 #' 
 #' @examples 
@@ -283,7 +302,7 @@ NA
 #' 
 #' @keywords datasets
 #' @name HELPfull
-#' @usage HELPfull
+#' @usage data(HELPfull)
 #' @docType data
 #' @format 
 #'   A data frame with 1472 observations on the following variables.
@@ -925,7 +944,7 @@ NA
 #'     \item{\code{U35D}} {MDs communic w/your specialists/oth MDs (1=Very poor, 2= Poor, 3=Fair, 4=Good, 5= Very good, 6= Excellent)}
 #'     \item{\code{U35E}} {MD help in explain what specialists said (1=Very poor, 2= Poor, 3=Fair, 4=Good, 5= Very good, 6= Excellent)}
 #'     \item{\code{U35F}} {Quality of specialists MD sent you to (1=Very poor, 2= Poor, 3=Fair, 4=Good, 5= Very good, 6= Excellent)}
-#'     \item{\code{U36}} {How mant minutes to get to MDs office (1=<15, 2=16-30. 3=31-60, 4=More than 60)}
+#'     \item{\code{U36}} {How many minutes to get to MDs office (1=<15, 2=16-30. 3=31-60, 4=More than 60)}
 #'     \item{\code{U37}} {When sick+call how long take to see you (1=Same day, 2=Next day, 3=In 2-3 days, 4=In 4-5 days, 5=in >5 days)}
 #'     \item{\code{U38}} {How mant minutes late appt usually begin (1=None, 2=<5 minutes, 3=6-10 minutes, 4=11-20 minutes, 5=21-30 minutes, 6=31-45 minutes, 7=>45 minutes)}
 #'     \item{\code{U39}} {How satisfied are you w/your reg MD (1=Completely satisfied, 2=Very satisfied, 3=Somewhat satisfied, 4=Neither, 5=Somewhat dissatisfied, 6=Very dissatisfied, 7=Completely dissatisfied)}
@@ -1093,7 +1112,7 @@ NA
 #' predictors and outcomes were collected at each of these five
 #' occasions.
 #' 
-#' This dataset is a superset of the HELPmiss and HELP datasets which include
+#' This dataset is a superset of the HELPmiss and HELPrct datasets which include
 #' far fewer variables.
 #' 
 #' @source 
@@ -1110,7 +1129,7 @@ NA
 #' @examples 
 #' data(HELPfull)
 #' 
-#' @seealso \code{\link{HELP}} , and \code{\link{HELPmiss}}. 
+#' @seealso \code{\link{HELPrct}}, and \code{\link{HELPmiss}}. 
 #' 
 #' @keywords datasets
 
@@ -1124,7 +1143,7 @@ NA
 #' or usual care, with the goal of linking them to primary medical care.
 #' 
 #' @name HELPmiss
-#' @usage HELPmiss
+#' @usage data(HELPmiss)
 #' @docType data
 #' @format 
 #'   Data frame with 470 observations on the following variables.  
@@ -1176,7 +1195,7 @@ NA
 #' predictors and outcomes were collected at each of these five
 #' occasions.
 #' 
-#' This dataset is a superset of the HELP data with 17 subjects with 
+#' This dataset is a superset of the HELPrct data with 17 subjects with 
 #' partially observed data on some of the baseline variables.  This is
 #' a subset of the HELPfull data which includes 5 timepoints and many
 #' additional variables.
@@ -1191,7 +1210,7 @@ NA
 #' a multi-disciplinary health intervention in a detoxification unit.  
 #' \emph{Addiction}, 2003; 98(4):509-516.
 #' 
-#' @seealso \code{\link{HELP}} , and \code{\link{HELPfull}}.
+#' @seealso \code{\link{HELPrct}} , and \code{\link{HELPfull}}.
 #' 
 #' 
 #' @examples 
@@ -1209,7 +1228,7 @@ NA
 #' or usual care, with the goal of linking them to primary medical care.
 #' 
 #' @name HELPrct
-#' @usage HELPrct
+#' @usage data(HELPrct)
 #' @docType data
 #' @format 
 #'   Data frame with 453 observations on the following variables.  
@@ -1282,7 +1301,7 @@ NA
 #' a multi-disciplinary health intervention in a detoxification unit.  
 #' \emph{Addiction}, 2003; 98(4):509-516.
 #' 
-#' @seealso \code{\link{HELPmiss}} , and \code{\link{HELPfull}}.
+#' @seealso \code{\link{HELPmiss}}, and \code{\link{HELPfull}}.
 #' 
 #' 
 #' @examples 
@@ -1299,7 +1318,7 @@ NA
 #' convenience sample --- the kids who were in the fourth grade.
 #' 
 #' @name KidsFeet
-#' @usage KidsFeet
+#' @usage data(KidsFeet)
 #' @docType data
 #' @format 
 #'   A data frame with 39 observations on the following variables.
@@ -1336,7 +1355,7 @@ NA
 #' Marriage records from the Mobile County, Alabama, probate court.  
 #' 
 #' @name Marriage
-#' @usage Marriage
+#' @usage data(Marriage)
 #' @docType data
 #' @format 
 #'   A data frame with 98 observations on the following variables.
@@ -1382,7 +1401,7 @@ NA
 #' 
 #' 
 #' @name SAT
-#' @usage SAT
+#' @usage data(SAT)
 #' @docType data
 #' @format 
 #'   A data frame with 50 observations on the following variables.
@@ -1425,7 +1444,7 @@ NA
 #' are published.  This data frame  contains the results from the 2005 race. 
 #' 
 #' @name TenMileRace
-#' @usage TenMileRace
+#' @usage data(TenMileRace)
 #' @docType data
 #' @format 
 #'   A data frame with 8636 observations on the following variables.
@@ -1456,7 +1475,7 @@ NA
 #' \code{\link{Utilities2}}  is a similar data set with some additional variables.
 #' 
 #' @name Utilities
-#' @usage Utilities
+#' @usage data(Utilities)
 #' @docType data
 #' @format 
 #'   A data frame containing 117 observations for the following variables.
@@ -1482,17 +1501,18 @@ NA
 #' data(Utilities)
 #' xyplot(gasbill ~ temp, Utilities)
 #' 
+#' @seealso \code{\link{Utilities2}}.
 #' @keywords datasets
 
 NA
 
 #' Utility bills 
 #' 
-#' Data from utility bills at a residence.  This is a wider version 
-#' of \code{\link{Utilities}} .
+#' Data from utility bills at a private residence.  This is an augmented version 
+#' of \code{\link{Utilities}}.
 #' 
 #' @name Utilities2
-#' @usage Utilities2
+#' @usage data(Utilities2)
 #' @docType data
 #' @format 
 #'   A data frame containing 117 observations for the following variables.
@@ -1525,6 +1545,7 @@ NA
 #' data(Utilities2)
 #' xyplot(gasbillpday ~ temp, Utilities2)
 #' 
+#' @seealso \code{\link{Utilities}}.
 #' @keywords datasets
 
 NA
@@ -1539,7 +1560,7 @@ NA
 #' survey was conducted twenty years later.
 #' 
 #' @name Whickham
-#' @usage Whickham
+#' @usage data(Whickham)
 #' @docType data
 #' @format 
 #'   A data frame with 1314 observations on women for the following  variables.
@@ -1574,13 +1595,13 @@ NA
 #' Official snowfall data by month and season for Grand Rapids, MI, going back to 1893.
 #' 
 #' @name SnowGR
-#' @usage SnowGR
+#' @usage data(SnowGR)
 #' @docType data
 #' @format 
 #'   A data frame with 119 observations of the following variables.
 #'   \itemize{
 #'       \item \code{SeasonStart} Year in which season started (July is start of season)
-#'       \item \code{SeasonEnd} Year in which season ended (June is start of season)
+#'       \item \code{SeasonEnd} Year in which season ended (June is end of season)
 #'       \item \code{Jul} Inches of snow in July
 #'       \item \code{Aug} Inches of snow in August
 #'       \item \code{Sep} Inches of snow in September
@@ -1610,6 +1631,29 @@ NA
 #'   names(Snow2)[3:4] <- c('Time','Snow')
 #'   bwplot(Snow ~ Time, Snow2)
 #' }
+#' 
+#' @keywords datasets
+
+NA
+
+#' 100 m Swimming World Records
+#' 
+#' World records for men and women over time from 1905 through 2004.
+#' 
+#' @name SwimRecords
+#' @usage data(SwimRecords)
+#' @docType data
+#' @format 
+#'   A data frame with 62 observations of the following variables.
+#'   \itemize{
+#'       \item \code{time} time (in seconds) of the world record
+#'       \item \code{year} Year in which the record was set
+#'       \item \code{sex} a factor with levels \code{M} and \code{F}
+#'   }
+#' 
+#' @examples 
+#' data(SwimRecords)
+#' xyplot(time~year, data=SwimRecords, groups=sex)
 #' 
 #' @keywords datasets
 

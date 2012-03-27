@@ -14,7 +14,7 @@
 #' @param header logical;  
 #'     For \code{.txt} and \code{.csv} files, this indicates whether the first line of the file includes variables names.
 #' 
-#' @param na.strings character: stings that indicate missing data.
+#' @param na.strings character: strings that indicate missing data.
 #' 
 #' @param comment.char 
 #' character: a character vector of length one containing a single character or an empty string. Use "" to turn 
@@ -34,7 +34,6 @@
 #' @return A data frame, unless \code{file} ends in \code{.Rdata}, in which 
 #' case arbitrary objects may be loaded and a character vector
 #' holding the names of the loaded objects is returned invisibly.
-#' @author Randall Pruim (\email{rpruim@@calvin.edu})
 #' @seealso \code{\link{read.table}}, 
 #' \code{\link{read.csv}}, 
 #' \code{\link{load}}.

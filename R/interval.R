@@ -7,7 +7,6 @@
 #' @return the extracted p-value, confidence interval, or test statistic
 #' 
 #' 
-#' @author Randall Pruim (\email{rpruim@@calvin.edu})
 #' @export
 #' @examples
 #' interval(t.test(rnorm(100)))
@@ -16,12 +15,13 @@
 #' interval(var.test(rnorm(10,sd=1), rnorm(20, sd=2)))
 #' pval(var.test(rnorm(10,sd=1), rnorm(20, sd=2)))
 #' 
-#' stat( t.test (age ~ shuffle(sex), HELP) )
+#' data(HELPrct)
+#' stat(t.test (age ~ shuffle(sex), HELPrct))
 #' # Compare to test statistic computed with permuted values of sex.
-#' do(10) * stat( t.test (age ~ shuffle(sex), HELP) )
+#' do(10) * stat(t.test (age ~ shuffle(sex), HELPrct))
 #' 
-#' @keywords univar 
 #' @keywords stats 
+#' @keywords inference 
 #' 
 
 interval <- function(x, ...){UseMethod("interval", x)}
@@ -53,6 +53,8 @@ interval.htest <- function (x, verbose=FALSE, ...){
 }
 
 #' @rdname interval
+#' @keywords stats 
+#' @keywords inference 
 pval <- function(x, ...){UseMethod("pval", x)}
 
 #' @rdname interval
@@ -111,6 +113,8 @@ pval.htest <- function (x, digits=4, verbose=FALSE, ...){
 }
 
 #' @rdname interval
+#' @keywords stats 
+#' @keywords inference 
 stat <- function(x,...) { UseMethod("stat", x)}
 
 #' @rdname interval

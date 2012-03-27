@@ -2,10 +2,12 @@
 \alias{SD}
 \title{Compute standard deviation}
 \usage{
-  SD(x)
+  SD(x, ...)
 }
 \arguments{
   \item{x}{a vector or formula}
+
+  \item{\dots}{additional arguments passed to \code{var}.}
 }
 \value{
   a numeric containing the standard deviaiton

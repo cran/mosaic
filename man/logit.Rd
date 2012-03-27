@@ -24,7 +24,4 @@ l <- logit(p); l
 ilogit(l)
 ilogit(l) == p
 }
-\author{
-  Randall Pruim (\email{rpruim@calvin.edu})
-}
 

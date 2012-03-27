@@ -41,9 +41,8 @@ and still births)}
     \item{\code{number}} {number of cigs smoked per day for past and current smokers  0=never, 1=1-4, 2=5-9, 3=10-14, 4=15-19, 5=20-29, 6=30-39, 7=40-60, 8=60+, 9=smoke but don't know}
   }}
 \source{
-  The admirable book by Deborah Nolan and Terry Speed
-  describes the data in some detail and provides an
-  Internet site for accessing them:
+  The book by Nolan and Speed describes the data in more
+  detail and provides an Internet site for accessing them:
   \url{http://www.stat.berkeley.edu/users/statlabs/}
 }
 \description{

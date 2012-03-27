@@ -75,9 +75,6 @@ faithful$long <- faithful$eruptions > 3
 prop.test( faithful$long )
 prop.test( ~long , faithful )
 }
-\author{
-  Randall Pruim (\email{rpruim@calvin.edu})
-}
 \seealso{
   \code{\link[mosaic]{binom.test}},
   \code{\link[stats]{prop.test}}

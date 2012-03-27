@@ -88,7 +88,7 @@ data(HELPrct)
   98(4):509-516.
 }
 \seealso{
-  \code{\link{HELPmiss}} , and \code{\link{HELPfull}}.
+  \code{\link{HELPmiss}}, and \code{\link{HELPfull}}.
 }
 \keyword{datasets}
 

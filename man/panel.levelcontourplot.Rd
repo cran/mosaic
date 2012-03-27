@@ -8,8 +8,7 @@
     contour = FALSE, region = TRUE, col = add.line$col,
     lty = add.line$lty, lwd = add.line$lwd,
     border = "transparent", ..., col.regions = regions$col,
-    color.scheme, filled = TRUE,
-    alpha.regions = regions$alpha)
+    filled = TRUE, alpha.regions = regions$alpha)
 }
 \arguments{
   \item{x}{x on a grid}
@@ -40,12 +39,10 @@
 
   \item{border}{type of border}
 
-  \item{\ldots}{additional arguments}
+  \item{\dots}{additional arguments}
 
-  \item{col.regions}{color set for regions}
-
-  \item{color.scheme}{color generation function, e.g.
-  \code{rainbow}}
+  \item{col.regions}{a vector of colors or a function
+  (\code{topo.colors} by default) for generating such}
 
   \item{filled}{whether to fill the contours with color}
 

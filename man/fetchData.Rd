@@ -2,11 +2,9 @@
 \alias{fetchData}
 \title{A Web and Library Data-Loading Facility}
 \usage{
-  .fetchData.storage.helper()
-
   fetchData(name = NULL, add.to.path = FALSE,
     drop.from.path = FALSE, add.to.library = FALSE,
-    directory = NULL, var = NULL)
+    directory = NULL, data = NULL, verbose = TRUE)
 }
 \arguments{
   \item{name}{a character string naming a data set.  This
@@ -14,7 +12,7 @@
   When used in conjunction with \code{TRUE} values for the
   following arguments, it can also name a web directory
   (always ending in \code{/}). It can also give a name to a
-  data set to be stored in the cached library.  See}
+  data set to be stored in the cached library.}
 
   \item{add.to.path}{If \code{TRUE}, indicates that the web
   search path is to printed out, or, if \code{name} is
@@ -31,8 +29,12 @@
   This allows, for instance, users to pre-load on-line data
   to be used when they are off-line.}
 
-  \item{var}{The data frame to be put in the cached library
-  if \code{add.to.library=TRUE}.}
+  \item{verbose}{a logical indicating whether additional
+  status messages (e.g., indicating where the dataset was
+  located) should be printed.}
+
+  \item{data}{The data frame to be put in the cached
+  library if \code{add.to.library=TRUE}.}
 
   \item{directory}{The name of a web directory to be
   searched but not added to the search path.}
@@ -44,8 +46,8 @@
   \code{fetchData} provides a means for students and others
   to locate and load data sets provided by instructors.
   Data can be pre-loaded for off-line sessions, can be
-  positioned on identified web sites, and can be loaded
-  from packages. \code{fetchData} also will load local
+  positioned on identified web sites, or loaded from
+  packages. \code{fetchData} also will load local
   \code{.csv} files using \code{file.choose()}.
 }
 \details{
@@ -77,21 +79,10 @@
 kids <- fetchData("KidsFeet.csv")
 carbon <- fetchData("CO2")
 fetchData(add.to.path=TRUE)
-fetchData(add.to.path=TRUE,name="http://www.macalester.edu/~kaplan/ISM/datasets/")
-fetchData(drop.from.path=TRUE,name="http://www.macalester.edu/~kaplan/ISM/datasets/")
-fetchData(drop.from.path=TRUE)
-fetchData(add.to.library=TRUE,name="mydata.csv",var=data.frame(x=c(1,2,3), y=c(7,1,4)))
+\dontrun{fetchData(add.to.path=TRUE, name="http://www.macalester.edu/~kaplan/ISM/datasets/")}
+\dontrun{fetchData(drop.from.path=TRUE, name="http://www.macalester.edu/~kaplan/ISM/datasets/") }
+\dontrun{fetchData(drop.from.path=TRUE)}
+\dontrun{fetchData(add.to.library=TRUE, name="mydata.csv", data=data.frame(x=c(1,2,3), y=c(7,1,4)))}
 }
-\author{
-  Daniel Kaplan (\email{kaplan@macalester.edu}) and Randall
-  Pruim (\email{rpruim@calvin.edu})
-}
-\keyword{data}
-\keyword{Fetch}
-\keyword{from}
-\keyword{internal}
-\keyword{internet}
-\keyword{mosaic}
-\keyword{repositories}
-\keyword{sets}
+\keyword{util}
 

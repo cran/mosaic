@@ -77,7 +77,7 @@
 \examples{
 # 100 Bernoulli trials -- no need for replace=TRUE
 resample(c(0,1), 100)
-deal(Cards,13)    # A Bridge hand
+deal(Cards, 13)    # A Bridge hand
 shuffle(Cards)
 }
 

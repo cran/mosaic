@@ -30,5 +30,8 @@
 data(Utilities)
 xyplot(gasbill ~ temp, Utilities)
 }
+\seealso{
+  \code{\link{Utilities2}}.
+}
 \keyword{datasets}
 
