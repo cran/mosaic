@@ -64,12 +64,8 @@ past 30 days (measured at baseline)}
   and outcomes were collected at each of these five
   occasions.
 
-  This dataset is a subset of the HELPmiss data which
-  includes an additional 17 subjects with partially
-  observed data on some of the baseline variables.  This is
-  also a subset of the HELPfull data which includes 5
-  timepoints and many additional variables for all
-  subjects.
+  This dataset is equivalent to the less confusingly named
+  \code{\link{HELPrct}} dataset.
 }
 \examples{
 data(HELP)
@@ -83,7 +79,7 @@ data(HELP)
   98(4):509-516.
 }
 \seealso{
-  \code{\link{HELP}} , and \code{\link{HELPfull}}.
+  \code{\link{HELPrct}}.
 }
 \keyword{datasets}
 

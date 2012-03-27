@@ -29,12 +29,15 @@
   approach}, 2009.
 }
 \description{
-  Data from utility bills at a residence.  This is a wider
-  version of \code{\link{Utilities}} .
+  Data from utility bills at a private residence.  This is
+  an augmented version of \code{\link{Utilities}}.
 }
 \examples{
 data(Utilities2)
 xyplot(gasbillpday ~ temp, Utilities2)
+}
+\seealso{
+  \code{\link{Utilities}}.
 }
 \keyword{datasets}
 

@@ -7,7 +7,6 @@
 \alias{.is.simple.formula}
 \alias{.make.data.frame}
 \alias{.merge_data_frames}
-\alias{.mosaic_aggregate}
 \alias{.simple.part}
 \alias{.squash_names}
 \alias{dynamicsFunction}
@@ -22,9 +21,6 @@
   .simple.part(x)
 
   .flatten(x)
-
-  .mosaic_aggregate(x, data, FUN,
-    overall = mosaic.par.get("aggregate.overall"), ...)
 
   .make.data.frame(x)
 
@@ -105,8 +101,6 @@
 
   a data frame
 
-  a data frame
-
   a character vector
 
   a data frame
@@ -128,9 +122,6 @@
   Extract simple part from formula
 
   Extract simple part from formula
-
-  Wrapper to modify aggregating behavior of
-  \code{\link[Hmisc]{summary.formula}}
 
   parameters are stored as extra arguments the order of the
   dynamical variables (and "t") is important and will be

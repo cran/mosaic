@@ -2,7 +2,8 @@
 \alias{bargraph}
 \title{Create bar graphs from raw data}
 \usage{
-  bargraph(x, data, groups, horizontal = FALSE, origin = 0,
+  bargraph(x, data = parent.frame(), groups,
+    horizontal = FALSE, origin = 0, ylab = "Frequency",
     ...)
 }
 \arguments{
@@ -17,14 +18,17 @@
   \item{horizontal}{a logical indicating whether bars
   should be horizontal}
 
-  \item{\dots}{additional arguments passed through to
+  \item{\dots}{additional arguments passed to
   \code{\link[lattice]{barchart}}}
 
   \item{origin}{beginning point for bars.  For the default
   behavior used by \code{\link[lattice]{barchart}} set
-  \code{origin} to \code{NULL}, but 0 is a better default,
-  and if 0 is not good, perhaps you should use a different
-  kind of plot anyway.}
+  \code{origin} to \code{NULL}, but 0 is often a better
+  default. If 0 is not good, perhaps you should use a
+  different kind of plot as the results may be misleading.}
+
+  \item{ylab}{a character of length one used for the y-axis
+  label}
 }
 \value{
   a trellis object describing the plot
@@ -37,18 +41,13 @@
   functions.  \code{bargraph} provides an interface that is
   consistent with the other \code{lattice} functions.
 }
-\note{
-  The current implementation may not work if one of the
-  variables used in the plot is called \code{Freq}, since
-  that variable is created by an underlying call to
-  \code{\link{xtabs}}.
-}
 \examples{
+data(HELPrct)
 bargraph( ~ substance, data=HELPrct)
 bargraph( ~ substance, data=HELPrct, horizontal=TRUE)
-bargraph( ~ substance | sex, groups=homeless, data=HELPrct)
+bargraph( ~ substance | sex, groups=homeless, auto.key=TRUE, data=HELPrct)
 }
 \seealso{
-  \code{link[lattice]{barchart}}
+  \code{\link[lattice]{barchart}}
 }
 

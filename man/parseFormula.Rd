@@ -56,7 +56,7 @@
   utilities for exptracting portions of formulas.
 }
 \details{
-  currently this is primarily concerned with extractly the
+  currently this is primarily concerned with extracting the
   operator, left hand side, right hand side (minus any
   condition) and the condition. Improvements/extensions may
   come in the future.

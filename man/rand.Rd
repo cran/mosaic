@@ -34,10 +34,6 @@ rand(2,nrow=4)
 rand(2,rdist=rpois, args=list(lambda=3), nrow=4)
 summary(lm( waiting ~ eruptions + rand(1), faithful))
 }
-\author{
-  Daniel Kaplan (\email{kaplan@macalester.edu}) and Randall
-  Pruim (\email{rpruim@calvin.edu})
-}
 \keyword{distribution}
 \keyword{regression}
 

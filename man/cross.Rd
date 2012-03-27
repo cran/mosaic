@@ -24,8 +24,5 @@ y <- c(1,2,1,1,3,1,3)
 cross(x, y)
 cross(x, y, drop.unused.levels=TRUE)
 }
-\author{
-  Randall Pruim (\email{rpruim@calvin.edu})
-}
 \keyword{manipulate}
 

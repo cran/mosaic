@@ -641,7 +641,7 @@
     \item{\code{U35D}} {MDs communic w/your specialists/oth MDs (1=Very poor, 2= Poor, 3=Fair, 4=Good, 5= Very good, 6= Excellent)}
     \item{\code{U35E}} {MD help in explain what specialists said (1=Very poor, 2= Poor, 3=Fair, 4=Good, 5= Very good, 6= Excellent)}
     \item{\code{U35F}} {Quality of specialists MD sent you to (1=Very poor, 2= Poor, 3=Fair, 4=Good, 5= Very good, 6= Excellent)}
-    \item{\code{U36}} {How mant minutes to get to MDs office (1=<15, 2=16-30. 3=31-60, 4=More than 60)}
+    \item{\code{U36}} {How many minutes to get to MDs office (1=<15, 2=16-30. 3=31-60, 4=More than 60)}
     \item{\code{U37}} {When sick+call how long take to see you (1=Same day, 2=Next day, 3=In 2-3 days, 4=In 4-5 days, 5=in >5 days)}
     \item{\code{U38}} {How mant minutes late appt usually begin (1=None, 2=<5 minutes, 3=6-10 minutes, 4=11-20 minutes, 5=21-30 minutes, 6=31-45 minutes, 7=>45 minutes)}
     \item{\code{U39}} {How satisfied are you w/your reg MD (1=Completely satisfied, 2=Very satisfied, 3=Somewhat satisfied, 4=Neither, 5=Somewhat dissatisfied, 6=Very dissatisfied, 7=Completely dissatisfied)}
@@ -823,7 +823,7 @@
   and outcomes were collected at each of these five
   occasions.
 
-  This dataset is a superset of the HELPmiss and HELP
+  This dataset is a superset of the HELPmiss and HELPrct
   datasets which include far fewer variables.
 }
 \examples{
@@ -838,7 +838,7 @@ data(HELPfull)
   98(4):509-516.
 }
 \seealso{
-  \code{\link{HELP}} , and \code{\link{HELPmiss}}.
+  \code{\link{HELPrct}}, and \code{\link{HELPmiss}}.
 }
 \keyword{datasets}
 

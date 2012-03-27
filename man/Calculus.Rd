@@ -1,48 +1,67 @@
 \name{D}
 \alias{antiD}
 \alias{D}
+\alias{makeAntiDfun}
+\alias{numerical.integration}
 \title{Derivative and Anti-derivative operators}
 \usage{
-  D(expr, ..., ..h.. = NULL, symbolic = TRUE,
-    numerical = !symbolic, method = c("center", "right"))
+  D(formula, ..., .hstep = NULL, add.h.control = FALSE)
 
-  antiD(expr, from = 0, to = NULL, ...)
+  antiD(formula, ..., Const = 0)
+
+  makeAntiDfun(.function, .wrt, from, to, .tol, Const)
+
+  numerical.integration(f, wrt, av, args)
 }
 \arguments{
-  \item{expr}{a formula. The right side specifies the
+  \item{formula}{A formula. The right side specifies the
   variable(s) with which to carry out the integration or
   differentiation.  On the left side should be an
   expression or a function that returns a numerical vector
   of the same length as its argument.  The expression can
   contain unbound variables.}
 
-  \item{..h..}{horizontal distance between points used for
-  secant slope calculation in \code{D()}.  This is used
-  only if a symbolic derivative is not possible or if
-  \code{numerical=TRUE}.  The odd name, \code{..h..}, is
-  there to avoid conflicts with unbound variables in the
-  formula f.}
-
-  \item{symbolic}{a logical indicating whether symbolic
-  differentiation should be attempted}
-
-  \item{numerical}{opposite of symbolic available for
-  convenience}
-
-  \item{method}{For first-order numerical derivatives,
-  whether to use a centered difference or a right-facing
-  difference.}
-
   \item{\dots}{Default values to be given to unbound
-  variables in the expression \code{expr}. See examples.}
+  variables in the expression \code{expr}. See examples.#'
+  Note that in creating anti-derivative functions, default
+  values of "from" and "to" can be assigned.  They are to
+  be written with the name of the variable as a prefix,
+  e.g. \code{y.from}.}
 
-  \item{from}{Default value for the lower bound of the
-  interval of integration.  This can be set at the time the
-  integral function is invoked.}
+  \item{Const}{Numerical value for the constant of
+  integration.}
 
-  \item{to}{Default value for the upper bound of the
-  interval of integration. This can be set at the time the
-  integral function is invoked (and usually is).}
+  \item{.hstep}{horizontal distance between points used for
+  secant slope calculation in numerical derivatives.}
+
+  \item{add.h.control}{logical indicating whether the
+  returned derivative function should have an additional
+  parameter for setting .hstep.  Meaningful only for
+  numerical derivatives.}
+
+  \item{.function}{function to be integrated}
+
+  \item{.wrt}{character string naming the variable of
+  integration}
+
+  \item{from}{default value for the lower bound of the
+  integral region}
+
+  \item{to}{default value for the upper bound of the
+  integral region}
+
+  \item{.tol}{tolerance of the numerical integrator (not
+  yet implemented)}
+
+  \item{f}{a function}
+
+  \item{wrt}{character string naming a variable: the var.
+  of integration}
+
+  \item{av}{a list of the arguments passed to the function
+  calling this}
+
+  \item{args}{default values (if any) for parameterss}
 }
 \value{
   For derivatives, the return value is a function of the
@@ -52,11 +71,13 @@
   to x then y (that is, \eqn{\frac{d^2
   f}{dy\;dx}}{d2f/dydx}).  The returned value will be a
   function of x and y, as well as A and B.  In evaluating
-  the returned function, it's best to used the named form
-  of arguments, to make sure that you have the order right.
+  the returned function, it's best to use the named form of
+  arguments, to ensure the order is correct.
 
-  For anti-derivatives, a decorated function (eventually
-  this will be an object of a new class).
+  a function of the same arguments as the original
+  expression, but with the integration variable split into
+  "from" and "to" prefaced by the name of the variable,
+  e.g. \code{y.from} and \code{y.to}.
 }
 \description{
   Operators for computing derivatives and anti-derivatives
@@ -70,20 +91,22 @@
   can be of any order (although the expression may become
   unmanageably complex).  The numerical derivative is
   limited to first or second-order partial derivatives
-  (including mixed partials).
+  (including mixed partials). \code{antiD} always does
+  numerical integration.
 
   \code{antiD} returns a function with arguments \code{to}
   and \code{from=0}, the upper and lower bounds of the
   interval of integration w.r.t. the variable of
-  integration. The numerical value of the integral or
-  derivative can be found by evaluating that function
-  against its inputs.
+  integration. There is also an argument, \code{initVal},
+  that plays the role of the constant of integration. The
+  numerical value of the integral or derivative can be
+  found by evaluating that function.
 }
 \note{
-  A major redesign of these functions is planned that will
-  (1) refactor code so that the objects involved are S4
-  objects, and (2) allow \code{antiD} to return a single
-  value if both \code{to} and \code{from} are specified.
+  This function is not intended for direct use.  It
+  packages up the numerical anti-differentiation process so
+  that the contents of functions produced by \code{antiD}
+  look nicer to human readers.
 }
 \examples{
 D(sin(t) ~ t)
@@ -94,19 +117,19 @@ f(x=2)
 f(x=2,A=10) # override default value of parameter A
 g <- D(f(x=t, A=1)^2 ~ t)  # note: it's a function of t
 g(t=1)
-gg <- D(f(x=t,A=B)^2 ~ t, B=10)  # note: it's a function of t and B
+gg <- D(f(x=t, A=B)^2 ~ t, B=10)  # note: it's a function of t and B
 gg(t=1)
 gg(t=1, B=100)
 F <- antiD( A*exp(-k*t^2 ) ~ t, A=1, k=0.1)
-F(from=-Inf, to=0)
-F(from=-Inf, to=Inf)
+F(t.from=-Inf, t.to=0)
+F(t.from=-Inf, t.to=Inf)
 one = makeFun(1~x&y)
-by.x = antiD( one(x=x,y=y)~x)
-by.xy = antiD(by.x(from=-sqrt(1-y^2),to=sqrt(1-y^2),y=y)~y)
-by.xy(from=-1,to=1)
+by.x = antiD( one(x=x, y=y) ~x )
+by.xy = antiD(by.x(x.from=-sqrt(1-y^2), x.to=sqrt(1-y^2), y=y)~y)
+by.xy(y.from=-1, y.to=1)
+vel <- antiD( -9.8 ~ t  )
+pos <- antiD( vel( t.to=t, initVal=v0)~t, Const=50)
+pos(0:5, v0=10)
+pos(0:5, v0=10, initVal=100)
 }
-\author{
-  Daniel Kaplan (\email{kaplan@macalester.edu})
-}
-\keyword{calculus}
 

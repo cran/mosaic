@@ -20,9 +20,6 @@ colnames(phs) <- c("heart attack","no heart attack")
 phs
 xchisq.test(phs)
 }
-\author{
-  Randall Pruim (\email{rpruim@calvin.edu})
-}
 \seealso{
   \code{\link{chisq.test}}
 }

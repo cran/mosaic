@@ -1,7 +1,7 @@
 \docType{methods}
-\name{linear-algebra}
+\name{linear.algebra}
 \alias{dot}
-\alias{linear-algebra}
+\alias{linear.algebra}
 \alias{mat}
 \alias{project}
 \alias{project,formula-method}
@@ -12,7 +12,7 @@
 \usage{
   project(x, u, ...)
 
-  singvals(A, data = NULL)
+  singvals(A, data = parent.frame())
 
   dot(u, v)
 }
@@ -53,16 +53,27 @@
   of variables in data frames.
 }
 \details{
-  \code{mat} returns a model matrix from a formula while
-  \code{project} carries out the operation of least-squares
-  fitting using a singular value method. This means that
-  even when the matrix is singular, a solution, either
-  exact or least-squares, will be found. To demonstrate
-  singularity, use \code{singvals}. NOTE: unlike the
-  standard formula expansion in \code{lm}, these linear
-  algebra functions do NOT include an intercept by default.
-  If you want an intercept, put \code{+1} as a term in your
-  formula.  (See the examples.)
+  These functions are intended to support teaching basic
+  linear algebra with a particular connection to
+  statistics. \code{project} (preferably pronounced
+  "PRO-ject" as in "projection") does either of two related
+  things: (1) Given two vectors as arguments, it will
+  project the first onto the second, returning the point in
+  the subspace of the second that is as close as possible
+  to the first vector.  (2) Given a formula as an argument,
+  will work very much like \code{lm()}, constructing a
+  model matrix from the right-hand side of the formula and
+  projecting the vector on the left-hand side onto the
+  subspace of that model matrix.  In (2), rather than
+  returning the projected vector, \code{project()} returns
+  the coefficients on each of the vectors in the model
+  matrix. UNLIKE \code{lm()}, the intercept vector is NOT
+  included by default.  If you want an intercept vector,
+  include \code{+1} in your formula.
+
+  \code{mat} returns a model matrix
+
+  To demonstrate singularity, use \code{singvals}.
 }
 \examples{
 a <- c(1,0,0); b <- c(1,2,3); c <- c(4,5,6); x <- rnorm(3)
@@ -70,18 +81,16 @@ dot(b,c)   # dot product
 # projection onto the 1 vector gives the mean vector
 mean(x)
 project(x, 1)
+# return the length of the vector, rather than the vector itself
 project(x, 1, type='length')
+# Formula interface
 mat(~a+b)
 mat(~a+b+1)
-kids = fetchData("KidsFeet.csv")
-mat(~length+sex,data=kids)
+mat(~length+sex, data=KidsFeet)
 project(a~b)
-project(width~length+sex,data=kids)
-project(log(width)~I(length^2)+sin(length)+sex,data=kids)
-singvals(~length*sex*width,data=kids)
-}
-\author{
-  Daniel Kaplan (\email{kaplan@macalester.edu})
+project(width~length+sex, data=KidsFeet)
+project(log(width) ~ I(length^2)+sin(length)+sex, data=KidsFeet)
+singvals(~length*sex*width, data=KidsFeet)
 }
 \seealso{
   \code{\link{linearModel}}, which returns a function.

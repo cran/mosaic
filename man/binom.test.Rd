@@ -37,13 +37,13 @@
   an object of class \code{htest}
 }
 \description{
-  The mosaic \code{binom.test} provides wrapper functions
-  around the function of the same name in \pkg{stats}.
-  These wrappers provide an extended interface (including
-  formulas).  \code{binom.test} performs an exact test of a
-  simple null hypothesis about the probability of success
+  The \code{binom.test} function performs an exact test of
+  a simple null hypothesis about the probability of success
   in a Bernoulli experiment from summarized data or from
-  raw data.
+  raw data. The mosaic \code{binom.test} provides wrapper
+  functions around the function of the same name in
+  \pkg{stats}. These wrappers provide an extended interface
+  (including formulas).
 }
 \details{
   This is a wrapper around \code{\link{binom.test}} from
@@ -54,15 +54,13 @@
 \examples{
 # Several ways to get a confidence interval for the proportion of Old Faithful
 # eruptions lasting more than 3 minutes.
-binom.test( faithful$eruptions > 3 )
-binom.test(97,272)
-binom.test(c(97,272-97))
+data(faithful)
+binom.test(faithful$eruptions > 3)
+binom.test(97, 272)
+binom.test(c(97, 272-97))
 faithful$long <- faithful$eruptions > 3
-binom.test( faithful$long )
-binom.test( ~long , faithful )
-}
-\author{
-  Randall Pruim (\email{rpruim@calvin.edu})
+binom.test(faithful$long)
+binom.test(~ long, faithful)
 }
 \seealso{
   \code{\link[mosaic]{prop.test}},

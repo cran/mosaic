@@ -45,13 +45,11 @@ stat(t.test(rnorm(100)))
 interval(var.test(rnorm(10,sd=1), rnorm(20, sd=2)))
 pval(var.test(rnorm(10,sd=1), rnorm(20, sd=2)))
 
-stat( t.test (age ~ shuffle(sex), HELP) )
+data(HELPrct)
+stat(t.test (age ~ shuffle(sex), HELPrct))
 # Compare to test statistic computed with permuted values of sex.
-do(10) * stat( t.test (age ~ shuffle(sex), HELP) )
+do(10) * stat(t.test (age ~ shuffle(sex), HELPrct))
 }
-\author{
-  Randall Pruim (\email{rpruim@calvin.edu})
-}
+\keyword{inference}
 \keyword{stats}
-\keyword{univar}
 

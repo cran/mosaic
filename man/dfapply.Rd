@@ -13,7 +13,7 @@
   \item{select}{function used to select variables to which
   \code{FUN} is applied.  See examples.}
 
-  \item{\dots}{arguments passed allong to \code{FUN}}
+  \item{\dots}{arguments passed along to \code{FUN}}
 }
 \description{
   An \code{apply}-type function for data frames.
@@ -21,9 +21,6 @@
 \examples{
 dfapply(iris, favstats)
 dfapply(HELPrct, table, select=is.factor)
-}
-\author{
-  Randall Pruim (\email{rpruim@calvin.edu})
 }
 \seealso{
   \code{\link{apply}}, \code{\link{sapply}},

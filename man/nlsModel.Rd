@@ -34,12 +34,9 @@
   This doesn't work with categorical explanatory variables.
 }
 \examples{
-stan <- fetchData("stan-data.csv")
-f <- nlsModel(temp ~ A+B*exp(-k*time), data=stan,A=50,B=50,k=1/20)
-f(time=50)
-}
-\author{
-  Daniel Kaplan (\email{kaplan@macalester.edu})
+\dontrun{stan <- fetchData("stan-data.csv")}
+\dontrun{f <- nlsModel(temp ~ A+B*exp(-k*time), data=stan,A=50,B=50,k=1/20)}
+\dontrun{f(time=50)}
 }
 \seealso{
   \code{\link{linearModel}}, \code{\link{nls}}

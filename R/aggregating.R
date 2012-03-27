@@ -1,3 +1,16 @@
+
+
+.fetchFromDots <- function( dots, name, class='data.frame', n=1, default=NULL ) {
+	result <- dots[[name]]
+	if (is.null(result)) {
+		if (length(result) < n) return(default)
+		result <- dots[[n]]
+		if (! inherits(result, 'class') ) result <- default
+	}
+	return(result)
+}
+
+
 #' Aggregating summary statistics
 #' 
 #' These drop-in replacements and new summary statistics functions are 
@@ -17,7 +30,6 @@
 #' @rdname aggregating-methods
 #' @name aggregating-methods
 #'
-#' @author Randall Pruim (\email{rpruim@@calvin.edu})
 #'
 #' @seealso 
 #' \code{\link[stats]{aggregate}},
@@ -35,6 +47,7 @@
 ##########################################################################################
 
 #' @examples
+#' data(HELPrct)
 #' mean(age, data=HELPrct)
 #' mean(~age, data=HELPrct)
 #' mean(age ~ ., data=HELPrct)
@@ -42,15 +55,15 @@
 #' mean(age ~ NULL, data=HELPrct)
 #' mean(HELPrct$age)
 #' mean(age ~ sex, data=HELPrct)
-#' mean(age ~ sex + treat, data=HELPrct)
+#' mean(age ~ sex & treat, data=HELPrct)
 
 #' @rdname aggregating-methods
 #' @export
-#' @usage mean(x, ..., na.rm=TRUE, trim=0)
+#' @usage mean(x, ..., na.rm=FALSE, trim=0)
 
 setGeneric( 
 	"mean", 
-	function(x, ..., na.rm=TRUE, trim=0)  {
+	function(x, ..., na.rm=FALSE, trim=0)  {
 		dots <- list(...)
 		if ( ! .is.formula(x) && length(dots) > 0 && is.data.frame( dots[[1]] ) ) {
 			data <- dots[[1]]
@@ -71,8 +84,8 @@ setGeneric(
 setMethod(
 	'mean',
 	'ANY',
-	function(x, ..., na.rm=TRUE, trim=0) 
-		c( mean=base::mean( .flatten(c(x,list(...))), na.rm=na.rm, trim=trim ) )
+	function(x, ..., na.rm=FALSE, trim=0) 
+		base::mean( .flatten(c(x,list(...))), na.rm=na.rm, trim=trim ) 
 	
 )
 
@@ -83,8 +96,8 @@ setMethod(
 setMethod(
 	'mean',
 	'numeric',
-	function(x, ..., na.rm=TRUE, trim=0) 
-		c( mean=base::mean( c(x,.flatten(list(...))), na.rm=na.rm, trim=trim ) )
+	function(x, ..., na.rm=FALSE, trim=0) 
+		base::mean( c(x,.flatten(list(...))), na.rm=na.rm, trim=trim ) 
 	
 )
 
@@ -96,7 +109,6 @@ setMethod(
 	signature=c("data.frame"),
 	function(x, ..., na.rm=TRUE, trim=0) 
 		base::mean(x=x, ..., na.rm=na.rm, trim=trim)
-	
 )
 
 #' @rdname aggregating-methods
@@ -107,10 +119,10 @@ setMethod(
 	signature=c("formula"),
 	function(x, data=parent.frame(), ..., na.rm=TRUE, trim=0) {
 		if( .is.simple.formula(x) ) {
-			return( mean( eval( .simple.part(x), data, enclos=parent.frame()), 
+			return( base::mean( eval( .simple.part(x), envir=data, enclos=parent.frame()), 
 							   ..., na.rm=na.rm, trim=trim ) )
 		} else {
-			return( .mosaic_aggregate( x, data, FUN=base::mean, ..., na.rm=na.rm, trim=trim ) )
+			return( maggregate( x, data, FUN=base::mean, ..., na.rm=na.rm, trim=trim ) )
 		} 
 	}
 )
@@ -131,11 +143,11 @@ setMethod(
 #' median(age ~ NULL, data=HELPrct)
 #' median(HELPrct$age)
 #' median(age ~ sex, data=HELPrct)
-#' median(age ~ sex + treat, data=HELPrct)
+#' median(age ~ sex & treat, data=HELPrct)
 
 setGeneric( 
 	"median", 
-	function(x, ..., na.rm=TRUE)  {
+	function(x, ..., na.rm=FALSE)  {
 		dots <- list(...)
 		if ( ! .is.formula(x) && length(dots) > 0 && is.data.frame( dots[[1]] ) ) {
 			data <- dots[[1]]
@@ -151,8 +163,8 @@ setGeneric(
 setMethod(
 	'median',
 	'ANY',
-	function(x, ..., na.rm=TRUE) 
-		c( median=stats::median( .flatten(c(x,list(...))), na.rm=na.rm ) )
+	function(x, ..., na.rm=FALSE) 
+		stats::median( .flatten(c(x,list(...))), na.rm=na.rm ) 
 	
 )
 
@@ -162,8 +174,8 @@ setMethod(
 setMethod(
 	'median',
 	'numeric',
-	function(x, ..., na.rm=TRUE) 
-		c( median=stats::median( c(x,.flatten(list(...))), na.rm=na.rm) )
+	function(x, ..., na.rm=FALSE) 
+		stats::median( c(x,.flatten(list(...))), na.rm=na.rm)
 	
 )
 
@@ -187,7 +199,7 @@ setMethod(
 			return( median( eval( .simple.part(x), data, enclos=parent.frame()), 
 							   ..., na.rm=na.rm ) )
 		} else {
-			return( .mosaic_aggregate( x, data, FUN=stats::median, na.rm=na.rm) )
+			return( maggregate( x, data, FUN=stats::median, na.rm=na.rm) )
 		} 
 	}
 )
@@ -207,11 +219,11 @@ setMethod(
 #' sd(age ~ NULL, data=HELPrct)
 #' sd(HELPrct$age)
 #' sd(age ~ sex, data=HELPrct)
-#' sd(age ~ sex + treat, data=HELPrct)
+#' sd(age ~ sex & treat, data=HELPrct)
 
 setGeneric( 
 	"sd", 
-	function(x, ..., na.rm=TRUE)  {
+	function(x, ..., na.rm=FALSE)  {
 		dots <- list(...)
 		if ( ! .is.formula(x) && length(dots) > 0 && is.data.frame( dots[[1]] ) ) {
 			data <- dots[[1]]
@@ -227,8 +239,8 @@ setGeneric(
 setMethod(
 	'sd',
 	'ANY',
-	function(x, ..., na.rm=TRUE) 
-		c( sd=stats::sd( .flatten(c(x,list(...))), na.rm=na.rm) )
+	function(x, ..., na.rm=FALSE) 
+		stats::sd( .flatten(c(x,list(...))), na.rm=na.rm) 
 )
 
 #' @rdname aggregating-methods
@@ -237,8 +249,8 @@ setMethod(
 setMethod(
 	'sd',
 	'numeric',
-	function(x, ..., na.rm=TRUE) 
-		c( sd=stats::sd( c(x,.flatten(list(...))), na.rm=na.rm) )
+	function(x, ..., na.rm=FALSE) 
+		stats::sd( c(x,.flatten(list(...))), na.rm=na.rm)
 	
 )
 
@@ -259,9 +271,9 @@ setMethod(
 	signature=c("formula"),
 	function(x, data=parent.frame(), ..., na.rm=TRUE) {
 		if( .is.simple.formula(x) ) {
-			return( sd( eval( .simple.part(x), data, enclos=parent.frame()), ..., na.rm=na.rm ) )
+			return( sd( eval( .simple.part(x), envir=data, enclos=parent.frame()), ..., na.rm=na.rm ) )
 		} else {
-			return( .mosaic_aggregate( x, data, FUN=SD, na.rm=na.rm) )
+			return( maggregate( x, data, FUN=SD, na.rm=na.rm) )
 		} 
 	}
 )
@@ -272,7 +284,7 @@ setMethod(
 
 	setGeneric( 
 		NAME, 
-		function(x, ..., na.rm=TRUE)  {
+		function(x, ..., na.rm=FALSE)  {
 			dots <- list(...)
 			if ( ! .is.formula(x) && length(dots) > 0 && is.data.frame( dots[[1]] ) ) {
 				data <- dots[[1]]
@@ -285,7 +297,7 @@ setMethod(
 	setMethod(
 		NAME,
 		'numeric',
-		function(x, ..., na.rm=TRUE) {
+		function(x, ..., na.rm=FALSE) {
 			FUN(x, ..., na.rm=na.rm) 
 		}
 	)
@@ -310,7 +322,7 @@ setMethod(
 			if( .is.simple.formula(x) ) {
 				return( FUN( eval( .simple.part(x), data, enclos=parent.frame()), na.rm=na.rm ) )
 			} else {
-				return( .mosaic_aggregate( x, data, FUN=FUN, na.rm=na.rm) )
+				return( maggregate( x, data, FUN=FUN, na.rm=na.rm) )
 			} 
 		}
 	)
@@ -325,7 +337,7 @@ setMethod(
 # 
 setGeneric( 
 	'.Max', 
-	function(x, ..., na.rm=TRUE)  {
+	function(x, ..., na.rm=FALSE)  {
 		dots <- list(...)
 		if ( ! .is.formula(x) && length(dots) > 0 && is.data.frame( dots[[1]] ) ) {
 			data <- dots[[1]]
@@ -338,14 +350,14 @@ setGeneric(
 setMethod(
 	'.Max',
 	'ANY',
-	function(x, ..., na.rm=TRUE) 
-		c( max=base::max( x,..., na.rm=na.rm) )
+	function(x, ..., na.rm=FALSE) 
+		base::max( x,..., na.rm=na.rm) 
 )
 
 setMethod(
 	'.Max',
 	'numeric',
-	function(x, ..., na.rm=TRUE) {
+	function(x, ..., na.rm=FALSE) {
 		base::max(x, ..., na.rm=na.rm) 
 	}
 )
@@ -365,22 +377,22 @@ setMethod(
 	signature=c("formula"),
 	function(x, ..., na.rm=TRUE) {
 		dots <- list(...)
-		data  <- dots[[1]]
+		data  <- .fetchFromDots( dots, 'data', 1, 'data.frame', parent.frame())
 
 		if( .is.simple.formula(x) ) {
 			return( base::max( eval( .simple.part(x), data, enclos=parent.frame()), na.rm=na.rm ) )
 		} else {
-			return( .mosaic_aggregate( x, data, FUN=base::max, na.rm=na.rm) )
+			return( maggregate( x, data, FUN=base::max, na.rm=na.rm) )
 		} 
 	}
 )
 ###############################################################
 setGeneric( 
 	'.Min', 
-	function(x, ..., na.rm=TRUE)  {
+	function(x, ..., na.rm=FALSE)  {
 		dots <- list(...)
 		if ( ! .is.formula(x) && length(dots) > 0 && is.data.frame( dots[[1]] ) ) {
-			data <- dots[[1]]
+			data <- .fetchFromDots(dots, 'data', 'data.frame', 1, NULL)
 			return(base::min(eval( substitute(x), data),  na.rm=na.rm))
 		}
 		standardGeneric('.Min')
@@ -390,14 +402,14 @@ setGeneric(
 setMethod(
 	'.Min',
 	'ANY',
-	function(x, ..., na.rm=TRUE) 
-		c( max=base::min(x ,..., na.rm=na.rm) )
+	function(x, ..., na.rm=FALSE) 
+		base::min(x ,..., na.rm=na.rm)
 )
 
 setMethod(
 	'.Min',
 	'numeric',
-	function(x, ..., na.rm=TRUE) {
+	function(x, ..., na.rm=FALSE) {
 		base::min(x, ..., na.rm=na.rm) 
 	}
 )
@@ -417,12 +429,12 @@ setMethod(
 	signature=c("formula"),
 	function(x, ..., na.rm=TRUE) {
 		dots <- list(...)
-		data  <- dots[[1]]
+		data <- .fetchFromDots(dots, 'data', 'data.frame', 1, NULL)
 
 		if( .is.simple.formula(x) ) {
 			return( base::min( eval( .simple.part(x), data, enclos=parent.frame()), na.rm=na.rm ) )
 		} else {
-			return( .mosaic_aggregate( x, data, FUN=base::min, na.rm=na.rm) )
+			return( maggregate( x, data, FUN=base::min, na.rm=na.rm) )
 		} 
 	}
 )
@@ -445,19 +457,35 @@ setMethod(
 #' var(age ~ NULL, data=HELPrct)
 #' var(HELPrct$age)
 #' var(age ~ sex, data=HELPrct)
-#' var(age ~ sex + treat, data=HELPrct)
+#' var(age ~ sex & treat, data=HELPrct)
 
 setGeneric( 
 	"var", 
-	function(x, y=NULL, na.rm=TRUE, use, data=NULL)  {
-		if ( is.name(substitute(x)) && ! is.null(y) && is.name(substitute(y)) && is.data.frame( data ) ) {
-			return( stats::var(eval( substitute(x), data), eval(substitute(y, data), na.rm=na.rm, use=use)) )
+	function(x, y=NULL, na.rm=FALSE, use='everything', data=NULL)  {
+		if ( is.data.frame(data) && is.name(substitute(x)) && is.name(substitute(y)) ) {
+			return( stats::var(eval( substitute(x), data), eval(substitute(y), data), na.rm=na.rm, use=use) )
 		}
-		if ( is.name(substitute(x)) && is.data.frame( y ) ) {
-			return(stats::var(eval( substitute(x), y),  na.rm=na.rm))
-		}
-		if ( is.name(substitute(x)) && is.null(y) && is.data.frame( data ) ) {
+		if ( is.data.frame(data) && is.name(substitute(x)) && is.null(y) ) {
 			return( stats::var( eval( substitute(x), data), na.rm=na.rm, use=use) )
+		}
+		if ( is.data.frame(y) && is.name(substitute(x)) ) {
+			return(stats::var(eval( substitute(x), y),  na.rm=na.rm, use=use))
+		}
+		if ( is.data.frame(na.rm) && is.name(substitute(x)) && is.name(substitute(y)) ) {
+			data <- na.rm
+			return( stats::var(eval( substitute(x), data), eval(substitute(y), data), use=use) )
+		}
+		if ( is.data.frame(na.rm) && is.name(substitute(x)) && is.null(y) ) {
+			data <- na.rm
+			return( stats::var(eval( substitute(x), data), use=use) )
+		}
+		if ( is.data.frame(use) && is.name(substitute(x)) && is.name(substitute(y)) ) {
+			data <- use
+			return( stats::var(eval( substitute(x), data), eval(substitute(y), data), na.rm=na.rm) )
+		}
+		if ( is.data.frame(use) && is.name(substitute(x)) && is.null(y) ) {
+			data <- use
+			return( stats::var(eval( substitute(x), data), na.rm=na.rm) )
 		}
 		standardGeneric('var')
 	}
@@ -470,7 +498,7 @@ setGeneric(
 setMethod(
 	'var',
 	c('ANY','ANY'),
-	function(x, y, na.rm=TRUE, use=use, data=data) 
+	function(x, y, na.rm=FALSE, use='everything', data=parent.frame()) 
 		stats::var( x, y, na.rm=na.rm, use=use) 
 )
 
@@ -480,8 +508,8 @@ setMethod(
 setMethod(
 	'var',
 	c('numeric','numeric'),
-	function(x, y, na.rm=TRUE, use=use, data=data) 
-		c( var=stats::var( x, y, na.rm=na.rm, use=use) )
+	function(x, y, na.rm=FALSE, use='everything', data=parent.frame()) 
+		stats::var( x, y, na.rm=na.rm, use=use) 
 )
 
 #' @rdname aggregating-methods
@@ -490,8 +518,12 @@ setMethod(
 setMethod(
 	'var',
 	c('numeric'),
-	function(x, y, na.rm=TRUE, use=use, data=data) 
-		c( var=stats::var( x, y, na.rm=na.rm, use=use) )
+	function(x, y=NULL, na.rm=FALSE, use='everything', data=parent.frame()) {
+		if (is.null(y) )
+			stats::var( x, y, na.rm=na.rm)
+		else
+			stats::var( x, y, na.rm=na.rm, use=use)
+	}
 )
 
 #' @rdname aggregating-methods
@@ -500,7 +532,7 @@ setMethod(
 setMethod(
 	'var',
 	c('matrix'),
-	function(x, y, na.rm=TRUE, use=use, data=data) 
+	function(x, y, na.rm=FALSE, use='everything', data=parent.frame()) 
 		stats::var( x, y, na.rm=na.rm, use=use) 
 )
 
@@ -514,16 +546,31 @@ setMethod(
 )
 
 #' @rdname aggregating-methods
+#' @aliases var,formula,missing,ANY,ANY,missing-method
+#' @export
+setMethod( 
+	"var", 
+	signature=c(x="formula", y="missing", na.rm='ANY', use='ANY', data="missing"),
+	function(x, y, na.rm=TRUE, use='everything', data=parent.frame()) {
+		if( .is.simple.formula(x) ) {
+			return( stats::var( eval( .simple.part(x), data ),  na.rm=na.rm, use=use ) )
+		} else {
+			return( maggregate( x, data=data, FUN=stats::var, na.rm=na.rm, use=use) )
+		} 
+	}
+)
+
+#' @rdname aggregating-methods
 #' @aliases var,formula,missing,ANY,ANY,data.frame-method
 #' @export
 setMethod( 
 	"var", 
 	signature=c(x="formula", y="missing", na.rm='ANY', use='ANY', data="data.frame"),
-	function(x, na.rm=TRUE, use, data=parent.frame()) {
+	function(x, y, na.rm=TRUE, use='everything', data=parent.frame()) {
 		if( .is.simple.formula(x) ) {
 			return( stats::var( eval( .simple.part(x), data ),  na.rm=na.rm, use=use ) )
 		} else {
-			return( .mosaic_aggregate( x, data, FUN=stats::var, na.rm=na.rm, use=use) )
+			return( maggregate( x, data=data, FUN=stats::var, na.rm=na.rm, use=use) )
 		} 
 	}
 )
@@ -534,13 +581,35 @@ setMethod(
 setMethod( 
 	"var", 
 	signature=c(x="formula", y="data.frame", na.rm='ANY', use='ANY', data="missing"),
-	function(x, y=parent.frame(),  na.rm=TRUE, use) {
+	function(x, y=parent.frame(),  na.rm=FLASE, use='everything') {
 		data <- y
 		if( .is.simple.formula(x) ) {
 			return( stats::var( eval( .simple.part(x), data),  na.rm=na.rm, use=use ) )
 		} else {
-			return( .mosaic_aggregate( x, data, FUN=stats::var, na.rm=na.rm, use=use) )
+			return( maggregate( x, data=data, FUN=stats::var, na.rm=na.rm, use=use) )
 		} 
+	}
+)
+
+#' @rdname aggregating-methods
+#' @aliases var,ANY,missing,ANY,ANY,data.frame-method
+#' @export
+setMethod( 
+	"var", 
+	signature=c(x="ANY", y="missing", na.rm='ANY', use='ANY', data="data.frame"),
+	function(x,y, na.rm=FALSE, use, data=parent.frame()) {
+		return( stats::var( eval( substitute(x), data ), na.rm=na.rm, use=use) )
+	}
+)
+
+#' @rdname aggregating-methods
+#' @aliases var,ANY,ANY,ANY,ANY,data.frame-method
+#' @export
+setMethod( 
+	"var", 
+	signature=c(x="ANY", y="ANY", na.rm='ANY', use='ANY', data="data.frame"),
+	function(x,y, na.rm=FALSE, use, data=parent.frame()) {
+		return( stats::var( eval( substitute(x), data ), eval( substitute(y), data ), na.rm=na.rm, use=use) )
 	}
 )
 ##########################################################################################
@@ -559,10 +628,11 @@ min <- .Min
 #' max(age ~ NULL, data=HELPrct)
 #' max(HELPrct$age)
 #' max(age ~ sex, data=HELPrct)
-#' max(age ~ sex + treat, data=HELPrct)
+#' max(age ~ sex & treat, data=HELPrct)
 
 max <- .Max
 
+if(FALSE) {
 ##########################################################################################
 #' @export
 #' @docType methods
@@ -592,7 +662,7 @@ setMethod(
 	'count',
 	'ANY',
 	function(x, ..., level=level, na.rm=TRUE) 
-		c( count=callGeneric( as.factor( .flatten(c(x,list(...))) ), level=level, na.rm=na.rm) )
+		callGeneric( as.factor( .flatten(c(x,list(...))) ), level=level, na.rm=na.rm) 
 )
 
 #' @rdname aggregating-methods
@@ -645,8 +715,8 @@ setMethod(
 			names(result) <- paste('count', level, sep=".")
 			return(result)
 		} else {
-			stop('Invalid formula type.  Perhaps you should try xtabs().')
-			return( .mosaic_aggregate( x, data, FUN=count, ..., level=level, na.rm=na.rm ) )
+			stop('Invalid formula type.  Perhaps you should try tally().')
+			return( maggregate( x, data, FUN=count, ..., level=level, na.rm=na.rm ) )
 		} 
 	}
 )
@@ -673,6 +743,16 @@ setGeneric('prop',
 		standardGeneric('prop')
 	}
 )
+setGeneric('prop',
+	function(x, ..., level=TRUE, na.rm=TRUE) {
+		dots <- list(...)
+			if ( ! .is.formula(x) && length(dots) > 0 && is.data.frame( dots[[1]] ) ) {
+				data <- dots[[1]]
+				return( callGeneric(eval( substitute(x), data), level=level, na.rm=na.rm) ) 
+			}
+		standardGeneric('prop')
+	}
+)
 
 #' @rdname aggregating-methods
 #' @aliases prop,ANY-method
@@ -681,7 +761,7 @@ setMethod(
 	'prop',
 	'ANY',
 	function(x, ..., level=level, na.rm=TRUE) 
-		c( prop=callGeneric( as.factor( .flatten(c(x,list(...))) ), level=level, na.rm=na.rm) )
+		callGeneric( as.factor( .flatten(c(x,list(...))) ), level=level, na.rm=na.rm) 
 )
 
 #' @rdname aggregating-methods
@@ -726,14 +806,20 @@ setMethod(
 	signature=c("formula"),
 	function(x, data=parent.frame(), ..., level=level, na.rm=TRUE) {
 		if( .is.simple.formula(x) ) {
-			return( prop( eval( .simple.part(x), data, enclos=parent.frame()), 
-							   ..., level=level, na.rm=na.rm ) )
+			x <-  eval(.simple.part(x), data) 
+			if (! level %in% levels(x) ) {
+				level = levels(x) [as.numeric(level)]
+			}
+			result <- prop( x == level, na.rm=na.rm )  
+			names(result) <- paste('prop', level, sep=".")
+			return(result)
 		} else {
-			stop('Invalid formula type.  Perhaps you should try xtabs().')
-			return( .mosaic_aggregate( x, data, FUN=prop, ..., level=level, na.rm=na.rm ) )
+			stop('Invalid formula type.  Perhaps you should try tally().')
+			return( maggregate( x, data, FUN=count, ..., level=level, na.rm=na.rm ) )
 		} 
 	}
 )
+}  # end if (FALSE)
 
 #' Compute standard deviation
 #'
@@ -743,6 +829,8 @@ setMethod(
 #' @seealso \code{\link[mosaic]{sd}}
 #'
 #' @param x a vector or formula
+#' 
+#' @param \dots additional arguments passed to \code{var}.
 #'
 #' @return a numeric containing the standard deviaiton
 #'
@@ -756,8 +844,8 @@ setMethod(
 #' summary(age ~ substance, data=HELPrct, fun=SD)
 #' @export
 
-SD <- function(x) {
-	sqrt(stats::var(x))
+SD <- function(x, ...) {
+	sqrt(stats::var(x, ...))
 }
 
 
@@ -824,20 +912,74 @@ SD <- function(x) {
 
 #' Aggregate for mosaic
 #'
-#' Wrapper to modify aggregating behavior of \code{\link[Hmisc]{summary.formula}}
+#' Compute function on subsets of a variable in a data frame.
 #'
-#' @return  a data frame
+#' @return  a vector
+#' @param formula a formula.  Left side provides variable to be summarized.  Right side and condition
+#'                            describe subsets.  If the left side is empty, right side and condition are
+#'                            shifted over as a convenience.
+#' @param data a data frame
+#' @param FUN a function to apply to each subset 
+#' @param subset a logical indicating a subset of \code{data} to be processed.
+#' @param drop a logical indicating whether unused levels should be dropped.
+#' @param format,overall currently unused
+#' @param multiple logical indicating whether FUN returns multiple values
+#' @param \dots additional arguments passed to \code{FUN}
 #'
-#' @rdname mosaic-internal
-#' @keywords internal
-.mosaic_aggregate <- function(x, data, FUN, overall=mosaic.par.get("aggregate.overall"), ...) {
-	if (length(x) == 2 ) {
-		return( data.frame( FUN (eval( x[[2]], data, enclos=parent.frame()) ) ) )
-	} else {
-		return( as.data.frame( 
-			Hmisc::summary.formula( x, data, fun=FUN, overall=overall, method='cross',...) ) )
+#' @export
+#' @examples
+#' maggregate( cesd ~ sex, HELPrct, FUN=mean )
+#' maggregate( cesd ~ sex & homeless, HELPrct, FUN=mean )
+#' maggregate( cesd ~ sex | homeless, HELPrct, FUN=sd )
+#'
+maggregate <- function(formula, data=parent.frame(), FUN, subset, 
+					   overall=mosaic.par.get("aggregate.overall"), 
+					   format=c('default'), drop=FALSE, multiple=FALSE, ...) {
+	dots <- list(...)
+	format <- match.arg(format)
+	evalF <- evalFormula(formula, data)
+
+	if (!missing(subset)) {
+		subset <- eval(substitute(subset), data, environment(formula))
+		if (!is.null(evalF$left))           evalF$left <- evalF$left[subset,]
+		if (!is.null(evalF$right))         evalF$right <- evalF$right[subset,]
+		if (!is.null(evalF$condition)) evalF$condition <- evalF$condition[subset,]
 	}
-	result <- Hmisc::summary.formula(x, data, fun=FUN, overall=overall, method=method, ...)
-	result <- as.data.frame(oldUnclass(result))
-	return(result)
+
+	if ( is.null( evalF$left ) ) {
+		evalF$left <- evalF$right
+		evalF$right <- evalF$condition
+		evalF$condition <- NULL
+	}
+
+	#if ( ! is.null(evalF$condition) ) stop('Conditioning not allowed in this type of formula.')
+
+	if ( is.null(evalF$right) || ncol(evalF$right) < 1 )  evalF$right <- rep(1, nrow(evalF$left))
+
+	res <- lapply( split( evalF$left[,1], joinFrames(evalF$right, evalF$condition), drop=drop),
+				  function(x) { do.call(FUN, c(list(x), ...) ) }
+	)
+	if (! multiple ) res <- unlist(res)
+
+	if (! is.null(evalF$condition) ) {
+		res2 <- lapply( split( evalF$left[,1], evalF$condition, drop=drop),
+				  function(x) { do.call(FUN, c(list(x), ...) ) }
+		)
+		if (!multiple) {
+			res <- c( res , unlist(res2) )
+		} else {
+			res <- c(res, res2)
+		}
+	}
+	if (multiple) {
+		result <- res
+		res <- result[[1]]
+		for (item in result[-1]) {
+			res <- rbind(res,item)
+		}
+		rownames(res) <- names(result)
+	}
+	return( res )
 }
+
+
