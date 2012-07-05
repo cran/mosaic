@@ -1,15 +1,15 @@
 \name{interval}
+\alias{confint.htest}
 \alias{interval}
-\alias{interval.htest}
 \alias{pval}
 \alias{pval.htest}
 \alias{stat}
 \alias{stat.htest}
 \title{Extract summary statistics}
 \usage{
-  interval(x, ...)
+  interval(object, parm, level = 0.95, ...)
 
-  \method{interval}{htest} (x, verbose = FALSE, ...)
+  \method{confint}{htest} (object, parm, level, ...)
 
   pval(x, ...)
 
@@ -25,6 +25,15 @@
 
   \item{\dots}{Additional arguments.}
 
+  \item{object}{a fitted model object or an htest object.}
+
+  \item{parm}{a specification of which parameters are to be
+  given confidence intervals, either a vector of numbers or
+  a vector of names. If missing, all parameters are
+  considered.}
+
+  \item{level}{the confidence level required.}
+
   \item{verbose}{a logical}
 
   \item{digits}{number of digits to display in verbose
@@ -39,10 +48,10 @@
   from an \code{htest} object.
 }
 \examples{
-interval(t.test(rnorm(100)))
+confint(t.test(rnorm(100)))
 pval(t.test(rnorm(100)))
 stat(t.test(rnorm(100)))
-interval(var.test(rnorm(10,sd=1), rnorm(20, sd=2)))
+confint(var.test(rnorm(10,sd=1), rnorm(20, sd=2)))
 pval(var.test(rnorm(10,sd=1), rnorm(20, sd=2)))
 
 data(HELPrct)

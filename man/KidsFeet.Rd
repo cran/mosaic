@@ -13,6 +13,9 @@
     \item{\code{biggerfoot}} {a factor with levels \code{L} \code{R}}
     \item{\code{domhand}} {a factor with levels \code{L} \code{R}}
   }}
+\usage{
+  data(KidsFeet)
+}
 \description{
   These data were collected by a statistician, Mary C.
   Meyer, in a fourth grade classroom in Ann Arbor, MI, in

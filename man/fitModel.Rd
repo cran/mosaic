@@ -1,17 +1,21 @@
-\name{nlsModel}
-\alias{nlsModel}
+\name{fitModel}
+\alias{fitModel}
 \title{Fit a nonlinear least squares model}
 \usage{
-  nlsModel(formula, data, ..., options)
+  fitModel(formula, data = parent.frame(), start = list(),
+    ...)
 }
 \arguments{
   \item{formula}{formula specifying the model}
 
   \item{data}{dataframe containing the data to be used}
 
-  \item{...}{named initial values for parameters}
+  \item{start}{passed as \code{start} to \code{\link{nls}}.
+  If and empty list, a simple starting point is used (thus
+  avoiding the usual warning message).}
 
-  \item{options}{not yet used}
+  \item{\dots}{additional arguments passed to
+  \code{\link{nls}}}
 }
 \value{
   a function
@@ -34,9 +38,8 @@
   This doesn't work with categorical explanatory variables.
 }
 \examples{
-\dontrun{stan <- fetchData("stan-data.csv")}
-\dontrun{f <- nlsModel(temp ~ A+B*exp(-k*time), data=stan,A=50,B=50,k=1/20)}
-\dontrun{f(time=50)}
+f <- fitModel(temp ~ A+B*exp(-k*time), data=CoolingWater, start=list(A=50,B=50,k=1/20))
+f(time=50)
 }
 \seealso{
   \code{\link{linearModel}}, \code{\link{nls}}

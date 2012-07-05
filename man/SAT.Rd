@@ -19,6 +19,9 @@ and secondary schools, 1994-95 (in thousands of US dollars)}
 \source{
   http://www.amstat.org/publications/jse/secure/v7n2/datasets.guber.cfm
 }
+\usage{
+  data(SAT)
+}
 \description{
   SAT data assembled for a statistics education journal
   article on the link between SAT scores and measures of

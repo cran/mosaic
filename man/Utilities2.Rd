@@ -28,6 +28,9 @@
   Daniel T. Kaplan, \emph{Statistical modeling: A fresh
   approach}, 2009.
 }
+\usage{
+  data(Utilities2)
+}
 \description{
   Data from utility bills at a private residence.  This is
   an augmented version of \code{\link{Utilities}}.

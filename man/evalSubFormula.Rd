@@ -2,7 +2,8 @@
 \alias{evalSubFormula}
 \title{Evaluate a part of a formula}
 \usage{
-  evalSubFormula(x, data = parent.frame(), split = c("&"))
+  evalSubFormula(x, data = parent.frame(),
+    ops = c("+", "&"))
 }
 \arguments{
   \item{x}{an object appearing as a subformula (typically a
@@ -11,7 +12,7 @@
   \item{data}{a data fram or environment in which things
   are evaluated}
 
-  \item{split}{a vector of operators that are not evaluated
+  \item{ops}{a vector of operators that are not evaluated
   as operators but instead used to further split \code{x}}
 }
 \value{
@@ -22,8 +23,8 @@
   Evaluate a part of a formula
 }
 \examples{
-data(CPS)
-cps <- CPS[1:6,]
+data(CPS85)
+cps <- CPS85[1:6,]
 cps
 evalSubFormula( rhs( ~ married & sector), data=cps )
 }

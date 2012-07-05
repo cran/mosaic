@@ -8,6 +8,9 @@
     \item{\code{smoker}} {smoking status at baseline: a factor with levels \code{No} \code{Yes}}
     \item{\code{age}} {age (in years) at the time of the first survey}
   }}
+\usage{
+  data(Whickham)
+}
 \description{
   Data on age, smoking, and mortality from a one-in-six
   survey of the electoral roll in Whickham, a mixed urban

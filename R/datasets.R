@@ -44,18 +44,18 @@ NA
 NA 
 
 
-#' Data from the 1985 Current Population Survey (CPS)
+#' Data from the 1985 Current Population Survey (CPS85)
 #' 
 #' The Current Population Survey (CPS) is used to supplement census
 #' information between census years. These data consist of a random
-#' sample of persons from the CPS, with information on wages and
+#' sample of persons from the CPS85, with information on wages and
 #' other characteristics of the workers, including sex, number of years
 #' of education, years of work experience, occupational status, region of
 #' residence and union membership.  
 #' 
 #' @docType data
-#' @name CPS
-#' @usage data(CPS)
+#' @name CPS85
+#' @usage data(CPS85)
 #' @format 
 #'   A data frame with 534 observations on the following variables.
 #'   \itemize{
@@ -86,7 +86,7 @@ NA
 #' Berndt, ER. \emph{The Practice of Econometrics} 1991. Addison-Wesley. 
 #' 
 #' @examples
-#' data(CPS)
+#' data(CPS85)
 #' 
 
 NA
@@ -1657,4 +1657,32 @@ NA
 #' 
 #' @keywords datasets
 
+NA
+
+#' CoolingWater
+#' 
+#' Temperature of a mug of water as it cools
+#'  
+#' @name CoolingWater
+#' @usage data(CoolingWater)
+#' @docType data
+#' @format 
+#'   A data frame with 222 observations of the following variables.
+#'   \itemize{
+#'       \item \code{time} time in minutes
+#'       \item \code{temp} temperature in Celsius
+#'   }
+#' @source
+#' These data were collected Stan Wagon to help his
+#' mathematical modeling students explore Newton's 
+#' Law of Cooling and the ways that the law is really 
+#' only an approximation. More about Stan: \url{http://stanwagon.com}.
+#' @details
+#' The water was poured into a mug and a temperature probe inserted into
+#' the water with a few seconds of the pour.
+#' @examples 
+#' data(CoolingWater)
+#' xyplot(temp~time, data=CoolingWater)
+#' 
+#' @keywords datasets
 NA

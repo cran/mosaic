@@ -1,6 +1,6 @@
 \name{FunctionsFromData}
-\alias{connector}
 \alias{FunctionsFromData}
+\alias{connector}
 \alias{linearModel}
 \alias{smoother}
 \alias{spliner}
@@ -63,12 +63,12 @@
   variable.
 }
 \examples{
-data(CPS)
-f <- smoother(wage ~ age, span=.9, data=CPS)
+data(CPS85)
+f <- smoother(wage ~ age, span=.9, data=CPS85)
 f(40)
 df <- D(f(age) ~ age)
 df(40)
-g <- linearModel(log(wage) ~ age+educ+1, data=CPS)
+g <- linearModel(log(wage) ~ age+educ+1, data=CPS85)
 g(age=40, educ=12)
 dgdeduc <- D(g(age=age, educ=educ) ~ educ)
 dgdeduc(age=40, educ=12)

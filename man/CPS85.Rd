@@ -1,7 +1,7 @@
 \docType{data}
-\name{CPS}
-\alias{CPS}
-\title{Data from the 1985 Current Population Survey (CPS)}
+\name{CPS85}
+\alias{CPS85}
+\title{Data from the 1985 Current Population Survey (CPS85)}
 \format{A data frame with 534 observations on the following variables.
   \itemize{
     \item{\code{wage}} {wage (US dollars per hour)}
@@ -22,12 +22,15 @@
   Data are from
   \url{http://lib.stat.cmu.edu/datasets/CPS_85_Wages}.
 }
+\usage{
+  data(CPS85)
+}
 \description{
   The Current Population Survey (CPS) is used to supplement
   census information between census years. These data
-  consist of a random sample of persons from the CPS, with
-  information on wages and other characteristics of the
-  workers, including sex, number of years of education,
+  consist of a random sample of persons from the CPS85,
+  with information on wages and other characteristics of
+  the workers, including sex, number of years of education,
   years of work experience, occupational status, region of
   residence and union membership.
 }
@@ -36,7 +39,7 @@
   original, which had entirely numerical codes.
 }
 \examples{
-data(CPS)
+data(CPS85)
 }
 \references{
   Berndt, ER. \emph{The Practice of Econometrics} 1991.

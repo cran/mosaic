@@ -5,11 +5,15 @@
   plotFun(object, ..., add = FALSE, xlim = NULL,
     ylim = NULL, npts = NULL, ylab = NULL, xlab = NULL,
     zlab = NULL, filled = TRUE, levels = NULL,
-    nlevels = 10, surface = FALSE, groups = NULL,
-    col.regions = topo.colors, type = "l", alpha = NULL)
+    nlevels = 10, labels = TRUE, surface = FALSE,
+    groups = NULL, col.regions = topo.colors, type = "l",
+    alpha = NULL)
 }
 \arguments{
-  \item{object}{a mathematical expression (see examples)}
+  \item{object}{a mathematical expression or a function "of
+  one variable" which will converted to something
+  intuitively equivalent to \code{object(x) ~ x}. (See
+  examples)}
 
   \item{add}{if TRUE, then overlay an existing plot}
 
@@ -36,6 +40,8 @@
 
   \item{nlevels}{number of contours to draw (if
   \code{levels} not specified)}
+
+  \item{labels}{if \code{FALSE}, don't label contours}
 
   \item{surface}{draw a surface plot rather than a contour
   plot}
@@ -92,13 +98,18 @@ plotFun( (x^2 -3) * (x^2 > 3) ~ x, type='h', alpha=.1, lwd=4, col='lightblue', a
 plotFun( sin(x) ~ x,
    groups=cut(x, findZeros(sin(x) ~ x, within=10)),
    col=c('blue','green'), lty=2, lwd=3, xlim=c(-10,10) )
+plotFun( sin(2*pi*x/P)*exp(-k*t)~x+t,k=2,P=.3)
 f <- rfun( ~ u & v )
 plotFun( f(u=u,v=v) ~ u & v, u.lim=range(-3,3), v.lim=range(-3,3) )
 plotFun( u^2 + v < 3 ~ u & v, add=TRUE, npts=200 )
 # display a linear model using a formula interface
-model <- lm(wage ~ poly(exper,degree=2), data=CPS)
+model <- lm(wage ~ poly(exper,degree=2), data=CPS85)
 fit <- makeFun(model)
-xyplot(wage ~ exper, data=CPS)
-plotFun(fit(exper) ~ exper, add=TRUE)
+xyplot(wage ~ exper, data=CPS85)
+plotFun(fit(exper) ~ exper, add=TRUE, lwd=8)
+# Can also just give fit since it is a "function of one variable"
+plotFun(fit, add=TRUE, lwd=2, col='white')
+# Attempts to find sensible axis limits by default
+plotFun( sin(k*x)~x, k=0.01 )
 }
 

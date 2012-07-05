@@ -35,6 +35,12 @@ logical2factor.data.frame  <- function( x, ... ) {
 
 #' Tabulate categorical data
 #'
+#' Tabulate categorical data
+#'
+#' @rdname tally-methods
+#' @aliases tally,ANY-method
+#'
+#' @param x an object
 #' @param formula a formula describing the type of table desired
 #' @param data a data frame or environment in which evaluation occurs
 #' @param format a character string describing the desired format of the results.
@@ -45,6 +51,7 @@ logical2factor.data.frame  <- function( x, ... ) {
 #' @param quiet a logical indicating whether messages about order in which marginal distributions
 #'        are calculated should be surpressed.  See \code{\link{addmargins}}.
 #' @param margins a logical indicating whether marginal distributions should be displayed.
+#' @param ... additional arguments
 #' @export
 #' @examples
 #' tally( ~ substance, HELPrct)
@@ -61,9 +68,8 @@ setGeneric(
 	}
 )
 
-#' @rdname tally
+#' @rdname tally-methods
 #' @aliases tally,ANY-method
-#' @usage tally(x, ...)
 
 setMethod(
 	'tally',
@@ -74,22 +80,16 @@ setMethod(
 	}
 )
 
-#' @rdname tally
-#' @aliases tally,formula-method
-#' @param formula a formula
-#'
-#' @param data a data frame
-#'
-#' @param format one of \code{default}, \code{count}, \code{proportion}, or \code{percent} describing
-#'        the format the tallies should be returned in.
-#'
-#' @param margins a logical indicating whether margins tallies should be added.
-#'
-#' @param quiet a logical indicating whether tallying should be done quietly (vs. verbosely)
-#'
-#' @param subset an expression defining a subset of the data frame to be tallied.
-#'
+#' @rdname tally-methods
+### @aliases tally,formula-method
+#' 
 #' @export
+#' @usage
+#' \S4method{tally}{formula}( x, data=parent.frame(), 
+#'				   format=c('default','count','proportion','percent'), 
+#'				   margins=TRUE,
+#'				   quiet=TRUE,
+#'				   subset, ...) 
 
 setMethod(
 	'tally',
@@ -170,19 +170,20 @@ rows <- function(x, default=c()) {
 #' @param data a data frame or environment in which evaluation occurs
 #' @return a list containing data frames corresponding to the left, right, and condition
 #' slots of \code{formula}
+#' @param ops a vector of operator symbols allowable to separate variables in rhs
 #' @export
 #' @examples
-#' data(CPS)
-#' cps <- CPS[1:6,]
+#' data(CPS85)
+#' cps <- CPS85[1:6,]
 #' cps
 #' evalFormula(wage ~ sex & married & age | sector & race, data=cps)
 
-evalFormula <- function(formula, data=parent.frame()) {
+evalFormula <- function(formula, data=parent.frame(), ops=c('+','&')) {
 	# could make this an S4 object instead
 	return( list(
-				 left      = evalSubFormula(      lhs(formula), data), 
-				 right     = evalSubFormula(      rhs(formula), data), 
-				 condition = evalSubFormula(condition(formula), data) 
+				 left      = evalSubFormula(      lhs(formula), ops=ops, data), 
+				 right     = evalSubFormula(      rhs(formula), ops=ops, data), 
+				 condition = evalSubFormula(condition(formula), ops=ops, data) 
 				 ) )
 }
 
@@ -192,19 +193,19 @@ evalFormula <- function(formula, data=parent.frame()) {
 #'
 #' @param x an object appearing as a subformula (typically a call)
 #' @param data a data fram or environment in which things are evaluated
-#' @param split a vector of operators that are not evaluated as operators but
+#' @param ops a vector of operators that are not evaluated as operators but
 #'      instead used to further split \code{x}
 #' @return a data frame containing the terms of the evaluated subformula
 #' @export
 #' @examples
-#' data(CPS)
-#' cps <- CPS[1:6,]
+#' data(CPS85)
+#' cps <- CPS85[1:6,]
 #' cps
 #' evalSubFormula( rhs( ~ married & sector), data=cps )
 
-evalSubFormula <- function(x, data=parent.frame(), split=c('&') ){
+evalSubFormula <- function(x, data=parent.frame(), ops=c('+','&') ){
   if (is.null(x)) return(NULL)
-  if( is.name(x) || !(as.character(x[[1]]) %in% split) ) {
+  if( is.name(x) || !(as.character(x[[1]]) %in% ops) ) {
     res <- data.frame(eval(x, envir=data))
     names(res) <- deparse(x)
     return( res )

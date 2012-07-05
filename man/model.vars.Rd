@@ -15,7 +15,7 @@
   extract predictor variables from a model
 }
 \examples{
-model <- lm( wage ~ poly(exper,degree=2), data=CPS )
+model <- lm( wage ~ poly(exper,degree=2), data=CPS85 )
 model.vars(model)
 }
 

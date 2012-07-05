@@ -45,6 +45,9 @@ and still births)}
   detail and provides an Internet site for accessing them:
   \url{http://www.stat.berkeley.edu/users/statlabs/}
 }
+\usage{
+  data(Gestation)
+}
 \description{
   Birth weight, date, and gestational period collected as
   part of the Child Health and Development Studies in 1961

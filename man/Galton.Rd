@@ -17,6 +17,9 @@ the number whose heights Galton recorded.}
   published them at
   \url{http://www.medicine.mcgill.ca/epidemiology/hanley/galton/}
 }
+\usage{
+  data(Galton)
+}
 \description{
   In the 1880's, Francis Galton was developing ways to
   quantify the heritability of traits.  As part of this
