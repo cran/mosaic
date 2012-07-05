@@ -14,6 +14,9 @@ gone off.}
     \item{\code{age}} {Age of runner in years.}
     \item{\code{sex}} {A factor with levels \code{F} \code{M}.}
   }}
+\usage{
+  data(TenMileRace)
+}
 \description{
   The Cherry Blossom 10 Mile Run is a road race held in
   Washington, D.C. in April each year.  (The name comes

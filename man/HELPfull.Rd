@@ -796,6 +796,9 @@
 \source{
   \url{http://www.math.smith.edu/help}
 }
+\usage{
+  data(HELPfull)
+}
 \description{
   The HELP study was a clinical trial for adult inpatients
   recruited from a detoxification unit.  Patients with no

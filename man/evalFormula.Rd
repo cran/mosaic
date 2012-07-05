@@ -2,13 +2,17 @@
 \alias{evalFormula}
 \title{Evaluate a formula}
 \usage{
-  evalFormula(formula, data = parent.frame())
+  evalFormula(formula, data = parent.frame(),
+    ops = c("+", "&"))
 }
 \arguments{
   \item{formula}{a formula (\code{ y ~ x | z}) to evaluate}
 
   \item{data}{a data frame or environment in which
   evaluation occurs}
+
+  \item{ops}{a vector of operator symbols allowable to
+  separate variables in rhs}
 }
 \value{
   a list containing data frames corresponding to the left,
@@ -18,8 +22,8 @@
   Evaluate a formula
 }
 \examples{
-data(CPS)
-cps <- CPS[1:6,]
+data(CPS85)
+cps <- CPS85[1:6,]
 cps
 evalFormula(wage ~ sex & married & age | sector & race, data=cps)
 }

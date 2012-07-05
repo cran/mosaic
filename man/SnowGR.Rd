@@ -25,6 +25,9 @@
   available at
   \url{http://www.crh.noaa.gov/grr/climate/data/grr/snowfall/}.
 }
+\usage{
+  data(SnowGR)
+}
 \description{
   Official snowfall data by month and season for Grand
   Rapids, MI, going back to 1893.

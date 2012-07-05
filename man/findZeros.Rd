@@ -7,9 +7,9 @@
     within = Inf, nearest = 10, npts = 1000, iterate = 1)
 }
 \arguments{
-  \item{expr}{A formula, e.g. \code{sin(x) ~ x}. The right
-  side names the variable with respect to which the zeros
-  should be found. The left side is an expression. All free
+  \item{expr}{A formula.  The right side names the variable
+  with respect to which the zeros should be found. The left
+  side is an expression, e.g. \code{sin(x) ~ x}. All free
   variables (all but the variable on the right side) named
   in the expression must be assigned a value via
   \code{\ldots}}
@@ -77,4 +77,8 @@ findZeros( f(x) ~ x, near=0, within=100 )
 findZeros( f(x) ~ x, near=0, within=100, iterate=0 )
 findZeros( f(x) ~ x, near=0, within=100, iterate=3 )
 }
+\author{
+  Daniel Kaplan (\email{kaplan@macalester.edu})
+}
+\keyword{calculus}
 

@@ -2,10 +2,10 @@ Package: mosaic
 Type: Package
 Title: Project MOSAIC (mosaic-web.org) statistics and mathematics
         teaching utilities
-Version: 0.4-1
-Date: 2012-03-27
-Depends: R (>= 2.10), lattice, grid, methods, Hmisc, utils, RCurl
-Suggests: MASS, reshape2, manipulate, vcd, testthat
+Version: 0.5-1
+Date: 2012-07-05
+Depends: R (>= 2.10), lattice, grid, methods, survival, Hmisc, utils
+Suggests: MASS, reshape2, manipulate, vcd, RCurl, testthat
 Author: Randall Pruim <rpruim@calvin.edu>, Daniel Kaplan
         <kaplan@macalester.edu>, Nicholas Horton <nhorton@smith.edu>
 Maintainer: Randall Pruim <rpruim@calvin.edu>
@@ -28,10 +28,12 @@ Collate: 'favstats.R' 'CIsim.R' 'adapt_seq.R' 'aggregating.R'
         'utils.R' 'xchisq.test.R' 'xhistogram.R' 'xpnorm.R' 'xqqmath.R'
         'zzz.R' 'Calculus.R' 'mosaic-package.R' 'datasets.R' 'themes.R'
         'integrateODE.R' 'is.wholenumber.R' 'parseFormula.R'
-        'plotFun.R' 'nlsModel.R' 'bargraph.R' 'as.xtabs.R'
-        'plotCumfreq.R' 'oddsRatio.R' 'plotDist.R' 'compareMean.R'
+        'plotFun.R' 'bargraph.R' 'as.xtabs.R' 'plotCumfreq.R'
+        'oddsRatio.R' 'plotDist.R' 'compareMean.R'
         'compareProportion.R' 'numD.R' 'symbolicD.R' 'fetchGoogle.R'
-        'makeFun.R' 'tally.R'
-Packaged: 2012-03-27 13:35:31 UTC; rpruim
+        'makeFun.R' 'tally.R' 'mm.R' 'expandFun.R' 'findZerosMult.R'
+        'project.R' 'fitModel.R' 'fitSpline.R' 'plotPoints.R'
+        'datasetsOLI.R'
+Packaged: 2012-07-05 15:29:38 UTC; rpruim
 Repository: CRAN
-Date/Publication: 2012-03-27 14:25:35
+Date/Publication: 2012-07-05 17:16:11

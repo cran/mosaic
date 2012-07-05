@@ -1,6 +1,6 @@
 \name{D}
-\alias{antiD}
 \alias{D}
+\alias{antiD}
 \alias{makeAntiDfun}
 \alias{numerical.integration}
 \title{Derivative and Anti-derivative operators}
@@ -11,7 +11,7 @@
 
   makeAntiDfun(.function, .wrt, from, to, .tol, Const)
 
-  numerical.integration(f, wrt, av, args)
+  numerical.integration(f, wrt, av, args, vi.from)
 }
 \arguments{
   \item{formula}{A formula. The right side specifies the
@@ -62,6 +62,9 @@
   calling this}
 
   \item{args}{default values (if any) for parameterss}
+
+  \item{vi.from}{the the lower bound of the interval of
+  integration}
 }
 \value{
   For derivatives, the return value is a function of the
@@ -75,9 +78,7 @@
   arguments, to ensure the order is correct.
 
   a function of the same arguments as the original
-  expression, but with the integration variable split into
-  "from" and "to" prefaced by the name of the variable,
-  e.g. \code{y.from} and \code{y.to}.
+  expression.
 }
 \description{
   Operators for computing derivatives and anti-derivatives
@@ -94,13 +95,14 @@
   (including mixed partials). \code{antiD} always does
   numerical integration.
 
-  \code{antiD} returns a function with arguments \code{to}
-  and \code{from=0}, the upper and lower bounds of the
-  interval of integration w.r.t. the variable of
-  integration. There is also an argument, \code{initVal},
-  that plays the role of the constant of integration. The
-  numerical value of the integral or derivative can be
-  found by evaluating that function.
+  \code{antiD} returns a function with the same arguments
+  as the expression passed to it.  The returned function is
+  the anti-derivative of the expression, e.g.,
+  antiD(f(x)~x) -> F(x). To calculate the integral of f(x),
+  use F(to) - F(from). This feature may be deprecated in an
+  upcoming release: There is also an argument,
+  \code{initVal}, that plays the role of the constant of
+  integration.
 }
 \note{
   This function is not intended for direct use.  It
@@ -120,15 +122,16 @@ g(t=1)
 gg <- D(f(x=t, A=B)^2 ~ t, B=10)  # note: it's a function of t and B
 gg(t=1)
 gg(t=1, B=100)
+f <- makeFun(x^2~x)
+D(f(cos(z))~z) #will look in user functions also
 F <- antiD( A*exp(-k*t^2 ) ~ t, A=1, k=0.1)
-F(t.from=-Inf, t.to=0)
-F(t.from=-Inf, t.to=Inf)
+F(t=Inf)
 one = makeFun(1~x&y)
-by.x = antiD( one(x=x, y=y) ~x )
-by.xy = antiD(by.x(x.from=-sqrt(1-y^2), x.to=sqrt(1-y^2), y=y)~y)
-by.xy(y.from=-1, y.to=1)
+by.x = antiD( one(x=x, y=y) ~x)
+by.xy = antiD(by.x(x=sqrt(1-y^2), y=y)~y)
+4*by.xy(y=1) #area of quarter circle
 vel <- antiD( -9.8 ~ t  )
-pos <- antiD( vel( t.to=t, initVal=v0)~t, Const=50)
+pos <- antiD( vel( t=t, initVal=v0)~t, Const=50)
 pos(0:5, v0=10)
 pos(0:5, v0=10, initVal=100)
 }

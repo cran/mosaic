@@ -76,9 +76,9 @@
   the command to \code{source} it.
 }
 \examples{
-kids <- fetchData("KidsFeet.csv")
-carbon <- fetchData("CO2")
-fetchData(add.to.path=TRUE)
+\dontrun{kids <- fetchData("KidsFeet.csv")}
+\dontrun{carbon <- fetchData("CO2")}
+\dontrun{fetchData(add.to.path=TRUE)}
 \dontrun{fetchData(add.to.path=TRUE, name="http://www.macalester.edu/~kaplan/ISM/datasets/")}
 \dontrun{fetchData(drop.from.path=TRUE, name="http://www.macalester.edu/~kaplan/ISM/datasets/") }
 \dontrun{fetchData(drop.from.path=TRUE)}

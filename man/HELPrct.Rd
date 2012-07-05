@@ -37,6 +37,9 @@ past 30 days (measured at baseline)}
 \source{
   \url{http://www.math.smith.edu/help}
 }
+\usage{
+  data(HELPrct)
+}
 \description{
   The HELP study was a clinical trial for adult inpatients
   recruited from a detoxification unit.  Patients with no

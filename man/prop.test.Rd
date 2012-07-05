@@ -6,7 +6,36 @@
 \alias{prop.test,formula-method}
 \alias{prop.test,logical-method}
 \alias{prop.test,numeric-method}
+\alias{prop.test-methods}
 \title{Exact and Approximate Tests for Proportions}
+\usage{
+  prop.test( x, n, p = NULL, alternative = c("two.sided",
+    "less", "greater"), conf.level = 0.95, ...)
+
+  \S4method{prop.test}{ANY}(x, n, p=NULL, alternative =
+    c("two.sided", "less", "greater"), conf.level =
+    0.95,...)
+
+  \S4method{prop.test}{formula}( x, n, p=NULL, alternative
+    = c("two.sided", "less", "greater"), conf.level = 0.95,
+    success=NULL, data.name, data, ...)
+
+  \S4method{prop.test}{numeric}( x, n, p=NULL, alternative
+    = c("two.sided", "less", "greater"), conf.level = 0.95,
+    success=NULL, data.name, ...)
+
+  \S4method{prop.test}{character}( x, n, p=NULL,
+    alternative = c("two.sided", "less", "greater"),
+    conf.level = 0.95, success=NULL, data.name, ...)
+
+  \S4method{prop.test}{logical}( x, n, p=NULL, alternative
+    = c("two.sided", "less", "greater"), conf.level = 0.95,
+    success=NULL, data.name, ...)
+
+  \S4method{prop.test}{factor}( x, n, p=NULL, alternative =
+    c("two.sided", "less", "greater"), conf.level = 0.95,
+    success=NULL, data.name, ...)
+}
 \arguments{
   \item{x}{count of successes, length 2 vector of success
   and failure counts, a formula, or a character, numeric,
@@ -32,9 +61,6 @@
   and 1. Only used when testing the null that a single
   proportion equals a given value, or that two proportions
   are equal; ignored otherwise.}
-
-  \item{correct}{a logical indicating whether Yates'
-  continuity correction should be applied where possible.}
 
   \item{success}{level of variable to be considered
   success.  All other levels are considered failure.}

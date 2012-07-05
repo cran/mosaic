@@ -2,8 +2,20 @@
 \alias{tally}
 \alias{tally,ANY-method}
 \alias{tally,formula-method}
+\alias{tally-methods}
 \title{Tabulate categorical data}
+\usage{
+  tally(x, ...)
+
+  \S4method{tally}{ANY}(x, ...)
+
+  \S4method{tally}{formula}( x, data=parent.frame(),
+    format=c('default','count','proportion','percent'),
+    margins=TRUE, quiet=TRUE, subset, ...)
+}
 \arguments{
+  \item{x}{an object}
+
   \item{formula}{a formula describing the type of table
   desired}
 
@@ -27,22 +39,7 @@
   \item{margins}{a logical indicating whether marginal
   distributions should be displayed.}
 
-  \item{formula}{a formula}
-
-  \item{data}{a data frame}
-
-  \item{format}{one of \code{default}, \code{count},
-  \code{proportion}, or \code{percent} describing the
-  format the tallies should be returned in.}
-
-  \item{margins}{a logical indicating whether margins
-  tallies should be added.}
-
-  \item{quiet}{a logical indicating whether tallying should
-  be done quietly (vs. verbosely)}
-
-  \item{subset}{an expression defining a subset of the data
-  frame to be tallied.}
+  \item{...}{additional arguments}
 }
 \description{
   Tabulate categorical data

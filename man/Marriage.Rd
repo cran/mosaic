@@ -26,6 +26,9 @@ application}
   The records were collected through
   \url{http://www.mobilecounty.org/probatecourt/recordssearch.htm}
 }
+\usage{
+  data(Marriage)
+}
 \description{
   Marriage records from the Mobile County, Alabama, probate
   court.
