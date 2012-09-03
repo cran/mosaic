@@ -5,7 +5,7 @@
 \format{A data frame with 125 observations on the following variables.
 
    \itemize{
-    \item{\code{birthweight}}{weights of newborns (in grams)}
+    \item{\code{birthweight}} {weights of newborns (in grams)}
   }}
 \usage{
   data(Birthweight)

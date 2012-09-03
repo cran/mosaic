@@ -5,8 +5,8 @@
 \format{A data frame with 38 observations on the following variables.
 
    \itemize{
-    \item{\code{cry.count}}{the number of distinct cry vocalizations within 20 seconds}
-    \item{\code{IQ}}{IQ at 3 years of age}
+    \item{\code{cry.count}} {the number of distinct cry vocalizations within 20 seconds}
+    \item{\code{IQ}} {IQ at 3 years of age}
   }}
 \usage{
   data(Baby)

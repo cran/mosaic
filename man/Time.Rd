@@ -5,10 +5,10 @@
 \format{A data frame with 20 observations on the following variables.
 
    \itemize{
-    \item{\code{time1}}{time (in hours) spending on exercises in a typical week, sample 1 of size 20}
-    \item{\code{time2}}{time (in hours) spending on exercises in a typical week, sample 2 of size 20}
-    \item{\code{time3}}{time (in hours) spending on exercises in a typical week, sample 3 of size 20}
-    \item{\code{time4}}{time (in hours) spending on exercises in a typical week, sample 4 of size 20}
+    \item{\code{time1}} {time (in hours) spending on exercises in a typical week, sample 1 of size 20}
+    \item{\code{time2}} {time (in hours) spending on exercises in a typical week, sample 2 of size 20}
+    \item{\code{time3}} {time (in hours) spending on exercises in a typical week, sample 3 of size 20}
+    \item{\code{time4}} {time (in hours) spending on exercises in a typical week, sample 4 of size 20}
   }}
 \usage{
   data(Time)

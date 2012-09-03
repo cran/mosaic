@@ -3,16 +3,21 @@
 assign("mosaic.theme",   list(), envir = .mosaicEnv)
 assign("mosaic.options", list(), envir = .mosaicEnv)
 
-.onLoad <- function(libname, pkgname) 
-{
+.onLoad <- function(libname, pkgname) {
     ## library.dynam("mosaic", pkgname, libname )
     mosaic.par.set(.defaultMosaicOptions())
 }
 
+.onAttach <- function(libname, pkgname) {
+	# have histogram use panel.xhistogram by default
+	lattice::lattice.options(panel.histogram = "panel.xhistogram")
+}
+
 .noGenerics <- FALSE
 
-.onUnload <- function(libpath)
+.onUnload <- function(libpath) {
     ## library.dynam.unload("mosaic", libpath)
+}
 
 
 ## If present, .First.lib will be used if the NAMESPACE file is
@@ -22,12 +27,14 @@ assign("mosaic.options", list(), envir = .mosaicEnv)
 
 .First.lib <- function(lib, pkg) 
 {
-    cat(gettext("Note: you shouldn't be seeing this message unless\nyou are using a non-standard version of mosaic"),
+    packageStartupMessage(gettext("Note: you shouldn't be seeing this message unless\nyou are using a non-standard version of mosaic"),
         fill = TRUE)
     library.dynam("mosaic", pkg, lib )
     ## having the next line causes a warning from R CMD check
     ## if (!require("grid")) stop("The grid package couldn't be loaded.\nPlease check your installation of R")
     mosaic.par.set(.defaultMosaicOptions())
+	# have histogram use panel.xhistogram by default
+	lattice::lattice.options(panel.histogram = "panel.xhistogram")
 }
 
 

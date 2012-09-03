@@ -1,10 +1,16 @@
 \name{findZeros}
 \alias{findZeros}
-\title{Find the zeros of a function}
+\alias{solve.formula}
+\title{Find zeros of functions}
 \usage{
   findZeros(expr, ...,
     xlim = c(near - within, near + within), near = 0,
-    within = Inf, nearest = 10, npts = 1000, iterate = 1)
+    within = Inf, nearest = 10, npts = 1000, iterate = 1,
+    sortBy = c("byx", "byy", "radial"))
+
+  \method{solve}{formula} (form, ..., near = 0,
+    within = Inf, nearest = 10, npts = 1000, iterate = 1,
+    sortBy = c("byx", "byy", "radial"))
 }
 \arguments{
   \item{expr}{A formula.  The right side names the variable
@@ -14,8 +20,10 @@
   in the expression must be assigned a value via
   \code{\ldots}}
 
-  \item{\dots}{Specific numerical values for the free
-  variables in the expression.}
+  \item{\dots}{Formulas corresponding to additional
+  functions to use in simultaneous zero finding and/or
+  specific numerical values for the free variables in the
+  expression.}
 
   \item{xlim}{The range of the dependent variable to search
   for zeros. \code{Inf} is a legitimate value, but is
@@ -48,17 +56,30 @@
   involved, the intervals are logarithmically spaced up to
   the largest finite floating point number. There is no
   guarantee that all the roots will be found.}
+
+  \item{sortBy}{specifies how the zeros found will be
+  sorted. Options are 'byx', 'byy', or 'radial'.}
+
+  \item{form}{Expression to be solved}
 }
 \value{
-  A set of zero or more numerical values.  Plugging these
-  into the expression on the left side of the formula
+  A dataframe of zero or more numerical values.  Plugging
+  these into the expression on the left side of the formula
   should result in values near zero.
+
+  a dataframe with solutions to the expression.
 }
 \description{
-  Compute numerically the zeros of a function.
+  Compute numerically zeros of a function or simultaneous
+  zeros of multiple functions.
+
+  Solve an equation
 }
 \details{
   Searches numerically using \code{uniroot}.
+
+  Uses findZerosMult of findZeros to solve the given
+  expression
 }
 \examples{
 findZeros( sin(t) ~ t, xlim=c(-10,10) )
@@ -76,9 +97,19 @@ findZeros( f(x) ~ x, near=0 )
 findZeros( f(x) ~ x, near=0, within=100 )
 findZeros( f(x) ~ x, near=0, within=100, iterate=0 )
 findZeros( f(x) ~ x, near=0, within=100, iterate=3 )
+# Zeros in multiple dimensions (not run: these take a long time)
+# findZeros(x^2+y^2+z^2-5~x&y&z, nearest=3000, within = 5)
+# findZeros(x*y+z^2~z&y&z, z+y~x&y&z, npts=10)
+solve(3*x==3~x)
+
+# plot out sphere (not run)
+# sphere = solve(x^2+y^2+z^2==5~x&y&z, within=5, nearest=1000)
+# cloud(z~x+y, data=sphere)
 }
 \author{
   Daniel Kaplan (\email{kaplan@macalester.edu})
+
+  Cecylia Bocovich
 }
 \keyword{calculus}
 

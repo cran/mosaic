@@ -5,7 +5,7 @@
 \format{A data frame with 75 observations on the following variables.
 
    \itemize{
-    \item{\code{drinks.per.week}}{number of alcoholic drinks (standard units) per week}
+    \item{\code{drinks.per.week}} {number of alcoholic drinks (standard units) per week}
   }}
 \usage{
   data(Drinks)

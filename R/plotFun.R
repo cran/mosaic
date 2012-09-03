@@ -1,3 +1,7 @@
+
+tryCatch(utils::globalVariables(c('rot','elev','slider','manipulate','colorList')), 
+		 error=function(e) message('Looks like you should update R.'))
+
 #' Plotting mathematical expressions
 #'
 #' Plots mathematical expressions in one and two variables.  
@@ -58,7 +62,7 @@
 #' ladd( panel.abline(h=0,v=0,col='gray50') )
 #' plotFun( (x^2 -3) * (x^2 > 3) ~ x, type='h', alpha=.1, lwd=4, col='lightblue', add=TRUE )
 #' plotFun( sin(x) ~ x, 
-#'    groups=cut(x, findZeros(sin(x) ~ x, within=10)), 
+#'    groups=cut(x, findZeros(sin(x) ~ x, within=10)$x), 
 #'    col=c('blue','green'), lty=2, lwd=3, xlim=c(-10,10) )
 #' plotFun( sin(2*pi*x/P)*exp(-k*t)~x+t,k=2,P=.3)
 #' f <- rfun( ~ u & v )
@@ -135,7 +139,7 @@ plotFun <- function(object, ...,
     
 		if (is.null(limits$xlim) || length(limits$xlim) < 2 ) {
       zeros <- c() #empty
-      tryCatch( zeros <- findZeros( object, nearest=6, ... ), 
+      tryCatch( zeros <- findZeros( object, nearest=6, ... )[[1]], 
                 error=function(e){e},warning=function(e){} )
 			limits$xlim <- switch(as.character(length(zeros)), 
 				"0" = c(0,1),
@@ -384,7 +388,12 @@ panel.plotFun <- function( object, ...,
 									f=function(xxqq){ ..f..(xxqq) }, length=npts)
 	  .yvals <- sapply( .xvals, ..f.. )  # pfun(.xvals)
 
-	  return(panel.xyplot(.xvals, .yvals, type=type, alpha=alpha, ...))
+	  # need to strip out any components of ... that are in the object so they
+	  # don't get passed to the panel function.
+	  cleandots = list(...)
+	  cleandots[ names(cleandots) %in% all.vars(object) ] <- NULL
+	  # use do.call to call the panel function so that the cleandots can be put back in
+    return(do.call(panel.xyplot,c(list(x=.xvals, y=.yvals, type=type, alpha=alpha), cleandots)))
 	  #return(panel.xyplot(.xvals, .yvals, ...))
   }
 	   
@@ -507,14 +516,16 @@ panel.levelcontourplot <- function(x, y, z, subscripts,
                                    contour = FALSE, 
                                    region = TRUE,
                                    col = add.line$col, 
-								   lty = add.line$lty,
+				   lty = add.line$lty,
                                    lwd = add.line$lwd, 
                                    border = "transparent", ...,
                                    col.regions = regions$col,
                                    filled=TRUE, 
                                    alpha.regions = regions$alpha
-                                   ){
-	add.line <- trellis.par.get('add.line')
+                                   )
+{
+  add.line <- trellis.par.get('add.line')
+  regions <- trellis.par.get('regions')
 
   if(filled) panel.levelplot(x, y, z, subscripts, 
                              at = pretty(z,5*length(at)), shrink, 

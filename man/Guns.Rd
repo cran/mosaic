@@ -5,7 +5,7 @@
 \format{A data frame with 1200 observations on the following variables.
 
    \itemize{
-    \item{\code{opinion}}{whether or not satisfied with the expiration of the ban on assault weapons: \code{satisfied} or \code{not satisfied}}
+    \item{\code{opinion}} {whether or not satisfied with the expiration of the ban on assault weapons: \code{satisfied} or \code{not satisfied}}
   }}
 \usage{
   data(Guns)

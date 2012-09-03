@@ -4,9 +4,9 @@
 \title{Preferences for Computer Software}
 \format{A data frame with 20783 observations on the following variables.
    \itemize{
-    \item{\code{age}}{age of computer user (in years)}
-    \item{\code{gender}}{a factor with levels \code{female} or \code{male}}
-    \item{\code{comp}}{weekly time of computer use (in hours)}
+    \item{\code{age}} {age of computer user (in years)}
+    \item{\code{gender}} {a factor with levels \code{female} or \code{male}}
+    \item{\code{comp}} {weekly time of computer use (in hours)}
  }}
 \usage{
   data(Computers)

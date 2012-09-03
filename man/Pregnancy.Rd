@@ -5,7 +5,7 @@
 \format{A data frame with 25 observations on the following variables.
 
    \itemize{
-    \item{\code{length} }{the length of pregnancy (in days) of women who were smoking and/or drinking alcohol during their pregnancy}
+    \item{\code{length}} {the length of pregnancy (in days) of women who were smoking and/or drinking alcohol during their pregnancy}
   }}
 \usage{
   data(Pregnancy)

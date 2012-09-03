@@ -73,6 +73,7 @@ do <- function(n=1L, cull=NULL, mode=NULL) {
 	x <- gsub('sample\\(','', x)
 	x <- gsub('shuffle\\(','', x)
 	x <- gsub('\\(','.', x)
+	x <- gsub('-','.', x)
 	x <- gsub('\\)','', x)
 	return(x)
 }
@@ -189,7 +190,7 @@ if(FALSE) {
 		names(res) <- paste( attr(object,'stat.name'), 
 						.squash_names(object[,1:(ncol(object)-3),drop=FALSE]), sep=".")
 		return(res)
-	}
+	} #
 	if (any(class(object)=='lme')){ # for mixed effects models
 		result <- object
 		names(result) <- .clean_names(names(result))
@@ -197,7 +198,7 @@ if(FALSE) {
 	}
 	if (inherits(object,c('lm','groupwiseModel')) ) {
 		sobject <- summary(object)
-		result <-  c( coef(object), sigma=sobject$sigma, "r-squared" = sobject$r.squared ) 
+		result <-  c( coef(object), sigma=sobject$sigma, r.squared = sobject$r.squared ) 
 		names(result) <- .clean_names(names(result))
 		return(result)
 	}

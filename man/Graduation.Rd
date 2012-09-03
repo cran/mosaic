@@ -5,8 +5,8 @@
 \format{A data frame with 48 observations on the following variables.
 
    \itemize{
-    \item{ontime}{percentage of students that graduated on time}
-    \item{\code{college}}{a factor with levels \code{A} through \code{F}}
+    \item{ontime} {percentage of students that graduated on time}
+    \item{\code{college}} {a factor with levels \code{A} through \code{F}}
   }}
 \usage{
   data(Graduation)

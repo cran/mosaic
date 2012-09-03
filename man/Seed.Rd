@@ -5,8 +5,8 @@
 \format{A data frame with 11 observations on the following variables.
 
    \itemize{
-    \item{\code{regular.seed}}{the corn yield (in pounds per acre) planting regular seed}
-    \item{\code{kiln.dried.seed}}{the corn yield (in pounds per acre) planting kiln-dried seed}
+    \item{\code{regular.seed}} {corn yield (in pounds per acre) planting regular seed}
+    \item{\code{kiln.dried.seed}} {corn yield (in pounds per acre) planting kiln-dried seed}
   }}
 \usage{
   data(Seed)

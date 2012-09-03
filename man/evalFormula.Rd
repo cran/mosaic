@@ -2,7 +2,7 @@
 \alias{evalFormula}
 \title{Evaluate a formula}
 \usage{
-  evalFormula(formula, data = parent.frame(),
+  evalFormula(formula, data = parent.frame(), subset,
     ops = c("+", "&"))
 }
 \arguments{
@@ -13,6 +13,10 @@
 
   \item{ops}{a vector of operator symbols allowable to
   separate variables in rhs}
+
+  \item{subset}{an optional vector describing a subset of
+  the observations to be used. Currently only implemented
+  when data is a data frame.}
 }
 \value{
   a list containing data frames corresponding to the left,

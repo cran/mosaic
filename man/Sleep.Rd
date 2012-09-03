@@ -5,7 +5,7 @@
 \format{A data frame with 142 observations on the following variables.
 
    \itemize{
-    \item{\code{sleep}}{sleeping time in a typical day (in hours)}
+    \item{\code{sleep}} {sleeping time in a typical day (in hours)}
   }}
 \usage{
   data(Sleep)

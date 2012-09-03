@@ -4,8 +4,8 @@
 \title{Winning Times for 1,500 Meter Race}
 \format{A data frame with 24 observations on the following variables.
    \itemize{
-    \item{\code{Year}}{the year of the Olympic Games, from 1896 to 2000}
-    \item{\code{Time}}{the winning time for the 1,500 meter race (in seconds)}
+    \item{\code{Year}} {the year of the Olympic Games, from 1896 to 2000}
+    \item{\code{Time}} {the winning time for the 1,500 meter race (in seconds)}
   }}
 \usage{
   data(Olympics)

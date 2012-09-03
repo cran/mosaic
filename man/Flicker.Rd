@@ -5,8 +5,8 @@
 \format{A data frame with 19 observations on the following variables.
 
    \itemize{
-    \item{\code{color}}{eye color: \code{Brown}, \code{Green}, or \code{Blue}}
-    \item{\code{cff}}{Critical Flicker Frequency}
+    \item{\code{color}} {eye color: \code{Brown}, \code{Green}, or \code{Blue}}
+    \item{\code{cff}} {critical flicker frequency}
   }}
 \usage{
   data(Flicker)

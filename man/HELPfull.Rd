@@ -779,8 +779,8 @@
     \item{\code{TOTALRAB}} {RAB-Total RAB sore}
     \item{\code{RABSCALE}} {RAB scale sore}
     \item{\code{CHR_6M}} {Chronic medical conds/HIV-past 6m y/n (0=No, 1=Yes)}
-    \item{\code{RCT_LINK}} {Did subjet link to primary care (RCT)--This time point (0=No, 1=Yes)}
-    \item{\code{REG_MD}} {Did subjet report having regular doctor--This time point (0=No, 1=Yes)}
+    \item{\code{RCT_LINK}} {Did subject link to primary care (RCT)--This time point (0=No, 1=Yes)}
+    \item{\code{REG_MD}} {Did subject report having regular doctor--This time point (0=No, 1=Yes)}
     \item{\code{ANY_VIS}} {# visits to regular doctor's office--This time point}
     \item{\code{ANY_VIS_CUMUL}} {Cumulative # visits to regular doctor's office}
     \item{\code{PC_REC}} {Primary care received: Linked & #visits (0=Not linked, 1=Linked, 1 visit, 2=Linked, 2+ visits)}
