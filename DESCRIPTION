@@ -2,8 +2,8 @@ Package: mosaic
 Type: Package
 Title: Project MOSAIC (mosaic-web.org) statistics and mathematics
         teaching utilities
-Version: 0.5-1
-Date: 2012-07-05
+Version: 0.6-2
+Date: 2012-09-03
 Depends: R (>= 2.10), lattice, grid, methods, survival, Hmisc, utils
 Suggests: MASS, reshape2, manipulate, vcd, RCurl, testthat
 Author: Randall Pruim <rpruim@calvin.edu>, Daniel Kaplan
@@ -16,7 +16,7 @@ Description: Data sets and utilities from Project MOSAIC
         quantitative work that students in science, technology,
         engineering and mathematics will need in their professional
         lives, but which are usually taught in isolation, if at all.
-License: GPL
+License: GPL (>= 2)
 LazyLoad: yes
 LazyData: yes
 Collate: 'favstats.R' 'CIsim.R' 'adapt_seq.R' 'aggregating.R'
@@ -33,7 +33,8 @@ Collate: 'favstats.R' 'CIsim.R' 'adapt_seq.R' 'aggregating.R'
         'compareProportion.R' 'numD.R' 'symbolicD.R' 'fetchGoogle.R'
         'makeFun.R' 'tally.R' 'mm.R' 'expandFun.R' 'findZerosMult.R'
         'project.R' 'fitModel.R' 'fitSpline.R' 'plotPoints.R'
-        'datasetsOLI.R'
-Packaged: 2012-07-05 15:29:38 UTC; rpruim
+        'datasetsOLI.R' 'frequencyPolygon.R' 'panel.lmbands.R'
+        'simplify.R' 'symbolicInt.R' 'Tukey.R' 'evalFormula.R'
+Packaged: 2012-09-03 20:19:04 UTC; rpruim
 Repository: CRAN
-Date/Publication: 2012-07-05 17:16:11
+Date/Publication: 2012-09-04 06:07:32

@@ -1,3 +1,6 @@
+tryCatch(utils::globalVariables(c('.LatticeEnv')),
+		 error=function(e) message('Looks like you should update R.'))
+
 #' Setting options for mosaic package functions
 #'
 #' A mechanism for setting options in the mosaic package.

@@ -5,7 +5,7 @@
 \format{A data frame with 32 observations on the following variable.
 
    \itemize{
-    \item{\code{age} }{Ages of Best Actor Oscar winners from 1970 to 2001}
+    \item{\code{age}} {ages of Best Actor Oscar winners from 1970 to 2001}
   }}
 \usage{
   data(Actors)

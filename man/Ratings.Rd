@@ -5,8 +5,8 @@
 \format{A data frame with 81 observations on the following variables.
 
    \itemize{
-    \item{\code{score}}{score on the evaluation scale}
-    \item{\code{situation}}{a factor with levels \code{Class I}, \code{Class II} or \code{Class III}}
+    \item{\code{score}} {score on the evaluation scale}
+    \item{\code{situation}} {a factor with levels \code{Class I}, \code{Class II} or \code{Class III}}
   }}
 \usage{
   data(Ratings)

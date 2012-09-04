@@ -1,54 +1,53 @@
+\docType{data}
 \name{fetchData}
+\alias{.fetchEnvironment}
 \alias{fetchData}
 \title{A Web and Library Data-Loading Facility}
+\format{<environment: 0x10423ff18>}
 \usage{
-  fetchData(name = NULL, add.to.path = FALSE,
-    drop.from.path = FALSE, add.to.library = FALSE,
-    directory = NULL, data = NULL, verbose = TRUE)
+  fetchData(name = NULL, show.path = FALSE,
+    add.to.path = NULL, drop.from.path = NULL,
+    cache = FALSE, verbose = TRUE)
+
+  .fetchEnvironment
 }
 \arguments{
   \item{name}{a character string naming a data set.  This
   will often end in \code{.csv} for reading in a data set.
-  When used in conjunction with \code{TRUE} values for the
-  following arguments, it can also name a web directory
-  (always ending in \code{/}). It can also give a name to a
-  data set to be stored in the cached library.}
+  If it ends in \code{.r} or \code{.R}, the file will be
+  "sourced".}
 
-  \item{add.to.path}{If \code{TRUE}, indicates that the web
-  search path is to printed out, or, if \code{name} is
-  specified, the name should be a web directory (ending in
+  \item{show.path}{If \code{TRUE}, causes the current
+  search path to be returned}
+
+  \item{add.to.path}{Name of a web directory (ending in
   \code{/}), which should be pre-pended to the search
   path.}
 
-  \item{drop.from.path}{If \code{TRUE}, wipes out the web
-  search path, or, if \code{name} is specified, removes
-  that web directory from the search path.}
+  \item{drop.from.path}{Name of a web directory to be
+  deleted from the path.}
 
-  \item{add.to.library}{If \code{TRUE}, indicates that a
-  data set is to be pre-loaded into the cached library.
-  This allows, for instance, users to pre-load on-line data
-  to be used when they are off-line.}
+  \item{cache}{If \code{TRUE}, indicates that a data set is
+  to be pre-loaded into the cached library.  This allows,
+  for instance, users to pre-load on-line data to be used
+  when they are off-line.}
 
   \item{verbose}{a logical indicating whether additional
   status messages (e.g., indicating where the dataset was
   located) should be printed.}
-
-  \item{data}{The data frame to be put in the cached
-  library if \code{add.to.library=TRUE}.}
-
-  \item{directory}{The name of a web directory to be
-  searched but not added to the search path.}
 }
 \value{
   a data frame.
 }
 \description{
   \code{fetchData} provides a means for students and others
-  to locate and load data sets provided by instructors.
-  Data can be pre-loaded for off-line sessions, can be
-  positioned on identified web sites, or loaded from
-  packages. \code{fetchData} also will load local
-  \code{.csv} files using \code{file.choose()}.
+  to locate and load data sets and R commands provided by
+  instructors. Data can be pre-loaded for off-line
+  sessions, can be positioned on identified web sites, or
+  loaded from packages. \code{fetchData} also will load
+  local files using a complete path name (relative to the
+  current working directory) or, if no name is given, via a
+  dialog box.
 }
 \details{
   There are two major purposes for this function. One is to
@@ -60,11 +59,11 @@
   assignment.
 
   The other purpose is to allow instructors or other group
-  leaders to post data on web sites that can be searched as
-  naturally as if the data were on the users' own machines.
-  For instance, an instructor might want to post a new data
-  set just before class, enabling her students to access it
-  in class.
+  leaders to post data and R code on web sites that can be
+  searched as naturally as if the data were on the users'
+  own machines.  For instance, an instructor might want to
+  post a new data set just before class, enabling her
+  students to access it in class.
 
   To support this, \code{fetchData} allows new web sites to
   be added to the web search path.  Typically, the command
@@ -74,15 +73,19 @@
   instructor might create a script file stored on a website
   and, using a web page, provide students with the text of
   the command to \code{source} it.
+
+  Currently, https addresses are changed to http
 }
 \examples{
-\dontrun{kids <- fetchData("KidsFeet.csv")}
+\dontrun{dome <- fetchData("Dome.csv")}
 \dontrun{carbon <- fetchData("CO2")}
-\dontrun{fetchData(add.to.path=TRUE)}
-\dontrun{fetchData(add.to.path=TRUE, name="http://www.macalester.edu/~kaplan/ISM/datasets/")}
-\dontrun{fetchData(drop.from.path=TRUE, name="http://www.macalester.edu/~kaplan/ISM/datasets/") }
-\dontrun{fetchData(drop.from.path=TRUE)}
-\dontrun{fetchData(add.to.library=TRUE, name="mydata.csv", data=data.frame(x=c(1,2,3), y=c(7,1,4)))}
+\dontrun{fetchData(show=TRUE)}
+\dontrun{fetchData(add.to.path="http://www.macalester.edu/~kaplan/ISM/datasets/")}
+\dontrun{fetchData(drop.from.path="http://www.macalester.edu/~kaplan/ISM/datasets/") }
+\dontrun{dome <- fetchData("Dome.csv", cache=TRUE)}
 }
+\keyword{datasets}
+\keyword{internel}
+\keyword{mosaic}
 \keyword{util}
 

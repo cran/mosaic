@@ -5,11 +5,11 @@
 \format{A data frame with 1129 observations on the following variables.
 
    \itemize{
-    \item{\code{Course}}{purpose of taking introductory statistics courses \code{natural science} \code{social science} \code{business}}
-    \item{\code{Handed}}{handedness \code{right-handed} \code{left-handed}}
-    \item{\code{Sex}}{a factor with levels \code{female} or \code{male}}
-    \item{\code{Verbal}}{SAT verbal scores up to 800}
-    \item{\code{Age}}{age (in years)}
+    \item{\code{Course}} {purpose of taking introductory statistics courses \code{natural science} \code{social science} \code{business}}
+    \item{\code{Handed}} {handedness \code{right-handed} \code{left-handed}}
+    \item{\code{Sex}} {a factor with levels \code{female} or \code{male}}
+    \item{\code{Verbal}} {SAT verbal scores up to 800}
+    \item{\code{Age}} {age (in years)}
   }}
 \usage{
   data(Population)

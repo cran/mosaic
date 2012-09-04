@@ -5,8 +5,8 @@
 \format{A data frame with 40 rows on the following variables.
 
    \itemize{
-    \item{\code{time}}{amount of time (in minutes) that an individual watched TV during a week}
-    \item{\code{gender} }{\code{Female} or \code{Male}}
+    \item{\code{time}} {amount of time (in minutes) that an individual watched TV during a week}
+    \item{\code{gender}} {\code{Female} or \code{Male}}
   }}
 \usage{
   data(TV1)

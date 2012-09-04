@@ -5,8 +5,8 @@
 \format{A data frame with 479 observations on the following variables.
 
    \itemize{
-    \item{\code{Light}}{lighting conditions \code{no light} \code{night light} \code{lamp}}
-    \item{\code{Nearsightedness}}{whether or not the subjects later became nearsighted \code{Yes} \code{No}}
+    \item{\code{Light}} {lighting conditions \code{no light} \code{night light} \code{lamp}}
+    \item{\code{Nearsightedness}} {whether or not the subjects later became nearsighted \code{Yes} \code{No}}
   }}
 \usage{
   data(Nightlight)

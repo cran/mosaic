@@ -7,11 +7,14 @@
 \usage{
   D(formula, ..., .hstep = NULL, add.h.control = FALSE)
 
-  antiD(formula, ..., Const = 0)
+  antiD(formula, ..., lower.bound = 0,
+    force.numeric = FALSE)
 
-  makeAntiDfun(.function, .wrt, from, to, .tol, Const)
+  makeAntiDfun(.function, .wrt, from,
+    .tol = .Machine$double.eps^0.25)
 
-  numerical.integration(f, wrt, av, args, vi.from)
+  numerical.integration(f, wrt, av, args, vi.from,
+    ciName = "C", .tol)
 }
 \arguments{
   \item{formula}{A formula. The right side specifies the
@@ -28,9 +31,6 @@
   be written with the name of the variable as a prefix,
   e.g. \code{y.from}.}
 
-  \item{Const}{Numerical value for the constant of
-  integration.}
-
   \item{.hstep}{horizontal distance between points used for
   secant slope calculation in numerical derivatives.}
 
@@ -39,6 +39,12 @@
   parameter for setting .hstep.  Meaningful only for
   numerical derivatives.}
 
+  \item{lower.bound}{for numerical integraion, the lower
+  bound used}
+
+  \item{force.numeric}{If \code{TRUE}, a numerical integral
+  is performed even when a symbolic integral is available.}
+
   \item{.function}{function to be integrated}
 
   \item{.wrt}{character string naming the variable of
@@ -46,12 +52,6 @@
 
   \item{from}{default value for the lower bound of the
   integral region}
-
-  \item{to}{default value for the upper bound of the
-  integral region}
-
-  \item{.tol}{tolerance of the numerical integrator (not
-  yet implemented)}
 
   \item{f}{a function}
 
@@ -65,6 +65,11 @@
 
   \item{vi.from}{the the lower bound of the interval of
   integration}
+
+  \item{ciName}{character string giving the name of the
+  symbol for the constant of integration}
+
+  \item{.tol}{Numerical tolerance.  See stats::integrate}
 }
 \value{
   For derivatives, the return value is a function of the
@@ -78,7 +83,9 @@
   arguments, to ensure the order is correct.
 
   a function of the same arguments as the original
-  expression.
+  expression with a constant of integration set to zero by
+  default, named "C", "D", ... depending on the first such
+  letter not otherwise in the argument list.
 }
 \description{
   Operators for computing derivatives and anti-derivatives
@@ -92,17 +99,15 @@
   can be of any order (although the expression may become
   unmanageably complex).  The numerical derivative is
   limited to first or second-order partial derivatives
-  (including mixed partials). \code{antiD} always does
-  numerical integration.
+  (including mixed partials). \code{antiD} will attempt
+  simple symbolic integration but if it fails it will
+  return a numerically-based anti-derivative.
 
   \code{antiD} returns a function with the same arguments
   as the expression passed to it.  The returned function is
   the anti-derivative of the expression, e.g.,
   antiD(f(x)~x) -> F(x). To calculate the integral of f(x),
-  use F(to) - F(from). This feature may be deprecated in an
-  upcoming release: There is also an argument,
-  \code{initVal}, that plays the role of the constant of
-  integration.
+  use F(to) - F(from).
 }
 \note{
   This function is not intended for direct use.  It
@@ -124,15 +129,13 @@ gg(t=1)
 gg(t=1, B=100)
 f <- makeFun(x^2~x)
 D(f(cos(z))~z) #will look in user functions also
+antiD( a*x^2 ~ x)
+antiD( A/x~x )
 F <- antiD( A*exp(-k*t^2 ) ~ t, A=1, k=0.1)
 F(t=Inf)
 one = makeFun(1~x&y)
 by.x = antiD( one(x=x, y=y) ~x)
 by.xy = antiD(by.x(x=sqrt(1-y^2), y=y)~y)
 4*by.xy(y=1) #area of quarter circle
-vel <- antiD( -9.8 ~ t  )
-pos <- antiD( vel( t=t, initVal=v0)~t, Const=50)
-pos(0:5, v0=10)
-pos(0:5, v0=10, initVal=100)
 }
 

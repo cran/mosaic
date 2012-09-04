@@ -26,6 +26,7 @@
 \alias{var,data.frame,ANY,ANY,ANY,ANY-method}
 \alias{var,formula,data.frame,ANY,ANY,missing-method}
 \alias{var,formula,missing,ANY,ANY,data.frame-method}
+\alias{var,formula,missing,ANY,ANY,environment-method}
 \alias{var,formula,missing,ANY,ANY,missing-method}
 \alias{var,matrix,ANY,ANY,ANY,ANY-method}
 \alias{var,numeric,ANY,ANY,ANY,ANY-method}
@@ -33,76 +34,90 @@
 \alias{var-methods}
 \title{Aggregating summary statistics}
 \usage{
-  mean(x, ..., na.rm=FALSE, trim=0)
+  mean(x, ..., na.rm=getOption("na.rm",FALSE), trim=0)
 
-  \S4method{mean}{ANY}(x, ..., na.rm=FALSE, trim=0)
+  \S4method{mean}{ANY}(x, ...,
+    na.rm=getOption("na.rm",FALSE), trim=0)
 
-  \S4method{mean}{numeric}(x, ..., na.rm=FALSE, trim=0)
+  \S4method{mean}{numeric}(x, ...,
+    na.rm=getOption("na.rm",FALSE), trim=0)
 
-  \S4method{mean}{data.frame}(x, ..., na.rm=TRUE, trim=0)
+  \S4method{mean}{data.frame}(x, ...,
+    na.rm=getOption("na.rm",FALSE), trim=0)
 
-  \S4method{mean}{formula}(x, data=parent.frame(), ...,
-    na.rm=TRUE, trim=0)
+  \S4method{mean}{formula}(x, data=parent.frame(2), ...,
+    na.rm=getOption("na.rm",FALSE), trim=0)
 
-  median(x, ..., na.rm=FALSE)
+  median(x, ..., na.rm=getOption("na.rm",FALSE))
 
-  \S4method{median}{ANY}(x, ..., na.rm=FALSE)
+  \S4method{median}{ANY}(x, ...,
+    na.rm=getOption("na.rm",FALSE))
 
-  \S4method{median}{numeric}(x, ..., na.rm=FALSE)
+  \S4method{median}{numeric}(x, ...,
+    na.rm=getOption("na.rm",FALSE))
 
-  \S4method{median}{numeric}(x, ..., na.rm=FALSE)
+  \S4method{median}{numeric}(x, ...,
+    na.rm=getOption("na.rm",FALSE))
 
-  \S4method{median}{formula}(x, data=parent.frame(), ...,
-    na.rm=TRUE)
+  \S4method{median}{formula}(x, data=parent.frame(2), ...,
+    na.rm=getOption("na.rm",FALSE))
 
-  sd(x, ..., na.rm=FALSE)
+  sd(x, ..., na.rm=getOption("na.rm",FALSE))
 
-  \S4method{sd}{ANY}(x, ..., na.rm=FALSE)
+  \S4method{sd}{ANY}(x, ...,
+    na.rm=getOption("na.rm",FALSE))
 
-  \S4method{sd}{numeric}(x, ..., na.rm=FALSE)
+  \S4method{sd}{numeric}(x, ...,
+    na.rm=getOption("na.rm",FALSE))
 
-  \S4method{sd}{data.frame}(x, ..., na.rm=TRUE)
+  \S4method{sd}{data.frame}(x, ...,
+    na.rm=getOption("na.rm",FALSE))
 
-  \S4method{sd}{formula}(x, data=parent.frame(), ...,
-    na.rm=TRUE)
+  \S4method{sd}{formula}(x, data=parent.frame(2), ...,
+    na.rm=getOption("na.rm",FALSE))
 
-  var(x, y=NULL, na.rm=FALSE, use='everything', data=NULL)
+  var(x, y, na.rm=getOption("na.rm",FALSE), use, data)
 
-  \S4method{var}{ANY,ANY,ANY,ANY,ANY}(x, y, na.rm=FALSE,
-    use='everything', data=parent.frame())
+  \S4method{var}{ANY,ANY,ANY,ANY,ANY}(x, y,
+    na.rm=getOption("na.rm",FALSE), use,
+    data=parent.frame(2))
 
   \S4method{var}{numeric,numeric,ANY,ANY,ANY}(x, y,
-    na.rm=FALSE, use='everything', data=parent.frame())
+    na.rm=getOption("na.rm",FALSE), use, data)
 
   \S4method{var}{numeric,ANY,ANY,ANY,ANY}(x, y=NULL,
-    na.rm=FALSE, use='everything', data=parent.frame())
+    na.rm=getOption("na.rm",FALSE), use,
+    data=parent.frame(2))
 
-  \S4method{var}{matrix,ANY,ANY,ANY,ANY}(x, y, na.rm=FALSE,
-    use='everything', data=parent.frame())
+  \S4method{var}{matrix,ANY,ANY,ANY,ANY}(x, y,
+    na.rm=getOption("na.rm",FALSE), use,
+    data=parent.frame(2))
 
   \S4method{var}{data.frame,ANY,ANY,ANY,ANY}(x, y,
-    na.rm=TRUE, use='everything')
+    na.rm=getOption("na.rm",FALSE), use)
 
   \S4method{var}{formula,missing,ANY,ANY,missing}(x, y,
-    na.rm=TRUE, use='everything', data=parent.frame())
+    na.rm=getOption("na.rm",FALSE), use, data)
+
+  \S4method{var}{formula,missing,ANY,ANY,environment}(x, y,
+    na.rm=getOption("na.rm",FALSE), use, data)
 
   \S4method{var}{formula,missing,ANY,ANY,data.frame}(x, y,
-    na.rm=TRUE, use='everything', data=parent.frame())
+    na.rm=getOption("na.rm",FALSE), use, data)
 
   \S4method{var}{formula,data.frame,ANY,ANY,missing}(x,
-    y=parent.frame(), na.rm=FALSE, use='everything')
+    y=parent.frame(2), na.rm=getOption("na.rm",FALSE), use,
+    data)
 
   \S4method{var}{ANY,missing,ANY,ANY,data.frame}(x,
-    y = NULL, na.rm = FALSE, use = "everything",
-    data = parent.frame())
+    y = NULL, na.rm = getOption("na.rm", FALSE), use, data)
 
   \S4method{var}{ANY,ANY,ANY,ANY,data.frame}(x, y = NULL,
-    na.rm = FALSE, use = "everything",
-    data = parent.frame())
+    na.rm = getOption("na.rm", FALSE), use, data)
 
-  min(x, ..., na.rm = FALSE)
+  min(x, ..., na.rm = getOption("na.rm", FALSE))
 
-  max(x, ..., na.rm = FALSE)
+  max(x, ..., na.rm = getOption("na.rm", FALSE))
 }
 \arguments{
   \item{x}{a vector}

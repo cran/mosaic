@@ -5,8 +5,8 @@
 \format{A data frame with 125 rows on the following variables.
 
    \itemize{
-    \item{\code{hours} }{number of hours that a student sleeps in a typical day)}
-    \item{\code{status} }{\code{Undergrad} or \code{Graduate} student}
+    \item{\code{hours}} {number of hours that a student sleeps in a typical day)}
+    \item{\code{status}} {\code{Undergrad} or \code{Graduate} student}
   }}
 \usage{
   data(Sleep2)

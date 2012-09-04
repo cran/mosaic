@@ -5,13 +5,13 @@
 \format{A data frame with 109 observations on the following variables.
 
    \itemize{
-    \item{\code{Hospt}}{the hospital of patient, represented by a code for each of the 5 hospitals (1, 2, 3, 5, or 6)}
-    \item{\code{Treat}}{the treatment received by the patient}
-    \item{\code{Outcome}}{whether or not a recurrence occurred during the treatment of patient (0 = No Recurrence, 1 = Recurrence)}
-    \item{\code{Time}}{either the time in days till the first recurrence, or if a recurrence did not occur, the length (in days) of the patient's participation in the study}
-    \item{\code{AcuteT}}{the time (in days) that the patient was depressed prior to the study}
-    \item{\code{Age}}{the age of the patient (in years), when the patient entered the study}
-    \item{\code{Gender}}{the gender of patient (\code{Female} or \code{Male})}
+    \item{\code{Hospt}} {the hospital of patient, represented by a code for each of the 5 hospitals (1, 2, 3, 5, or 6)}
+    \item{\code{Treat}} {the treatment received by the patient (0=Lithium, 1=Imipramine, or 2=Placebo)}
+    \item{\code{Outcome}} {whether or not a recurrence occurred during the treatment of patient (0 = No Recurrence, 1 = Recurrence)}
+    \item{\code{Time}} {either the time in days till the first recurrence, or if a recurrence did not occur, the length (in days) of the patient's participation in the study}
+    \item{\code{AcuteT}} {the time (in days) that the patient was depressed prior to the study}
+    \item{\code{Age}} {the age of the patient (in years), when the patient entered the study}
+    \item{\code{Gender}} {the gender of patient (\code{Female} or \code{Male})}
   }}
 \usage{
   data(Depression)

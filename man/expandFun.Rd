@@ -11,7 +11,8 @@
   \item{\ldots}{additional parameters}
 }
 \value{
-  A new formula with expanded left-hand side.
+  A list with the new expanded formula and the combined
+  formals
 }
 \description{
   Expands the contents of functions used in a formula.

@@ -1,16 +1,16 @@
 \docType{data}
-\name{Animals}
-\alias{Animals}
-\title{Average Gestation Period}
+\name{GestationLongevity}
+\alias{GestationLongevity}
+\title{Gestation Period and Longevity for Animals}
 \format{A data frame with 40 observations on the following variables.
 
    \itemize{
-    \item{\code{animal}}{the name of the animal species}
-    \item{\code{gestation}}{the average gestation period of the species (in days)}
-    \item{\code{longevity}}{the average longevity of the species (in years)}
+    \item{\code{animal}} {name of the animal species}
+    \item{\code{gestation}} {average gestation period of the species (in days)}
+    \item{\code{longevity}} {average longevity of the species (in years)}
   }}
 \usage{
-  data(Animals)
+  data(GestationLongevity)
 }
 \description{
   The average gestation period, or time of pregnancy, of an
