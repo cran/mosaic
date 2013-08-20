@@ -14,9 +14,6 @@
   approximation. More about Stan:
   \url{http://stanwagon.com}.
 }
-\usage{
-  data(CoolingWater)
-}
 \description{
   Temperature of a mug of water as it cools
 }

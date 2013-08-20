@@ -17,7 +17,7 @@
 #' 	  of any of these)
 #' @param xlab,ylab as per other lattice functions
 #' @param breaks  a vector of break points for bins of histograms,
-#'    as in \code{\link{xhistogram}} 
+#'    as in \code{\link{histogram}} 
 #' @param type  passed along to various lattice graphing functions 
 #' @param resolution  number of points to sample when generating the plots
 #' @param \dots  other arguments passed along to lattice graphing routines
@@ -45,8 +45,11 @@
 #' plotDist('binom', params=list( 25, .25), kind='cdf')
 #' plotDist('beta', params=list( 3, 10), kind='density')
 #' plotDist('beta', params=list( 3, 10), kind='cdf')
-#' plotDist( "binom", params=list(35,.25), groups= y < dbinom(qbinom(0.05, 35, .25), 35,.25) )
-#' plotDist( "binom", params=list(35,.25), groups= y < dbinom(qbinom(0.05, 35, .25), 35,.25), kind='hist')
+#' plotDist( "binom", params=list(35,.25), 
+#'            groups= y < dbinom(qbinom(0.05, 35, .25), 35,.25) )
+#' plotDist( "binom", params=list(35,.25), 
+#'            groups= y < dbinom(qbinom(0.05, 35, .25), 35,.25), 
+#'            kind='hist')
 #' 
 #' @keywords graphics 
 #' @keywords stats 
@@ -54,9 +57,12 @@
 
 # utility for various graphical representations of distributions.
 
-plotDist <- function( dist, params=list(), kind=c('density','cdf','qq','histogram'), 
-					 xlab="", ylab="", breaks=NULL, type, 
-					 resolution=5000,... ) {
+plotDist <- function( 
+  dist, params=list(), 
+  kind=c('density','cdf','qq','histogram'), 
+	xlab="", ylab="", breaks=NULL, type, 
+	resolution=5000, ... ) {
+  
 	kind = match.arg(kind)
 	ddist = paste('d', dist, sep='')
 	qdist = paste('q', dist, sep='')
@@ -115,7 +121,7 @@ plotDist <- function( dist, params=list(), kind=c('density','cdf','qq','histogra
 					y = do.call( ddist, c(list(x=values), params) ) ), 
 				type=type, xlab=xlab, ylab=ylab, ...),
 		histogram = 
-			xhistogram( ~ x,
+			histogram( ~ x,
 				data = data.frame( 
 					x = values, 
 					y = do.call( ddist, c(list(x=values), params) ) ), 

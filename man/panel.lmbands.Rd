@@ -4,8 +4,8 @@
 \usage{
   panel.lmbands(x, y, interval = "confidence",
     level = 0.95, model = lm(y ~ x),
-    band.col = c(conf = trellis.par.get("superpose.line")$col[3], pred = trellis.par.get("superpose.line")$col[2]),
-    band.lty = c(conf = trellis.par.get("superpose.line")$lty[3], pred = trellis.par.get("superpose.line")$lty[2]),
+    band.col = c(conf = slcol[3], pred = slcol[2]),
+    band.lty = c(conf = slty[3], pred = slty[2]),
     band.show = TRUE, fit.show = TRUE, band.alpha = 0.6,
     band.lwd = 1, npts = 100, ...)
 }

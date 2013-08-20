@@ -4,14 +4,19 @@
 \alias{prop}
 \title{Compute proportions, percents, or counts for a single level}
 \usage{
-  prop(..., level = NULL, long.names = TRUE, sep = ":",
-    format = "proportion")
+  prop(x, data = parent.frame(), ..., level = NULL,
+    long.names = TRUE, sep = ":", format = "proportion")
 
-  count(..., format = "count")
+  count(x, data = parent.frame(), ..., format = "count")
 
-  perc(..., format = "percent")
+  perc(x, data = parent.frame(), ..., format = "percent")
 }
 \arguments{
+  \item{x}{an R object, usually a formula}
+
+  \item{data}{a data frame in which \code{x} is to be
+  evaluated}
+
   \item{\dots}{arguments passed through to
   \code{\link{tally}}}
 

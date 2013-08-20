@@ -22,9 +22,6 @@
   Data are from
   \url{http://lib.stat.cmu.edu/datasets/CPS_85_Wages}.
 }
-\usage{
-  data(CPS85)
-}
 \description{
   The Current Population Survey (CPS) is used to supplement
   census information between census years. These data

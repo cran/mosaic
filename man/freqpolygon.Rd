@@ -72,7 +72,7 @@ freqpolygon(~age, HELPrct, groups=cut(age, seq(10,80,by=10)))
 freqpolygon(~age, HELPrct, groups=sex, stripes='horizontal')
 freqpolygon(~racegrp, HELPrct, groups=substance,auto.key=TRUE)
 ## comparison of histogram and frequency polygon
-xhistogram(~eruptions, faithful, type='density', width=.5)
+histogram(~eruptions, faithful, type='density', width=.5)
 ladd( panel.freqpolygon(faithful$eruptions, width=.5 ))
 }
 

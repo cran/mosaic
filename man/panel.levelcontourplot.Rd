@@ -2,8 +2,8 @@
 \alias{panel.levelcontourplot}
 \title{Lattice plot that draws a filled contour plot}
 \usage{
-  panel.levelcontourplot(x, y, z, subscripts, at, shrink,
-    labels = TRUE,
+  panel.levelcontourplot(x, y, z, subscripts = 1, at,
+    shrink, labels = TRUE,
     label.style = c("mixed", "flat", "align"),
     contour = FALSE, region = TRUE, col = add.line$col,
     lty = add.line$lty, lwd = add.line$lwd,

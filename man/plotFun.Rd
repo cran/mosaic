@@ -6,8 +6,9 @@
     ylim = NULL, npts = NULL, ylab = NULL, xlab = NULL,
     zlab = NULL, filled = TRUE, levels = NULL,
     nlevels = 10, labels = TRUE, surface = FALSE,
-    groups = NULL, col.regions = topo.colors, type = "l",
-    alpha = NULL)
+    groups = NULL,
+    col = trellis.par.get("superpose.line")$col,
+    col.regions = topo.colors, type = "l", alpha = NULL)
 }
 \arguments{
   \item{object}{a mathematical expression or a function "of
@@ -31,7 +32,7 @@
 
   \item{zlab}{label for z axis (when in surface-plot mode)}
 
-  \item{col}{color for line graphs and contours}
+  \item{col}{vector of colors for line graphs and contours}
 
   \item{filled}{fill with color between the contours
   (\code{TRUE} by default)}
@@ -98,7 +99,7 @@ plotFun( (x^2 -3) * (x^2 > 3) ~ x, type='h', alpha=.1, lwd=4, col='lightblue', a
 plotFun( sin(x) ~ x,
    groups=cut(x, findZeros(sin(x) ~ x, within=10)$x),
    col=c('blue','green'), lty=2, lwd=3, xlim=c(-10,10) )
-plotFun( sin(2*pi*x/P)*exp(-k*t)~x+t,k=2,P=.3)
+## plotFun( sin(2*pi*x/P)*exp(-k*t)~x+t, k=2, P=.3)
 f <- rfun( ~ u & v )
 plotFun( f(u=u,v=v) ~ u & v, u.lim=range(-3,3), v.lim=range(-3,3) )
 plotFun( u^2 + v < 3 ~ u & v, add=TRUE, npts=200 )

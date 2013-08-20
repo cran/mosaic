@@ -1,24 +1,13 @@
+\docType{methods}
 \name{project}
 \alias{project}
-\alias{project,formula,ANY-method}
 \alias{project,formula-method}
-\alias{project,matrix,ANY-method}
+\alias{project,formula,ANY-method}
 \alias{project,matrix-method}
-\alias{project,numeric,ANY-method}
+\alias{project,matrix,ANY-method}
 \alias{project,numeric-method}
-\alias{project-methods}
+\alias{project,numeric,ANY-method}
 \title{Projections}
-\usage{
-  project(x, u, data, ...)
-
-  \S4method{project}{formula,ANY}( x, u=NULL,
-    data=parent.frame(), ...)
-
-  \S4method{project}{numeric,ANY}(x, u = rep(1, length(x)),
-    type = c("vector", "length"), ...)
-
-  \S4method{project}{matrix,ANY}(x, u, data=parent.frame())
-}
 \arguments{
   \item{x}{a vector or formula.  Left-hand sides of
   formulas should be a single quantity}

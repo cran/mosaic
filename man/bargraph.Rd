@@ -3,8 +3,9 @@
 \title{Create bar graphs from raw data}
 \usage{
   bargraph(x, data = parent.frame(), groups,
-    horizontal = FALSE, origin = 0, ylab = "Frequency",
-    ...)
+    horizontal = FALSE, origin = 0,
+    ylab = ifelse(horizontal, "", "Frequency"),
+    xlab = ifelse(horizontal, "Frequency", ""), ...)
 }
 \arguments{
   \item{x}{a formula describing the plot}
@@ -27,8 +28,11 @@
   default. If 0 is not good, perhaps you should use a
   different kind of plot as the results may be misleading.}
 
-  \item{ylab}{a character of length one used for the y-axis
-  label}
+  \item{ylab}{a character vector of length one used for the
+  y-axis label}
+
+  \item{xlab}{a character vector of length one used for the
+  x-axis label}
 }
 \value{
   a trellis object describing the plot

@@ -4,21 +4,7 @@
 \alias{makeFun,glm-method}
 \alias{makeFun,lm-method}
 \alias{makeFun,nls-method}
-\alias{makeFun-methods}
 \title{Create a function from a formula}
-\usage{
-  makeFun(object, ...)
-
-  \S4method{makeFun}{formula} ( object, ...,
-    strict.declaration =TRUE )
-
-  \S4method{makeFun}{lm} ( object, ...)
-
-  \S4method{makeFun}{glm} ( object, ...,
-    type=c('response','link') )
-
-  \S4method{makeFun}{nls} ( object, ...)
-}
 \arguments{
   \item{object}{an object from which to create a function.
   This should generally be specified without naming.}
@@ -30,6 +16,20 @@
   \item{strict.declaration}{if \code{TRUE} (the default),
   an error is thrown if default values are given for
   variables not appearing in the \code{object} formula.}
+
+  \item{use.environment}{if \code{TRUE}, then variables
+  implicitly defined in the \code{object} formula can take
+  default values from the environment at the time
+  \code{makeFun} is called.  A warning message alerts the
+  user to this situation, unless \code{suppress.warnings}
+  is \code{TRUE}.}
+
+  \item{suppress.warnings}{A logical indicating whether
+  warnings should be suppressed.}
+
+  \item{transform}{a function used to transform the
+  response. This can be useful to invert a transformation
+  used on the response when creating the model.}
 
   \item{type}{one of \code{'response'} (default) or
   \code{'link'} specifying scale to be used for value of
@@ -55,6 +55,10 @@
 f <- makeFun( sin(x^2 * b) ~ x & y & a); f
 g <- makeFun( sin(x^2 * b) ~ x & y & a, a=2 ); g
 h <- makeFun( a * sin(x^2 * b) ~ b & y, a=2, y=3); h
+model <- lm( log(length) ~ log(width), data=KidsFeet)
+f <- makeFun(model, transform=exp)
+f(8.4)
+head(KidsFeet,1)
 model <- lm(wage ~ poly(exper,degree=2), data=CPS85)
 fit <- makeFun(model)
 xyplot(wage ~ exper, data=CPS85)

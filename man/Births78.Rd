@@ -8,9 +8,6 @@
     \item{\code{births}} {number of US births}
     \item{\code{dayofyear}} {sequential number of days from 1 to 365}
   }}
-\usage{
-  data(Births78)
-}
 \description{
   A day by day record of the number of births in the United
   States in 1978.
