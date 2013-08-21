@@ -1,9 +1,21 @@
 \name{fitModel}
+\alias{coef.nlsfunction}
 \alias{fitModel}
+\alias{model}
+\alias{model.nlsfunction}
+\alias{summary.nlsfunction}
 \title{Fit a nonlinear least squares model}
 \usage{
   fitModel(formula, data = parent.frame(), start = list(),
     ...)
+
+  model(object, ...)
+
+  \method{model}{nlsfunction} (object, ...)
+
+  \method{summary}{nlsfunction} (object, ...)
+
+  \method{coef}{nlsfunction} (object, ...)
 }
 \arguments{
   \item{formula}{formula specifying the model}
@@ -16,6 +28,9 @@
 
   \item{\dots}{additional arguments passed to
   \code{\link{nls}}}
+
+  \item{object}{an R object (typically a the result of
+  fitModel)}
 }
 \value{
   a function
@@ -40,6 +55,9 @@
 \examples{
 f <- fitModel(temp ~ A+B*exp(-k*time), data=CoolingWater, start=list(A=50,B=50,k=1/20))
 f(time=50)
+coef(f)
+summary(f)
+model(f)
 }
 \seealso{
   \code{\link{linearModel}}, \code{\link{nls}}

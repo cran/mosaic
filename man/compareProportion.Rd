@@ -27,7 +27,7 @@ mean(homeless=="housed" ~ sex, data=HELPrct)
 obs <- compareProportion(homeless=="housed" ~ sex, data=HELPrct); obs
 # calculate the permutation distribution
 nulldist <- do(100) * compareProportion(homeless=="housed" ~ shuffle(sex), data=HELPrct)
-xhistogram(~ result, groups=(result >= obs), nulldist,
+histogram(~ result, groups=(result >= obs), nulldist,
   xlab="difference in proportions")
 }
 \seealso{

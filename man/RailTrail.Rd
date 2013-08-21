@@ -18,9 +18,6 @@
 \source{
   Pioneer Valley Planning Commission
 }
-\usage{
-  data(RailTrail)
-}
 \description{
   The Pioneer Valley Planning Commission (PVPC) collected
   data north of Chestnut Street in Florence, MA for ninety

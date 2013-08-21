@@ -40,6 +40,12 @@
   Creates a URL for Google Maps for a particular latitude
   and longitude position.
 }
+\examples{
+\dontrun{
+googleMap(40.7566, -73.9863, radius=1)   # Times Square
+googleMap(position=rgeo(2), radius=1)    # 2 random locations
+}
+}
 \seealso{
   \code{\link{deg2rad}}, \code{\link{latlon2xyz}} and
   \code{\link{rgeo}}.

@@ -10,13 +10,10 @@
     \item{\code{height}} {subject height (in inches)}
     \item{\code{weight}} {subject weight (in pounds)}
   }}
-\usage{
-  data(Heightweight)
-}
 \description{
   The height and weight data collected from 57 males and 24
   females for the purpose of exploring how the weight of a
-  person is related to (or affected by) his or her height.
+  person is related to his or her height.
 }
 \references{
   Part of the Carnegie Mellon University Online Learning

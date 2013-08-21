@@ -17,8 +17,8 @@
   group
 }
 \description{
-  A function to facilitate 2 group permutation tests for a
-  continuous outcome variable
+  A function to calculate the difference between the means
+  two of groups for a continuous outcome variable
 }
 \examples{
 data(HELPrct)
@@ -28,7 +28,7 @@ obs <- compareMean(age ~ sex, data=HELPrct); obs
 # calculate the permutation distribution
 nulldist <- do(100) * compareMean(age ~ shuffle(sex),
   data=HELPrct)
-xhistogram(~ result, groups=(result >= obs), nulldist,
+histogram(~ result, groups=(result >= obs), nulldist,
   xlab="difference in means")
 }
 \seealso{

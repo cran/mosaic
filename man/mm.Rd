@@ -17,7 +17,8 @@
 
   \method{coef}{groupwiseModel} (object, ...)
 
-  \method{print}{groupwiseModel} (x, ...)
+  \method{print}{groupwiseModel} (x, ...,
+    digits = max(3, getOption("digits") - 3))
 
   \method{residuals}{groupwiseModel} (object, ...)
 
@@ -25,7 +26,8 @@
 
   \method{summary}{groupwiseModel} (object, ...)
 
-  \method{print}{summary.groupwiseModel} (x, ...)
+  \method{print}{summary.groupwiseModel} (x,
+    digits = max(3, getOption("digits") - 3), ...)
 }
 \arguments{
   \item{formula}{A formula.  The left-hand side specifies
@@ -59,6 +61,8 @@
   rather than the lower and upper bounds}
 
   \item{x}{Object to be printed}
+
+  \item{digits}{number of digits to display}
 
   \item{object}{groupwiseMean object from which to extract
   the residuals}

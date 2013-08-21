@@ -8,9 +8,6 @@
       \item \code{year} Year in which the record was set
       \item \code{sex} a factor with levels \code{M} and \code{F}
   }}
-\usage{
-  data(SwimRecords)
-}
 \description{
   World records for men and women over time from 1905
   through 2004.

@@ -1,13 +1,18 @@
 \name{confint.numeric}
 \alias{confint.data.frame}
+\alias{confint.do.data.frame}
 \alias{confint.numeric}
 \title{Confidence interval methods for output of resampling}
 \usage{
   \method{confint}{numeric} (object, parm, level = 0.95,
     ..., method = c("stderr", "quantile"), margin = FALSE)
 
+  \method{confint}{do.data.frame} (object, parm,
+    level = 0.95, ..., method = c("stderr", "quantile"),
+    margin = FALSE)
+
   \method{confint}{data.frame} (object, parm, level = 0.95,
-    ..., method = c("stderr", "quantile"), margin = FALSE)
+    ...)
 }
 \arguments{
   \item{object}{The data frame or numerical vector.}
@@ -27,8 +32,16 @@
 \value{
   When applied to a data frame, returns a data frame giving
   the confidence interval for each variable in the data
-  frame.  When applied to a numerical vector, returns a
-  vector.
+  frame using \code{t.test} or \code{binom.test}, unless
+  the data frame was produced using \code{do}, in which
+  case it is assumed that each variable contains resampled
+  statistics that serve as an estimated sampling
+  distribution from which a confidence interval can be
+  computed using either a central proportion of this
+  distribution or using the standard error as estimated by
+  the standard deviation of the estimated sampling
+  distribution.  When applied to a numerical vector,
+  returns a vector.
 }
 \description{
   Methods for \code{confint} to compute confidence

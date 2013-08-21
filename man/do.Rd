@@ -1,14 +1,12 @@
 \name{do}
+\alias{*}
 \alias{*,repeater,ANY-method}
 \alias{do}
+\alias{print}
 \alias{print,repeater-method}
 \title{Do Things Repeatedly}
 \usage{
   do(n = 1L, cull = NULL, mode = NULL)
-
-  \S4method{print}{repeater}(x, ...)
-
-  \S4method{*}{repeater,ANY}(e1, e2)
 }
 \arguments{
   \item{n}{number of times to repeat}
@@ -20,14 +18,6 @@
   \code{table}, \code{cointoss}, and \code{matrix}.}
 
   \item{mode}{target mode for value returned}
-
-  \item{e1}{an object}
-
-  \item{e2}{an object}
-
-  \item{...}{additional arguemnts}
-
-  \item{x}{an object used to select a method.}
 }
 \value{
   \code{do} returns an object of class \code{repeater}

@@ -25,7 +25,7 @@
   \item{xlab,ylab}{as per other lattice functions}
 
   \item{breaks}{a vector of break points for bins of
-  histograms, as in \code{\link{xhistogram}}}
+  histograms, as in \code{\link{histogram}}}
 
   \item{type}{passed along to various lattice graphing
   functions}
@@ -65,8 +65,11 @@ plotDist('binom', params=list( 25, .25), xlim=c(-1,26) )
 plotDist('binom', params=list( 25, .25), kind='cdf')
 plotDist('beta', params=list( 3, 10), kind='density')
 plotDist('beta', params=list( 3, 10), kind='cdf')
-plotDist( "binom", params=list(35,.25), groups= y < dbinom(qbinom(0.05, 35, .25), 35,.25) )
-plotDist( "binom", params=list(35,.25), groups= y < dbinom(qbinom(0.05, 35, .25), 35,.25), kind='hist')
+plotDist( "binom", params=list(35,.25),
+           groups= y < dbinom(qbinom(0.05, 35, .25), 35,.25) )
+plotDist( "binom", params=list(35,.25),
+           groups= y < dbinom(qbinom(0.05, 35, .25), 35,.25),
+           kind='hist')
 }
 \keyword{graphics}
 \keyword{stats}

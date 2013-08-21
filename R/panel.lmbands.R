@@ -1,3 +1,5 @@
+tryCatch(utils::globalVariables(c('panel.plotFun1')), 
+		 error=function(e) message('Looks like you should update R.'))
 #' show confidence and preciction bands on plots
 #' 
 #' @param x,y numeric vectors
@@ -20,10 +22,8 @@ function (x, y,
 		  interval = "confidence", 
 		  level = 0.95, 
 		  model = lm(y ~ x), 
-		  band.col = c(conf = trellis.par.get("superpose.line")$col[3], 
-					   pred = trellis.par.get("superpose.line")$col[2]), 
-		  band.lty = c( conf = trellis.par.get("superpose.line")$lty[3], 
-		  				pred = trellis.par.get("superpose.line")$lty[2]),
+		  band.col = c(conf = slcol[3], pred=slcol[2]),
+		  band.lty = c(conf = slty[3], pred=slty[2]),
 		  band.show = TRUE,
 		  fit.show = TRUE,
 		  band.alpha = .6,
@@ -31,6 +31,9 @@ function (x, y,
 		  npts = 100,
 		  ...) 
 {
+  slcol <- trellis.par.get("superpose.line")$col
+  slty  <- trellis.par.get("superpose.line")$lty
+  
 	band.alpha <- rep(band.alpha, length.out=2)
 	band.lwd <- rep(band.lwd, length.out=2)
 	band.show <- rep(band.show, length.out=2)
@@ -48,8 +51,8 @@ function (x, y,
 	bandDots[['lwd']] <- NULL
 
 	if (band.show[2])
-	do.call( panel.plotFun, 
-			c(list(Plower(x)~x, 
+	do.call( panel.plotFun1, 
+			c(list(makeFun(Plower(x)~x), 
 				   col=band.col[2], 
 				   lty=band.lty[2], 
 				   npts=npts, 
@@ -58,8 +61,8 @@ function (x, y,
 			  bandDots) )
 
 	if (band.show[2])
-	do.call( panel.plotFun, 
-			c(list(Pupper(x)~x, 
+	do.call( panel.plotFun1, 
+			c(list(makeFun(Pupper(x)~x), 
 				   col=band.col[2], 
 				   lty=band.lty[2], 
 				   alpha=band.alpha[2], 
@@ -68,8 +71,8 @@ function (x, y,
 			  bandDots) )
 
 	if (band.show[1])
-	do.call( panel.plotFun, 
-			c(list(Clower(x)~x, 
+	do.call( panel.plotFun1, 
+			c(list(makeFun(Clower(x)~x), 
 				   col=band.col[1], 
 				   lty=band.lty[1], 
 				   alpha=band.alpha[1], 
@@ -78,8 +81,8 @@ function (x, y,
 			  bandDots) )
 
 	if (band.show[1])
-	do.call( panel.plotFun, 
-			c(list(Cupper(x)~x, 
+	do.call( panel.plotFun1, 
+			c(list(makeFun(Cupper(x)~x), 
 				   col=band.col[1], 
 				   lty=band.lty[1], 
 				   alpha=band.alpha[1], 
@@ -88,7 +91,7 @@ function (x, y,
 			  bandDots) )
 
 	if (fit.show)
-	panel.plotFun(fit(x) ~ x, ...)
+	panel.plotFun1(makeFun(fit(x) ~ x), ...)
 
     panel.xyplot(x, y, ...)
 }

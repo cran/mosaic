@@ -1,11 +1,8 @@
 \docType{data}
 \name{Cards}
-\alias{Cards}
 \alias{card}
+\alias{Cards}
 \title{Standard Deck of Cards}
-\usage{
-  Cards
-}
 \description{
   A character vector with two or three character
   representations of each card in a standard 52-card deck.

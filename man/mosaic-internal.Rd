@@ -2,10 +2,10 @@
 \alias{.clean_names}
 \alias{.cull_for_do}
 \alias{.do.safe.call}
-\alias{.flatten}
 \alias{.is.formula}
 \alias{.is.simple.formula}
 \alias{.make.data.frame}
+\alias{.makeNice}
 \alias{.merge_data_frames}
 \alias{.simple.part}
 \alias{.squash_names}
@@ -20,8 +20,6 @@
 
   .simple.part(x)
 
-  .flatten(x)
-
   .make.data.frame(x)
 
   .clean_names(x)
@@ -32,14 +30,16 @@
 
   .cull_for_do(object)
 
-  .do.safe.call(what, args, quote = FALSE,
-    envir = parent.frame(), ...)
-
   fetchDynamics(x)
 
   dynamicsFunction(DE, additionalAssignments = list())
 
   rkFunction(DE, additionalArguments = list())
+
+  .makeNice(form, params = all.vars(form))
+
+  .do.safe.call(what, args, quote = FALSE,
+    envir = parent.frame(), ...)
 }
 \arguments{
   \item{x}{an object}
@@ -47,8 +47,6 @@
   \item{x}{a formula}
 
   \item{x}{a formula}
-
-  \item{x}{an R container object}
 
   \item{x}{object to be converted}
 
@@ -61,6 +59,18 @@
   \item{object}{an object}
 
   \item{sep}{a character}
+
+  \item{x}{a list}
+
+  \item{DE}{representation of DE, the result of
+  fetchDynamics}
+
+  \item{additionalAssignments,}{a list return a function}
+
+  \item{DE}{representation of DE, the result of
+  fetchDynamics}
+
+  \item{additionalAssignments,}{a list return a function}
 
   \item{what}{either a function or a non-empty character
   string naming the function to be called.}
@@ -75,18 +85,6 @@
   call.  This will be most useful if what is a character
   string and the arguments are symbols or quoted
   expressions.}
-
-  \item{x}{a list}
-
-  \item{DE}{representation of DE, the result of
-  fetchDynamics}
-
-  \item{additionalAssignments,}{a list return a function}
-
-  \item{DE}{representation of DE, the result of
-  fetchDynamics}
-
-  \item{additionalAssignments,}{a list return a function}
 }
 \value{
   TRUE for a formula, FALSE otherwise, even if evaluation
@@ -96,8 +94,6 @@
   right-hand side (e.g., \code{NULL}, ., 1, or 0)
 
   simple part of formula or NULL if formula is not simple
-
-  a vector containing items in \code{x}
 
   a data frame
 
@@ -110,16 +106,14 @@
   an object reflecting some of the information contained in
   \code{object}
 
-  The result of the (evaluated) function call.
-
   a list with two slots: names and functions
+
+  The result of the (evaluated) function call.
 }
 \description{
   Check if formula
 
   Check for simple formula
-
-  Extract simple part from formula
 
   Extract simple part from formula
 
@@ -129,6 +123,9 @@
 
   Create a functions with a vector argument of state, for
   use in rk()
+
+  Simplifying expressions, e.g. pure numbers go to numbers
+  Written by Aaron Mayerson, May 2013
 }
 \details{
   \code{.make.data.frame} converts things to a data frame

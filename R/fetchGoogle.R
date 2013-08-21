@@ -48,19 +48,18 @@
 #' @export
 #' 
 #' @examples
-#' \dontrun{s = fetchGoogle("https://spreadsheets.google.com/spreadsheet/pub?hl=en&hl=en&key=0Am13enSalO74dEVzMGJSMU5TbTc2eWlWakppQlpjcGc&single=TRUE&gid=0&output=csv")}
 #' \dontrun{s = fetchGoogle(key="0Am13enSalO74dEVzMGJSMU5TbTc2eWlWakppQlpjcGc")}
 #' 
 
 
 fetchGoogle = function(URL,key=NULL){
-  if( !require("RCurl")) {
-    stop("Requires installation of RCurl package")
-  }
+
+  .try_require("RCurl")
+
   if (missing(URL) & !is.null(key))
     URL = paste("https://docs.google.com/spreadsheet/pub?key=",
                 key,"&single=TRUE&gid=0","&output=csv",sep="")
-  s = getURLContent(URL)
+  s = RCurl::getURLContent(URL)
   foo = textConnection(s)
   b = read.csv(foo)
   close(foo)

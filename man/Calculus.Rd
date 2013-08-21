@@ -1,8 +1,8 @@
 \name{D}
-\alias{D}
 \alias{antiD}
+\alias{D}
 \alias{makeAntiDfun}
-\alias{numerical.integration}
+\alias{numerical_integration}
 \title{Derivative and Anti-derivative operators}
 \usage{
   D(formula, ..., .hstep = NULL, add.h.control = FALSE)
@@ -13,7 +13,7 @@
   makeAntiDfun(.function, .wrt, from,
     .tol = .Machine$double.eps^0.25)
 
-  numerical.integration(f, wrt, av, args, vi.from,
+  numerical_integration(f, wrt, av, args, vi.from,
     ciName = "C", .tol)
 }
 \arguments{
@@ -39,8 +39,8 @@
   parameter for setting .hstep.  Meaningful only for
   numerical derivatives.}
 
-  \item{lower.bound}{for numerical integraion, the lower
-  bound used}
+  \item{lower.bound}{for numerical integration only, the
+  lower bound used}
 
   \item{force.numeric}{If \code{TRUE}, a numerical integral
   is performed even when a symbolic integral is available.}
@@ -110,10 +110,10 @@
   use F(to) - F(from).
 }
 \note{
-  This function is not intended for direct use.  It
-  packages up the numerical anti-differentiation process so
-  that the contents of functions produced by \code{antiD}
-  look nicer to human readers.
+  \code{numerical_integration} is not intended for direct
+  use.  It packages up the numerical anti-differentiation
+  process so that the contents of functions produced by
+  \code{antiD} look nicer to human readers.
 }
 \examples{
 D(sin(t) ~ t)

@@ -42,7 +42,7 @@
   \code{wilcox.test} used to detect lack of symmetry}
 
   \item{\dots}{additional arguments passed to
-  \code{\link{xhistogram}}}
+  \code{\link{histogram}}}
 }
 \value{
   A lattice plot showing the sampling distribution.
@@ -62,8 +62,8 @@ rdata <- rmultinom(1000, sum(x), prob=rep(.25, 4))
 statTally(x, rdata, fun=max)  # unusual test statistic
 statTally(x, rdata, fun=var)  # equivalent to chi-squared test
 # Can also be used with test stats that are precomputed.
-D <- diff(mean( age ~ sex, HELPrct)); D
-nullDist <- do(1000) * diff( mean( age ~ shuffle(sex), HELPrct))
+D <- diff(mean( age ~ sex, data=HELPrct)); D
+nullDist <- do(1000) * diff( mean( age ~ shuffle(sex), data=HELPrct))
 statTally( D, nullDist)
 }
 \keyword{inference}

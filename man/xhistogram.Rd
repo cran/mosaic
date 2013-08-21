@@ -1,14 +1,18 @@
 \name{xhistogram}
+\alias{histogram}
 \alias{panel.xhistogram}
+\alias{prepanel.xhistogram}
 \alias{xhistogram}
 \alias{xhistogramBreaks}
 \title{Augmented histograms}
 \usage{
   xhistogram(x, data = NULL, panel = panel.xhistogram,
-    type = "density", center = NULL, width = NULL, breaks,
-    nint, ...)
+    type = "density", center = NULL, width = NULL, ...)
 
-  xhistogramBreaks(x, center = NULL, width = NULL, nint)
+  xhistogramBreaks(x, center = NULL, width = NULL, nint,
+    ...)
+
+  prepanel.xhistogram(x, breaks = xhistogramBreaks, ...)
 
   panel.xhistogram(x,
     dcol = trellis.par.get("plot.line")$col, dlwd = 2,
@@ -36,12 +40,14 @@
 
   \item{breaks}{break points for histogram bins, a function
   for computing such, or a method \code{\link{hist}} knows
-  about given as a character string.  If missing,
+  about given as a character string.  When using the
+  \pkg{mosaic} package defaults,
   \code{\link[mosaic]{xhistogramBreaks}} is used.}
 
   \item{\dots}{additional arguments passed to
-  \code{\link[lattice]{histogram}} and on to
-  \code{\link{panel.xhistogram}}}
+  \code{\link[lattice]{histogram}} and (by default when the
+  \pkg{mosaic} package has been loaded) on to
+  \code{\link{panel.xhistogram}}.}
 
   \item{dcol}{color of density curve}
 
@@ -93,25 +99,37 @@
   \item{alpha}{transparency level}
 }
 \value{
-  a trellis object
-
   \code{xhistogramBreaks} returns a vector of break points
 }
 \description{
-  \code{xhistogram} adds some additional functionality to
-  \code{\link[lattice]{histogram}} making it simpler to
-  obtain certain common histogram adornments.
+  The \pkg{mosaic} package adds some additional
+  functionality to \code{\link[lattice]{histogram}}, making
+  it simpler to obtain certain common histogram adornments.
+  This is done be resetting the default panel and prepanel
+  functions used by histogram.
+}
+\note{
+  The use of \code{xhistogram} has been deprecated.
+  Versions of \pkg{lattice} since 0.20-21 support setting
+  custom defaults for \code{breaks}, \code{panel}, and
+  \code{prepanel} used by \code{histogram}, so
+  \code{xhistogram} is no longer needed.  \code{xhistogram}
+  will be retained temporarily to support users with older
+  versions of \pkg{lattice}.
 }
 \examples{
-xhistogram(~age | substance, HELPrct, v=35, fit='normal')
-xhistogram(~age, HELPrct, labels=TRUE, type='count')
-xhistogram(~age, HELPrct, groups=cut(age, seq(10,80,by=10)))
-xhistogram(~age, HELPrct, groups=sex, stripes='horizontal')
-xhistogram(~racegrp, HELPrct, groups=substance,auto.key=TRUE)
+histogram(~age | substance, HELPrct, v=35, fit='normal')
+histogram(~age, HELPrct, labels=TRUE, type='count')
+histogram(~age, HELPrct, groups=cut(age, seq(10,80,by=10)))
+histogram(~age, HELPrct, groups=sex, stripes='horizontal')
+histogram(~racegrp, HELPrct, groups=substance,auto.key=TRUE)
 xhistogramBreaks(1:10, center=5, width=1)
 xhistogramBreaks(1:10, center=5, width=2)
 xhistogramBreaks(0:10, center=15, width=3)
 xhistogramBreaks(1:100, center=50, width=3)
 xhistogramBreaks(0:10, center=5, nint=5)
+}
+\seealso{
+  \code{\link[lattice]{histogram}}
 }
 
