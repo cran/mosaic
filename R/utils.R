@@ -1,3 +1,7 @@
+
+tryCatch(utils::globalVariables(c('RStudioGD')), 
+         error=function(e) message('Looks like you should update R.'))
+
 #' @details
 #' \code{.do.safe.call} avoids conflicts between named arguments and ... by taking named arguments 
 #' preferentially.
@@ -40,3 +44,10 @@
   }
   )
 }
+
+.manipulate_is_available <- function() {
+  if (! exists("RStudioGD") ) return (FALSE)
+  if (! is.function(RStudioGD) ) return (FALSE)
+  return(TRUE)
+}
+

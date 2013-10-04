@@ -1,8 +1,0 @@
-%\VignetteIndexEntry{A Compendium of R Commands to Teach Statistics}
-%\VignettePackage{mosaic}
-%\VignetteKeywords{mosaic, teaching, starting}
-
-\documentclass{article}
-\begin{document}
-This page intentionally left blank.
-\end{document}

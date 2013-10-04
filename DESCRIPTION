@@ -2,12 +2,13 @@ Package: mosaic
 Type: Package
 Title: Project MOSAIC (mosaic-web.org) statistics and mathematics
         teaching utilities
-Version: 0.7-30
-Date: 2013-08-20
+Version: 0.8-1
+Date: 2013-10-04
 Depends: R (>= 2.10), grid, lattice (>= 0.20.21)
 Imports: Hmisc, methods, utils, splines
 Suggests: MASS, reshape2, ggplot2, plyr, maptools, manipulate, vcd,
-        RCurl, testthat
+        RCurl, testthat, knitr, tools
+VignetteBuilder: knitr
 Author: Randall Pruim <rpruim@calvin.edu>, Daniel Kaplan
     <kaplan@macalester.edu>, Nicholas Horton <nhorton@amherst.edu>
 Maintainer: Randall Pruim <rpruim@calvin.edu>
@@ -36,8 +37,8 @@ Collate: 'adapt_seq.R' 'aggregatingAux.R' 'aggregatingMeta.R'
         'rgeo.R' 'settings.R' 'simplify.R' 'smoothers.R' 'statTally.R'
         'surround.R' 'symbolicD.R' 'symbolicInt.R' 'tally.R' 'themes.R'
         'ttest.R' 'Tukey.R' 'utils.R' 'xchisq.test.R' 'xhistogram.R'
-        'xpnorm.R' 'xqqmath.R' 'zzz.R' 'ediff.R'
-Packaged: 2013-08-21 06:20:28 UTC; rpruim
+        'xpnorm.R' 'xqqmath.R' 'zzz.R' 'ediff.R' 'fetchGapminder.R'
+Packaged: 2013-10-05 05:17:41 UTC; rpruim
 NeedsCompilation: no
 Repository: CRAN
-Date/Publication: 2013-08-21 09:08:59
+Date/Publication: 2013-10-05 07:40:45

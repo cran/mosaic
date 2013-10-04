@@ -59,10 +59,25 @@ xhistogramBreaks <- function(x, center=NULL, width=NULL, nint, ...) {
   if (missing(nint) || is.null(nint)) { 
     nint <- round(1.5 *log2(length(x)) + 1) 
   }
-  if (is.null(width)) { width <- diff(range(x)) / nint }
+  
+  if (is.null(width)) { 
+    nint <- max(nint - 1, 1)
+    width <- diff(range(x)) / nint
+  }
 
-  shift <- -.5 + ( (floor( (min(x) - center)/width) ):(1 + ceiling( (max(x) - center)/width)) )
-  breaks <-  center + shift * width
+  shift <- ( (floor( (min(x) - center)/width) ):(1 + ceiling( (max(x) - center)/width)) )
+  breaks <-  -.5 * width + center + shift * width
+# was an attempt to pretty-up the breaks
+#  digits <- 15
+#  while ( digits > 2 && diff(range(diff(breaks))) > 0) {
+#    digits <- digits - 1 
+#    width <- round(width,digits)
+#    breaks <-  -.5 * width + center + shift * width
+#  }
+  
+  if (breaks[2] < min(x)) breaks <- tail(breaks,-1)
+  if (breaks[length(breaks)-1] > max(x)) breaks <- head(breaks,-1)
+  
   if (min(breaks) > min(x) || max(breaks) < max(x)) 
 	  stop("Bug alert: break points don't cover data.")
   return(breaks)
@@ -274,3 +289,5 @@ function (x,
         }
     }
 }
+
+         
