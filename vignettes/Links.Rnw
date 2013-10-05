@@ -1,8 +1,0 @@
-%\VignetteIndexEntry{Other Resources}
-%\VignettePackage{mosaic}
-%\VignetteKeywords{mosaic, resources}
-
-\documentclass{article}
-\begin{document}
-This page intentionally left blank.
-\end{document}
