@@ -9,8 +9,9 @@
 #' @param parm not used -- for compatibility with other confint methods
 #' @param level confidence level (default 0.95)
 #' @param \dots additional arguments (currently ignored)
-#' @param method either "stderr" (default) or "quantile"
-#' @param margin if true, report intervals as a center and margin of error.
+#' @param method either "stderr" (default) or "quantile".  ("se" and "percentile" are 
+#' allowed as aliases) or a vector containing both.
+#' @param margin.of.error if true, report intervals as a center and margin of error.
 #'
 #' @return When applied to a data frame, returns a data frame giving the 
 #' confidence interval for each variable in the data frame using 
@@ -25,47 +26,74 @@
 #' s <- do(500)*mean( age ~ sex, data=resample(HELPrct) )
 #' confint(s)
 #' confint(s, method="quantile")
-#' confint(s, margin=TRUE)
-#' confint(s, margin=TRUE, level=0.99 )
+#' confint(s, margin.of.error=TRUE)
+#' confint(s, margin.of.error=TRUE, level=0.99 )
 #' s2 <- do(500)*mean( resample(1:10) ) 
 #' confint(s2)
 # ==================
-confint.numeric = function(object, parm, level=0.95, ..., method=c("stderr", "quantile"),margin=FALSE) {
-  vals = .mosaic.get.ci( object, level, method[1] )
-  if( margin ) return( c(center=mean(vals), margin.of.error=diff(vals)/2) )
-  else return(vals)
+confint.numeric = function(object, parm, level=0.95, ..., method="stderr", 
+                           margin.of.error="stderr" %in% method=="stderr") {
+  method <- match.arg(method, c("stderr","percentile","quantile"), several.ok=TRUE)
+  result <- list()
+  for (m in method) {
+    vals <- .mosaic.get.ci( object, level, m )
+    result[[m]] <-  if( margin.of.error )  
+      c(center=mean(vals), margin.of.error=diff(vals)/2, method=m, level=level)  else 
+        vals
+  }
+  
+  
 }
 # =================
 #' @rdname confint
 #' @method confint do.data.frame
-confint.do.data.frame = function(object, parm, level=0.95, ..., method=c("stderr", "quantile"), margin=FALSE) {
-  method <- match.arg(method) # which method was selected
-  nms <- names(object)
+confint.do.data.frame = function(object, parm, level=0.95, ..., 
+                                 method="stderr", margin.of.error="stderr" %in% method) {
+  method <- match.arg(method, c("se","stderr","percentile","quantile"), several.ok=TRUE) # which method was selected
+  method[method=="percentile"] <- "quantile"
+  method[method=='se'] <- 'stderr'
+  method <- unique(method)
+  
+  if (missing(parm)) parm <- names(object)
+  nms <- intersect(names(object),parm)
   n <- length(nms)
-  res <- data.frame( name=rep(NA,n), lower=rep(NA,n), upper=rep(NA,n) )
+  res <- data.frame( matrix( nrow=0, ncol=5) )
+  names(res) <- c("name", "lower","upper","level","method")
+  row <- 0
   for (k in 1:n ) {
-    if (is.numeric( object[[nms[k]]] )) {
-      vals <- .mosaic.get.ci( object[[nms[k]]], level, method)
-      res$name[k] <- nms[k]
-      res$lower[k] <- vals[1]
-      res$upper[k] <- vals[2]
+    for (m in method) {
+      for (l in level) {
+        if (is.numeric( object[[nms[k]]] )) {
+          row <- row + 1
+          vals <- .mosaic.get.ci( object[[nms[k]]], l, m)
+          res[row,"name"] <- nms[k]
+          res[row,"lower"] <- vals[1]
+          res[row,"upper"] <- vals[2]
+          res[row,"level"] <- l
+          res[row,"method"] <- m
+          res[row,"estimate"] <- if(m == "stderr") mean(vals) else mean(object[[nms[k]]], na.rm=TRUE)
+        }
+      }
     }
   }
-  res <- subset(res, !is.na(res$name) ) # get rid of non-quantitative variables
-  if( margin ) {
-    res <- data.frame(name=res$name, 
-                     point=(res$upper+res$lower)/2, 
-                     margin.of.error=(res$upper-res$lower)/2)
+#  res <- subset(res, !is.na(res$name) ) # get rid of non-quantitative variables
+  if( margin.of.error ) {
+#     res[, "estimate"] <- with( res, (upper+lower)/2 )
+    res[, "margin.of.error"] <- with( res,  (res$upper-res$lower)/2 )
+    res[ res$method!="stderr", "estimate"] <- NA
+    res[ res$method!="stderr", "margin.of.error"] <- NA
+  } else {
+    res <- res[ , setdiff(names(res), "estimate") ]
   }
 
   # Change the names to those given by confint.default
-  colnames(res) <- 
-    if (method=="quantile") 
-      c("name", paste(c((1-level)/2, 1-(1-level)/2)*100, "%" ))
-    else c("name", "lower", "upper")
+#  colnames(res) <- 
+#    if (method=="quantile") 
+#      c("name", paste(c((1-level)/2, 1-(1-level)/2)*100, "%" ))
+#    else c("name", "lower", "upper")
   
-  if (margin)  # Report as a center and margin of error
-    res = .turn.to.margin(res)
+#  if (margin.of.error)  # Report as a center and margin of error
+#    res = .turn.to.margin(res)
 
   return( res )
 }
@@ -75,11 +103,12 @@ confint.do.data.frame = function(object, parm, level=0.95, ..., method=c("stderr
               margin.of.error=(res[[3]]-res[[2]])/2)
 }
 .mosaic.get.ci = function( vals, level, method ) {
+  alpha <- (1-level)/2
   if( method == "stderr" ) res = mean(vals, na.rm=TRUE) + 
     c(-1,1)*sd(vals, na.rm=TRUE)*
-    qt(1-(1-level)/2, sum(!is.na(vals))-1 )
+    qt(1-alpha, sum(!is.na(vals))-1 )
   # the sum(!is.na(vals)) above is to account for NAs in finding the degrees of freedom
-  else res = qdata( c((1-level)/2, 1-(1-level)/2), vals )
+  else res = qdata( c(alpha, 1-alpha), vals )
   return(res)
 }
 
@@ -92,7 +121,8 @@ confint.data.frame = function(object, parm, level=0.95, ... )  {
     x <- object[,c]
     if (is.numeric(x)) { 
       newCI <- interval(t.test(x, ...))
-      newRow <- data.frame( method="t.test", estimate=newCI[1], lower=newCI[2], upper=newCI[3], level=newCI[4])
+      newRow <- data.frame( method="t.test", estimate=newCI[1], lower=newCI[2], 
+                            upper=newCI[3], level=newCI[4])
       
     } else if ( (is.factor(x) && nlevels(x) <= 2) || (is.character(x) && length(unique(x)) <= 2) || is.logical(x)) { 
       newCI <- interval(binom.test(x, ...)) 

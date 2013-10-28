@@ -1,17 +1,17 @@
-95d4df40cf35028eafcf38ae0110671e *DESCRIPTION
+9f7f9cada7f1abf23559870ff3374e07 *DESCRIPTION
 9f2aa32d3696744a1dcd3cd65d538a52 *NAMESPACE
 dd51a5b8bb838749a65fc538854dcc5c *R/CIsim.R
 ba591cf9906a94b8727099b038bd5bc2 *R/Calculus.R
 9840ac4fd32f7ada5a0c1b200b08641a *R/Tukey.R
 2e11feea40098086cdb7ad8e77ef5a1a *R/adapt_seq.R
 6838fb71a944fefb6a2ecd97871e566f *R/aggregatingAux.R
-c42f67572aaf451ffc84aa5fa03910c6 *R/aggregatingMeta.R
+b0dd83496fe72e48060446cd4734a857 *R/aggregatingMeta.R
 3263d8012a4eb21940346be8fded1fed *R/as.xtabs.R
 4f910e64041e02df0b50efcbb21d64f5 *R/bargraph.R
 5a7b3afeb4a1c9e5bf89f0e3757b9c43 *R/binom.test.R
 da5b1aadc2bf20fc458946ba48aad3a3 *R/compareMean.R
 66cafa1f8d6947da91efbba9a09dff76 *R/compareProportion.R
-d318925139f9ec7c90f3d26bb649a452 *R/confint.R
+d777fa584a10e935af7c213ba81beccd *R/confint.R
 44f4ec1610b99ef99fe4277631db33fd *R/cross.R
 e2aee9cda5ae2cfe92c3112c8acdc9e6 *R/datasets.R
 9895455821b1c7e4a1980aa0503571fa *R/dfapply.R
@@ -52,7 +52,7 @@ b6e646f50fbbddb9bb64c31ea51d2e43 *R/plotDist.R
 47e1759479694bf735e44594f61634bd *R/plotPoints.R
 d66b7b8a266f1262bbce8d882cc60585 *R/pqrdata.R
 6ae592bcc006c4e41f2ea858d7bd9a2c *R/project.R
-eab86aacbec399a046c85881199d025b *R/prop.test.R
+a8635003566599f5eedd6c80845d77fe *R/prop.test.R
 019baf8d74f591964b14d7818b4858eb *R/rand.R
 46cc60205c4a887a479f98b99f0c2c40 *R/read.file.R
 d8431f91f39ccdc5161e5f693cfa6e2f *R/resample.R
@@ -118,7 +118,7 @@ cafefec6fa1b3b690bae1f43892de731 *inst/doc/MustangPrice.csv
 b16982878a39f255376e9542d2c0dc39 *inst/doc/SleepCaffeine.csv
 9deabf39083095a04d0bd2625c2b7c8d *inst/doc/Vignettes.R
 db2588926390c2c73fd586d12d62b940 *inst/doc/Vignettes.Rnw
-370e2aadd75de9d08e3b960aba50d11f *inst/doc/Vignettes.pdf
+9c3553d0757554f28efe5731310562a8 *inst/doc/Vignettes.pdf
 a6cf2bd2326ffd8821aa71c90b247ddc *inst/google/googlemap.html
 2188686712be352d26015aa3ad57a5a4 *inst/google/googlemap3.html
 49ded40f7ec988fb6e79ad49ecb59acc *inst/otherdata/Alcohol.csv
@@ -166,7 +166,7 @@ dbd906571e3c8f8977b2a6173a39fb7a *man/Utilities2.Rd
 4b4d6f79fac387ec4d9107147f0e0b37 *man/Whickham.Rd
 35a8481bbd8450f3f55d1fca516f30f1 *man/adapt_seq.Rd
 ef00b3385e0397c196740b7fbb7ac747 *man/aggregating.Rd
-b36476ebc117ee238901eb5b58e9033c *man/aggregatingFunction1.Rd
+4298a51a2307f0c3676da86e47666587 *man/aggregatingFunction1.Rd
 3e195c5150fce68ac37078d290e59101 *man/aggregatingFunction2.Rd
 1a6e2311e6332b869554655db24394fa *man/as-xtabs.Rd
 88c344643d9e263eeffcd3fd0af08750 *man/bargraph.Rd
@@ -175,7 +175,7 @@ b36476ebc117ee238901eb5b58e9033c *man/aggregatingFunction1.Rd
 6305b9423a5a08a422c082f6914d5b7c *man/columns.Rd
 a6afb4f8748a213cceb6a38a117c8679 *man/compareMean.Rd
 54cd81cd8726dd88fae3e57ddda3fb77 *man/compareProportion.Rd
-f74704779baa09dbaca311e49d307fc2 *man/confint.Rd
+312495bf0fd1e949899f51cbf21f23e6 *man/confint.Rd
 4fd8a4dd9232ddc61b07eabb3a4e7785 *man/cross.Rd
 21a0bbeaccdc261d3a714062d02f5da1 *man/deg2rad.Rd
 18ad67f2663c9afc39a7be125fda4048 *man/dfapply.Rd
@@ -231,7 +231,7 @@ e0b20aa0b98daad25cf00877bf9a0611 *man/plotFun.Rd
 61febbef5bc066b2618405c4bb94d332 *man/pqrdata.Rd
 482431947d99a67088eec282891ea117 *man/project-methods.Rd
 14341ef6d9b759776290f77b5faae55a *man/prop.Rd
-9f16345adfbade06a94ef85369f02581 *man/prop.test.Rd
+677890451edfd8a68edbac5361e23b3e *man/prop.test.Rd
 660b67a9ffb8ae8603711ce4138f8d55 *man/r.squared.Rd
 d447c166ae45a0e710b3222b2230fbf3 *man/rand.Rd
 60faa5a6e33927df60f9413d9dacdd80 *man/read.file.Rd
