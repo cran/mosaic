@@ -25,20 +25,15 @@
 #' @param p a vector of probabilities
 #' @param vals a vector containing the data
 #' @param data a data frame in which to evaluate vals
+#' @param groups a grouping variable, typically the name of a variable in \code{data}
+#' @param ..fun.. a function.  Most users will not need to change the default value.
 #' @param \dots additional arguments passed to \code{quantile} or \code{sample}
 #' @return For \code{qdata}, a vector of quantiles
 #' @export
-#' 
+#' @rdname pqrdata
 #' @keywords distribution 
 
-#' @rdname pqrdata
-#'
-#' @examples
-#' data(iris)
-#' qdata(.5, iris$Sepal.Length)
-#' qdata(.5, Sepal.Length, data=iris)
-
-qdata <- function(p, vals, data=NULL, ... ) {
+.qdata_old <- function(p, vals, data=NULL, ... ) {
         if( !is.null(data) ) { # handle data= style of passing values
             vals = eval( substitute(vals), data, enclos=parent.frame())
         }
@@ -49,6 +44,43 @@ qdata <- function(p, vals, data=NULL, ... ) {
 	quantile(vals, probs=p, na.rm=TRUE, ... )
 }
 
+#' @rdname pqrdata
+#'
+#' @examples
+#' data(iris)
+#' qdata(.5, Sepal.Length ~ Species, data=iris)
+#' qdata(.5, ~Sepal.Length, groups=Species, data=iris)
+#' qdata(.5, iris$Sepal.Length)
+#' qdata(.5, Sepal.Length, data=iris)
+#' qdata(.5, Sepal.Length, groups=Species, data=iris)
+
+
+#' @rdname pqrdata
+#' 
+qdata_v <- function( x, p=seq(0, 1, 0.25), ... ) {
+  .check_for_quant_input(x)
+  if ( any(p > 1) | any(p < 0) ) 
+    stop("Prob outside of range 0 to 1.  Do you perhaps want pdata?")
+  qs <- quantile(x, probs=p, na.rm=TRUE, ... )
+  if (length(p) == 1) {
+    result <- setNames( c(p, qs), c("p","quantile") )
+  } else {
+    result <- data.frame(quantile = qs, p=p)
+  }
+  result
+}
+
+#' @rdname pqrdata
+qdata_f <- aggregatingFunction1(qdata_v, output.multiple=TRUE)
+
+#' @rdname pqrdata
+qdata <- function( p, vals, data=NULL, ...) { 
+  vals_call <- substitute(vals)
+  args <- eval(substitute(alist(vals_call, ...)))
+  args [["p"]] <- p 
+  args [["data"]] <- data
+  do.call( "qdata_f", args )
+}
 
 #' \code{cdata} is a wrapper around \code{qdata} and determines endpoints of 
 #' central probabilities rather than tail probabilities.
@@ -59,8 +91,10 @@ qdata <- function(p, vals, data=NULL, ... ) {
 #' data(iris)
 #' cdata(.5, iris$Sepal.Length)
 #' cdata(.5, Sepal.Length, data=iris)
+#' cdata_f(~Sepal.Length, data=iris, p=.5)
+#' cdata_f(~Sepal.Length | Species, data=iris, p=.5)
 
-cdata <- function( p, vals, data=NULL, ...) {
+.cdata_old <- function( p, vals, data=NULL, ...) {
   if( !is.null(data) ) { # handle data= style of passing values
     vals = eval( substitute(vals), data, enclos=parent.frame())
   }
@@ -71,6 +105,51 @@ cdata <- function( p, vals, data=NULL, ...) {
   result <- cbind(low=lo, hi=hi)
   row.names(result) <- paste( 100*p, "%", sep="" )
   return(result)
+}
+
+
+#' @rdname pqrdata
+cdata_v <- function( x, p=.95, ... ) {
+  lo_p <- (1-p)/2
+  hi_p <- 1 - lo_p
+  lo <- quantile( x, lo_p, ... )
+  hi <- quantile( x, hi_p, ... )
+  if (length(p) == 1) {
+    result <- setNames( c(lo, hi, p), c("low", "hi", "central.p") )
+  } else {
+    result <- data.frame(low=lo, hi=hi, central.p=p)
+  }
+  # row.names(result) <- paste( 100*p, "%", sep="" )
+  return(result)
+}
+
+#' @rdname pqrdata
+cdata_f <- aggregatingFunction1( cdata_v, output.multiple=TRUE )
+
+
+#' @rdname pqrdata
+cdata <- function( p, vals, data=NULL, ...) { 
+  vals_call <- substitute(vals)
+  args <- eval(substitute(alist(vals_call, ...)))
+  args [["p"]] <- p # substitute(p, parent.frame())
+  args [["data"]] <- data
+  do.call( "cdata_f", args )
+}
+  
+.pdata = function(q, vals, data=NULL, lower.tail=TRUE, ... ) {
+   if( !is.null(data) ) {
+         vals = eval( substitute(vals), data, enclos=parent.frame())
+   }
+  .check_for_quant_input(vals)
+#  L = length(q)
+#  res = rep(0,L)
+  n <- sum( ! is.na(vals) )
+  probs <- sapply( q, function(q) { sum( vals <= q , na.rm=TRUE ) } ) / n
+  if (lower.tail) { 
+  	return(probs)
+  } else {
+	return( 1 - probs )
+  }
 }
 
 #' \code{pdata} computes cumulative probabilities from data.
@@ -84,7 +163,33 @@ cdata <- function( p, vals, data=NULL, ...) {
 #' pdata(3:6, iris$Sepal.Length)
 #' pdata(3:6, Sepal.Length, data=iris)
 #'
-pdata = function(q, vals, data=NULL, lower.tail=TRUE, ... ) {
+pdata_v = function(x, q, lower.tail=TRUE, ... ) {
+  .check_for_quant_input(x)
+  n <- sum( ! is.na(x) )
+  probs <- sapply( q, function(q) { sum( x <= q , na.rm=TRUE ) } ) / n
+  if (lower.tail) { 
+  	return(probs)
+  } else {
+	return( 1 - probs )
+  }
+}
+
+#' @rdname pqrdata
+pdata_f <- aggregatingFunction1( pdata_v, output.multiple=TRUE )
+#' 
+#' @rdname pqrdata
+pdata <- function (q, vals, data = NULL, ...) 
+{
+  vals_call <- substitute(vals)
+  args <- eval(substitute(alist(vals_call, ...)))
+  args[["q"]] <- q
+  args[["data"]] <- data
+  do.call("pdata_f", args)
+}
+
+#'
+#' @rdname pqrdata
+.pdata_old = function(q, vals, data=NULL, lower.tail=TRUE, ... ) {
    if( !is.null(data) ) {
          vals = eval( substitute(vals), data, enclos=parent.frame())
    }

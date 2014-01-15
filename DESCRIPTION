@@ -2,8 +2,8 @@ Package: mosaic
 Type: Package
 Title: Project MOSAIC (mosaic-web.org) statistics and mathematics
         teaching utilities
-Version: 0.8-3
-Date: 2013-10-26
+Version: 0.8-10
+Date: 2014-1-15
 Depends: R (>= 3.0.0), grid, lattice (>= 0.20-21)
 Imports: Hmisc, methods, utils, splines
 Suggests: MASS, reshape2, ggplot2, plyr, maptools, manipulate, vcd,
@@ -21,24 +21,7 @@ Description: Data sets and utilities from Project MOSAIC (mosaic-web.org) used
 License: GPL (>= 2)
 LazyLoad: yes
 LazyData: yes
-Collate: 'adapt_seq.R' 'aggregatingAux.R' 'aggregatingMeta.R'
-        'as.xtabs.R' 'bargraph.R' 'binom.test.R' 'Calculus.R' 'CIsim.R'
-        'compareMean.R' 'compareProportion.R' 'confint.R' 'cross.R'
-        'datasets.R' 'dfapply.R' 'do.R' 'dotPlot.R' 'evalFormula.R'
-        'expandFun.R' 'favstats.R' 'fetchData.R' 'fetchGoogle.R'
-        'findZeros.R' 'findZerosMult.R' 'fitModel.R' 'fitSpline.R'
-        'frequencyPolygon.R' 'integrateODE.R' 'interval.R'
-        'is.wholenumber.R' 'ladd.R' 'linear-algebra.R' 'logit.R'
-        'makeFun.R' 'maps.R' 'mm.R' 'mosaic-package.R' 'mPlots.R'
-        'ntiles.R' 'numD.R' 'oddsRatio.R' 'panel.lmbands.R'
-        'parseFormula.R' 'perctable.R' 'plotCumfreq.R' 'plotDist.R'
-        'plotFun.R' 'plotPoints.R' 'pqrdata.R' 'project.R'
-        'prop.test.R' 'rand.R' 'read.file.R' 'resample.R' 'rfun.R'
-        'rgeo.R' 'settings.R' 'simplify.R' 'smoothers.R' 'statTally.R'
-        'surround.R' 'symbolicD.R' 'symbolicInt.R' 'tally.R' 'themes.R'
-        'ttest.R' 'Tukey.R' 'utils.R' 'xchisq.test.R' 'xhistogram.R'
-        'xpnorm.R' 'xqqmath.R' 'zzz.R' 'ediff.R' 'fetchGapminder.R'
-Packaged: 2013-10-28 05:13:52 UTC; rpruim
+Packaged: 2014-01-16 20:56:42 UTC; rpruim
 NeedsCompilation: no
 Repository: CRAN
-Date/Publication: 2013-10-28 07:07:14
+Date/Publication: 2014-01-16 22:45:40
