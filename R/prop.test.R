@@ -11,6 +11,10 @@
 #' 
 #' @param x  count of successes, length 2 vector of success and failure counts, a formula,
 #'   			or a character, numeric, or factor vector containing raw data.
+#'     		
+#' @param groups when \code{x} is a formula, \code{groups} can be used to 
+#' compare groups.  (This can also be done using by placing both variables into
+#' the formula.)  See the examples.
 #' 
 #' @param n  sample size (successes + failures) or a data frame 
 #'   (for the formula interface) 
@@ -57,6 +61,7 @@
 #' prop.test( ~long , faithful )
 #' prop.test( homeless ~ sex, data=HELPrct )
 #' prop.test( ~ homeless | sex, data=HELPrct )
+#' prop.test( ~ homeless, groups= sex, data=HELPrct )
 #' 
 #' @keywords stats
 #' 
@@ -105,9 +110,9 @@ setMethod(
 		  function(
 				   x, n, p=NULL, 
 				   alternative = c("two.sided", "less", "greater"), 
-				   conf.level = 0.95, success=NULL, data.name, data, ...) 
+				   conf.level = 0.95, success=NULL, data.name, data, groups=NULL, ...) 
 		  {
-			  formula <- x
+			  formula <- mosaic_formula_q(x, groups=groups, max.slots=2)
 			  missing.n <- missing(n)
 			  missing.data <- missing(data)
 			  dots <- list(...)
@@ -166,18 +171,20 @@ setMethod(
 				   alternative = c("two.sided", "less", "greater"), 
 				   conf.level = 0.95, success=NULL, data.name, ...) 
 		  {
-			  if ( length(x) == 1 ) {
+		    if ( FALSE ) {  # no longer allowing this since it masks some stats::prop.test() behavior
+		      result <-  stats::prop.test(x=x[1], n=sum(x), p=p, alternative=alternative,
+		                                  conf.level=conf.level,...) 
+		      result$data.name <- deparse(substitute(x))
+		      return(result)
+		    }
+			  if ( !missing(n) ) {  # doing this if there is an n
 				  result <-  stats::prop.test(x=x, n=n, p=p, alternative=alternative,
 											  conf.level=conf.level,...) 
 				  result$data.name <- paste( deparse(substitute(x)), "and", deparse(substitute(n)) )
 				  return(result)
 			  }
-			  if ( length(x) == 2 ) {
-				  result <-  stats::prop.test(x=x[1], n=sum(x), p=p, alternative=alternative,
-											  conf.level=conf.level,...) 
-				  result$data.name <- deparse(substitute(x))
-				  return(result)
-			  }
+        
+        # when n is missing, treat the numbers as raw data rather than counts
 
 			  if (missing(data.name)) { 
 				  data.name <- deparse(substitute(x)) 

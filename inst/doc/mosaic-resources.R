@@ -2,7 +2,7 @@
 ## ----include=FALSE-------------------------------------------------------
 pdfpath <- function(name) {
   return( 
-    paste('http://github.com/rpruim/mosaic/blob/master/inst/PDFs/',
+    paste('http://github.com/rpruim/mosaic/blob/master/inst/doc/',
           name, "?raw=TRUE",sep="")
     )
 }
