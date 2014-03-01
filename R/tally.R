@@ -13,7 +13,6 @@
 logical2factor  <- function(x, ...) { UseMethod('logical2factor') }
 
 #' @rdname logical2factor
-#' @method logical2factor default
 logical2factor.default  <- function( x, ... ) {
 	if (is.logical(x)) {
 		x <- factor(x, levels=c(TRUE,FALSE), labels=c("TRUE","FALSE"))
@@ -22,7 +21,6 @@ logical2factor.default  <- function( x, ... ) {
 }
 
 #' @rdname logical2factor
-#' @method logical2factor data.frame
 logical2factor.data.frame  <- function( x, ... ) {
 	for (var in names(x)) {
 		if (is.logical(x[,var])) {
@@ -64,7 +62,7 @@ logical2factor.data.frame  <- function( x, ... ) {
 
 tally <- function(x, data=parent.frame(), 
                       format=c('default','count','proportion','percent'), 
-                      margins=TRUE,
+                      margins=FALSE,
                       quiet=TRUE,
                       subset, ...) {
 	format <- match.arg(format)
@@ -82,9 +80,9 @@ tally <- function(x, data=parent.frame(),
 
 	if (!missing(subset)) {
 		subset <- eval(substitute(subset), data, environment(formula))
-		if (!is.null(evalF$left))           evalF$left <- evalF$left[subset,]
-		if (!is.null(evalF$right))         evalF$right <- evalF$right[subset,]
-		if (!is.null(evalF$condition)) evalF$condition <- evalF$condition[subset,]
+		if (!is.null(evalF$left))           evalF$left <- evalF$left[subset, , drop=FALSE]
+		if (!is.null(evalF$right))         evalF$right <- evalF$right[subset, , drop=FALSE]
+		if (!is.null(evalF$condition)) evalF$condition <- evalF$condition[subset, , drop=FALSE]
 	}
   
   # provide warning for 3-slot formulas
@@ -117,7 +115,8 @@ tally <- function(x, data=parent.frame(),
 		   		100 * prop.table( res, margin = ncol(evalF$right) + columns(evalF$condition) )
 		   )
 	if (margins) {  # add margins for the non-condition dimensions of the table
-		res <- addmargins(res, 1:ncol(evalF$right), FUN=list(Total=sum), quiet=quiet )
+    if ( !is.null(evalF$right) & ncol(evalF$right) > 0 )
+		  res <- addmargins(res, 1:ncol(evalF$right), FUN=list(Total=sum), quiet=quiet )
 	}
 	return(res)
 }

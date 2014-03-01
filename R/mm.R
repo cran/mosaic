@@ -84,7 +84,6 @@ mm <- function(formula, data=parent.frame(), fun=mean, drop=TRUE, ... ) {
 #' @param pooled Whether to use a pooled variance of residuals to compute the standard error. 
 #' (This is what \code{lm} does.)
 #' @param margin Whether to present the margin of error rather than the lower and upper bounds
-#' @method confint groupwiseModel
 confint.groupwiseModel <- function(object, parm, level=0.95, ..., pooled=TRUE, margin=FALSE) {
   n <- length(object$fitted)
   # Find the standard error of each group
@@ -110,7 +109,6 @@ confint.groupwiseModel <- function(object, parm, level=0.95, ..., pooled=TRUE, m
 }
 
 #' @rdname mm
-#' @method coef groupwiseModel
 coef.groupwiseModel <- function(object, ...) {
   x <- object$coefs
   if( is.numeric(x)) return(x)
@@ -125,9 +123,9 @@ coef.groupwiseModel <- function(object, ...) {
 }
 # Methods
 #' @rdname mm
-#' @method print groupwiseModel
 #' @param x Object to be printed
 #' @param digits number of digits to display
+#' @method print groupwiseModel
 print.groupwiseModel <- function(x, ..., digits=max(3, getOption("digits") -3) ) {
   # directly copied from print.lm, but since this isn't an lm object, it
   # doesn't make sense to call print.lm on it.
@@ -143,14 +141,11 @@ print.groupwiseModel <- function(x, ..., digits=max(3, getOption("digits") -3) )
   invisible(x)
 }
 #' @rdname mm
-#' @method residuals groupwiseModel
 #' @param object groupwiseMean object from which to extract the residuals
 residuals.groupwiseModel <- function(object, ...) {object$resids}
 #' @rdname mm
-#' @method fitted groupwiseModel
 fitted.groupwiseModel <- function(object, ...) {object$fitted}
 #' @rdname mm
-#' @method summary groupwiseModel
 summary.groupwiseModel <- function(object, ... ){
   resids <- resid(object)
   sigma <- sqrt(sum(resids^2)/(length(resids)-object$df))
@@ -158,13 +153,13 @@ summary.groupwiseModel <- function(object, ... ){
   ar2 <- r2*(length(resids)-1)/(length(resids)-object$df)
   res <- structure( list(sigma=sigma,r.squared=1-r2,call=object$call,adj.r.squared=1-ar2,
                          df=object$df,coefs=confint(object)), 
-                         class= "summary.groupwiseModel"
+                         class= "summary_groupwiseModel"
   )
   return(res)
 }
 #' @rdname mm
-#' @method print summary.groupwiseModel
-print.summary.groupwiseModel <- function(x, digits = max(3, getOption("digits")-3), ...) {
+#' @method print summary_groupwiseModel
+print.summary_groupwiseModel <- function(x, digits = max(3, getOption("digits")-3), ...) {
   cat("Groupwise Model\n")
   cat(paste("Call: ", deparse(x$call), "\n"))
   cat("\n"); print(x$coefs); cat("\n")

@@ -1,3 +1,6 @@
+tryCatch(utils::globalVariables(c('.row')), 
+         error=function(e) message('Looks like you should update R.'))
+
 #' Do Things Repeatedly
 #' 
 #' \code{do()} provides a natural syntax for repetition tuned to assist 
@@ -17,6 +20,15 @@
 #'   
 #' @param mode  target mode for value returned
 #' 
+#' @param algorithm a number usd to select the algorithm used.  Currently numbers below 1 
+#' use an older algorithm and numbers >=1 use a newer algorithm which is faster in some 
+#' situations.
+#' @param parallel a logical indicating whether parallel computation should be attempted
+#' using the \pkg{parallel} package (if it is installed).
+#' 
+#' @param e1 an object (in cases documented here, the result of running \code{do})
+#' @param e2 an object (in cases documented here, an expression to be repeated)
+#' 
 #' @return \code{do} returns an object of class \code{repeater} which is only useful in
 #' the context of the operator \code{*}.  See the examples.
 #' @author Daniel Kaplan (\email{kaplan@@macalaster.edu})
@@ -29,17 +41,17 @@
 #' do(3) * rnorm(1)
 #' do(3) * "hello"
 #' do(3) * lm(shuffle(height) ~ sex + mother, Galton)
-#' do(3) * summary(lm(shuffle(height) ~ sex + mother, Galton))
+#' do(3) * anova(lm(shuffle(height) ~ sex + mother, Galton))
 #' do(3) * 1:4
 #' do(3) * mean(rnorm(25))
-#' do(3) * c(mean = mean(rnorm(25)))
+#' do(3) * c(sample.mean = mean(rnorm(25)))
 #' do(3) * tally( ~sex|treat, data=resample(HELPrct))
 #' 
 #' @keywords iteration 
 #' 
 
-do <- function(n=1L, cull=NULL, mode=NULL) {
-	new( 'repeater', n=n, cull=cull, mode=mode )
+do <- function(n=1L, cull=NULL, mode='default', algorithm=1.0, parallel=TRUE) {
+	new( 'repeater', n=n, cull=cull, mode=mode, algorithm=algorithm, parallel=parallel)
 }
 
 #' @rdname mosaic-internal
@@ -93,12 +105,17 @@ do <- function(n=1L, cull=NULL, mode=NULL) {
 #' \describe{
 #'   \item{\code{n}:}{Object of class \code{"numeric"} indicating how many times to repeat something.}
 #'   \item{\code{cull}:}{Object of class \code{"function"} that culls the ouput from each repetition.}
-#'   \item{\code{mode}:}{Object of class \code{"character"} indicating the output mode (NULL or 'data.frame' or 'list').}
+#'   \item{\code{mode}:}{Object of class \code{"character"} indicating the output mode 
+#'   ('default', 'data.frame', 'matrix', 'vector', or 'list').  For most purposes 'default' (the default)
+#'   should suffice.}
+#'   \item{\code{algorithm}:}{an algorithm number.}
+#'   \item{\code{parallel}:}{a logical indicating whether to attempt parallel execution.}
 #' }
 
 setClass('repeater', 
-	representation = representation(n='numeric', cull='ANY', mode='ANY'),
-	prototype = prototype(n=1, cull=NULL, mode=NULL)
+	representation = representation(n='numeric', cull='ANY', mode='character', 
+                                  algorithm='numeric', parallel='logical'),
+	prototype = prototype(n=1, cull=NULL, mode="default", algorithm=1, parallel=TRUE)
 )
 
 
@@ -272,8 +289,8 @@ if(FALSE) {
 
 #' @rdname do
 #' @aliases print,repeater-method
-#' @usage
-#' \S4method{print}{repeater}(x, ...) 
+# @usage
+# \S4method{print}{repeater}(x, ...) 
 setMethod("print",
     signature(x = "repeater"),
     function (x, ...) 
@@ -283,18 +300,58 @@ setMethod("print",
     }
 )
 
+.list2tidy.data.frame <- function (l) {
+  
+  # see if we really just have a vector
+  ul <- unlist( l )
+  if ( length(ul) == length(l) ) {
+    result <- data.frame(result=as.vector(ul))
+    row.names(result) <- NULL
+    if( !is.null(names(l[[1]])) ) names(result) <- names(l[[1]])
+    return(result)
+  }
+  
+  # if each element is a data frame with the same variables, combine them
+  if ( all( sapply( l, is.data.frame ) ) ) {
+    tryCatch( 
+      return ( 
+        transform( 
+          do.call( rbind, lapply ( l, function(x) { transform(x, .row= 1:nrow(x)) }) ),
+          .index = c(1, 1 + cumsum( diff(.row) != 1 )) 
+        )
+      ), error=function(e) {} 
+    )
+  }
+  
+  # If rbind() works, do it
+  tryCatch(
+    return ( as.data.frame( do.call( rbind, l) ) ),
+    error=function(e) {} 
+  )
+  
+  if (all (sapply(l, length) ) == length(l[[1]]) ) {
+    result <-  as.data.frame( matrix( ul, nrow=length(l) ) )
+    names(result) <- names(l[[1]])
+    return(result)
+  }
+  
+  # nothing worked.  Just return the list as is.
+  return( l )
+}
+
+
 #' @rdname do
 #' @aliases *,repeater,ANY-method
-#' @usage
-#' \S4method{*}{repeater,ANY}(e1, e2) 
+# @usage
+# \S4method{*}{repeater,ANY}(e1, e2) 
 
 setMethod("*",
     signature(e1 = "repeater", e2="ANY"),
     function (e1, e2) 
     {
-		fthing = substitute(e2)
+		e2unevaluated = substitute(e2)
 		if ( ! is.function(e2) ) {
-			e2 = function(){eval.parent(fthing, n=2) }   
+			e2 = function(){eval.parent(e2unevaluated, n=1) }   
 		}
 		n = e1@n
 
@@ -302,9 +359,33 @@ setMethod("*",
 		if (is.null(cull)) {
 			cull <- .cull_for_do
 		}
+    
+		out.mode <- if (!is.null(e1@mode)) e1@mode else 'default'
 
+    if (e1@algorithm >= 1) {
+      resultsList <- if( e1@parallel && require(parallel) )
+        mclapply( integer(n), function(...) { cull(e2()) } )
+      else 
+        lapply( integer(n), function(...) { cull(e2()) } )
+          
+      if (out.mode=='default') {  # is there any reason to be fancier?
+        out.mode = 'data.frame'
+      }
+      
+      result <- switch(out.mode, 
+                    "list" = resultsList,
+                    "data.frame" = .list2tidy.data.frame( resultsList ),
+                    "matrix" = as.matrix( do.call( rbind, resultsList) ),
+                    "vector" = unlist(resultsList)  
+      ) 
+      class(result) <- c(paste('do', class(result)[1], sep="."), class(result))
+      return(result)
+    }
+  
+    ## pre 1.0 algorithm...
+    message("Using older algorithm for do()")
+    
 		res1 = cull(e2())  # was (...)
-
 		nm = names(res1)
 
 		if (!is.null(e1@mode)) { 
