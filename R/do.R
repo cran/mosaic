@@ -7,7 +7,6 @@ tryCatch(utils::globalVariables(c('.row')),
 #' with replication and resampling methods.
 #'
 #' @rdname do
-#' @name do
 #' @param n  number of times to repeat 
 #' 
 #' @param object an object
@@ -33,6 +32,8 @@ tryCatch(utils::globalVariables(c('.row')),
 #' @param e1 an object (in cases documented here, the result of running \code{do})
 #' @param e2 an object (in cases documented here, an expression to be repeated)
 #' 
+#' @param ... additional arguments
+#' 
 #' @note \code{do} is a thin wrapper around \code{Do} to avoid collision with
 #'   \code{\link[dplyr]{do}} from the \pkg{dplyr} package.
 #' @return \code{do} returns an object of class \code{repeater} which is only useful in
@@ -45,12 +46,14 @@ tryCatch(utils::globalVariables(c('.row')),
 #' @examples
 #' do(3) * rnorm(1)
 #' do(3) * "hello"
-#' do(3) * lm(shuffle(height) ~ sex + mother, Galton)
-#' do(3) * anova(lm(shuffle(height) ~ sex + mother, Galton))
 #' do(3) * 1:4
 #' do(3) * mean(rnorm(25))
+#' if (require(mosaicData)) {
+#' do(3) * lm(shuffle(height) ~ sex + mother, Galton)
+#' do(3) * anova(lm(shuffle(height) ~ sex + mother, Galton))
 #' do(3) * c(sample.mean = mean(rnorm(25)))
 #' do(3) * tally( ~sex|treat, data=resample(HELPrct))
+#' }
 #' @keywords iteration 
 #' @export
 
@@ -315,17 +318,18 @@ if(FALSE) {
 	}
 	return(object) }
 
+# #' @aliases print,repeater-method
 #' @rdname do
-#' @aliases print,repeater-method
 #' @export
-setMethod("print",
-    signature(x = "repeater"),
-    function (x, ...) 
+# setMethod("print",
+#     signature(x = "repeater"),
+#     function (x, ...) 
+print.repeater <- function(x, ...) 
     {
-  		print(paste('This repeats a command',x@n,'times. Use with *.'))
+  		message(paste('This repeats a command',x@n,'times. Use with *.'))
   		return(invisible(x))
     }
-)
+# )
 
 .list2tidy.data.frame <- function (l) {
   
@@ -391,7 +395,7 @@ setMethod("*",
 
     if (e1@algorithm >= 1) {
       resultsList <- if( e1@parallel && require(parallel) )
-        mclapply( integer(n), function(...) { cull(e2()) } )
+        parallel::mclapply( integer(n), function(...) { cull(e2()) } )
       else 
         lapply( integer(n), function(...) { cull(e2()) } )
           

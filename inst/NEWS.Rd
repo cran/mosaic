@@ -1,5 +1,29 @@
 \name{NEWS}
 \title{NEWS file for the mosaic package}
+\section{Changes in version 0.9.1}{
+\itemize{
+\item The data sets formerly in this pacakge have been separated out into two
+additional packages:  \pkg{NHANES} contains the \code{NHANES} data set
+and \pkg{mosaicData} contains the other data sets.  
+\item \code{MAD} and \code{SAD} were added to compute mean and sum
+of all pairs of absolute differences.
+\item Facilities for making choropleth maps has been added.  The API for these 
+tools is still under development and may change in future releases.
+\item \code{rspin} has been added to simulate spinning a spinner.
+\item Two additional vignettes are included.  Less Volume, More Creativity
+outlines how to use the \pkg{mosaic} package to simplify R for beginners.  
+The other vignette 
+illustrates many of the plotting features added by the \pkg{mosaic} package.
+\item The mosaic package now contains two RMarkdown templates (one fancy and one plain).
+\item \code{plotFun} has been improved so that it does a better job of selecting points
+where the function is evaluated and no longer warns about \code{NaN}s encountered
+while exploring the domain of the function.
+\item \code{oddsRatio} has been redesigned and \code{relrisk} has been added.
+Use their \code{summary()} methods or \code{verbose=TRUE} to see more information
+(including confidence intervals).
+\item Added \code{Birthdays} data set.
+}
+}
 \section{Changes in version 0.9}{
 \itemize{
 \item A generic \code{mplot} and several instances have been
@@ -14,7 +38,7 @@
   \code{"hclust"}.  For several of these there are also
   \code{fortify} methods that return the data frame created to 
   facilitate plotting.
-\item \code{read.file} now handles https URLs and accepts 
+\item \code{read.file} now handles (some?) https URLs and accepts 
 an optional argument \code{filetype} that can be used to
 declare the type of data file when it is not identified 
 by extension.

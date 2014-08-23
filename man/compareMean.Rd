@@ -3,13 +3,18 @@
 \alias{compareMean}
 \title{Compare means between 2 groups}
 \usage{
-compareMean(formula, data = NULL, ...)
+compareMean(formula, data = parent.frame(), ...)
 }
 \arguments{
 \item{formula}{a formula}
 
 \item{data}{a data frame in which \code{x} is evaluated if \code{x} is a
-formula.}
+formula.
+Note that the default is \code{data=parent.frame()}.  This makes it convenient to
+use this function interactively by treating the working envionment as if it were
+a data frame.  But this may not be appropriate for programming uses.
+When programming, it is best to use an explicit \code{data} argument
+-- ideally supplying a data frame that contains the variables mentioned}
 
 \item{\dots}{other arguments}
 }
@@ -21,15 +26,17 @@ A function to calculate the difference between the means of a continuous
 variable for two groups.
 }
 \examples{
-data(HELPrct)
-# calculate the observed difference
-mean(age ~ sex, data=HELPrct)
-obs <- compareMean(age ~ sex, data=HELPrct); obs
-# calculate the permutation distribution
-nulldist <- do(100) * compareMean(age ~ shuffle(sex),
-  data=HELPrct)
-histogram(~ result, groups=(result >= obs), nulldist,
-  xlab="difference in means")
+if (require(mosaicData)) {
+  data(HELPrct)
+  # calculate the observed difference
+  mean(age ~ sex, data=HELPrct)
+  obs <- compareMean(age ~ sex, data=HELPrct); obs
+  # calculate the permutation distribution
+  nulldist <- do(100) * compareMean(age ~ shuffle(sex),
+    data=HELPrct)
+  histogram(~ result, groups=(result >= obs), nulldist,
+    xlab="difference in means")
+}
 }
 \seealso{
 \code{\link{do}}, \code{\link{compareProportion}} and \code{\link{shuffle}}

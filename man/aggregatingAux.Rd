@@ -13,7 +13,13 @@ maggregate(formula, data = parent.frame(), FUN, subset,
 describe subsets.  If the left side is empty, right side and condition are
 shifted over as a convenience.}
 
-\item{data}{a data frame}
+\item{data}{a data frame.
+Note that the default is \code{data=parent.frame()}.  This makes it convenient to
+use this function interactively by treating the working envionment as if it were
+a data frame.  But this may not be appropriate for programming uses.
+When programming, it is best to use an explicit \code{data} argument
+-- ideally supplying a data frame that contains the variables mentioned
+in \code{formula}.}
 
 \item{FUN}{a function to apply to each subset}
 
@@ -41,6 +47,7 @@ a vector
 Compute function on subsets of a variable in a data frame.
 }
 \examples{
+if (require(mosaicData)) {
 maggregate( cesd ~ sex, HELPrct, FUN=mean )
 # using groups instead
 maggregate( ~ cesd, groups = sex, HELPrct, FUN=sd )
@@ -51,5 +58,6 @@ maggregate( ~ cesd | sex , groups= homeless, HELPrct, FUN=sd )
 maggregate( cesd ~ sex, groups = homeless, HELPrct, FUN=sd )
 # this is unusual, but also works.
 maggregate( cesd ~ NULL , groups = sex, HELPrct, FUN=sd )
+}
 }
 

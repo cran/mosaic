@@ -59,9 +59,11 @@
 #' faithful$long <- faithful$eruptions > 3
 #' prop.test( faithful$long )
 #' prop.test( ~long , faithful )
+#' if (require(mosaicData)) {
 #' prop.test( homeless ~ sex, data=HELPrct )
 #' prop.test( ~ homeless | sex, data=HELPrct )
 #' prop.test( ~ homeless, groups= sex, data=HELPrct )
+#' }
 #' 
 #' @keywords stats
 #' 
@@ -144,7 +146,11 @@ setMethod(
         
         if (! is.null(form$left) || !is.null(form$condition) ) {
           table_from_formula <-  tally( formula, data=data, margin=FALSE, format="count" )
-          return( prop.test( t(table_from_formula), ...) ) 
+          return( stats::prop.test( t(table_from_formula), 
+                             p=p,
+                             conf.level=conf.level, 
+                             alternative=alternative, 
+                             ...) ) 
         }
         
 			  if (length(cond) == 0) {
