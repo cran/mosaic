@@ -33,7 +33,7 @@ mplot.default <- function(object, ...) {
 #' a data frame.  Typically \code{\link{merge}} will be used to combine the map
 #' data with some auxilliary data to be displayed as fill color on the map, although
 #' this is not necessary if all one wants is a map.
-#' @param default default type of plot to create; one of 
+#' @param format,default default type of plot to create; one of 
 #' \code{"scatter"},
 #' \code{"jitter"},
 #' \code{"boxplot"},
@@ -289,10 +289,11 @@ mplot.lm <- function(object, which=c(1:3, 7),
 #' }
 #' @export
 
-mplot.data.frame <- function (object, default = plotTypes, system = c("lattice", "ggplot2"), 
-                              show = FALSE, title = "", ...
+mplot.data.frame <- function (object, format = plotTypes, default = format, 
+                              system = c("lattice", "ggplot2"),  show = FALSE, 
+                              title = "", ...
                               ) {
-  if (missing(default)) 
+  if (missing(default) & missing(format)) 
     default <- "scatter"
   plotTypes <- c("scatter", "jitter", "boxplot", "violin", 
                  "histogram", "density", "frequency polygon", "xyplot", 

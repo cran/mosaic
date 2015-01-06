@@ -4,30 +4,39 @@
 #' facilitate better naming of the result
 #' 
 #' @param ... arguments passed to \code{mean}
+#' @param only.2 a logical indicating whether differences should only be computed
+#'   between two groups.
 #' @examples
 #' if (require(mosaicData)) {
 #' diffprop( homeless ~ sex , data=HELPrct)
 #' do(3) * diffprop( homeless ~ shuffle(sex) , data=HELPrct)
-#' diffmean( age ~ substance, data=HELPrct)
-#' do(3) * diffmean(age ~ shuffle(substance), data=HELPrct)
+#' diffmean( age ~ substance, data=HELPrct, only.2=FALSE)
+#' do(3) * diffmean(age ~ shuffle(substance), data=HELPrct, only.2=FALSE)
 #' diffmean( age ~ sex, data=HELPrct)
 #' do(3) * diffmean(age ~ shuffle(sex), data=HELPrct)
 #' }
 #' @export
-diffmean <- function( ... ) {
+diffmean <- function( ..., only.2=TRUE ) {
   m <- mean(...)
   nms <- names(m)
   res <- diff(m)
-  names(res) <- if (length(nms) < 3) "diffmean" else paste(tail(nms,-1), head(nms, -1), sep="-")
+  names(res) <- 
+    if (length(nms) < 3) "diffmean" else paste(tail(nms,-1), head(nms, -1), sep="-")
+  if (length(nms) > 2 && only.2) {
+    stop("To compare more than two means, set only.2=FALSE")
+  }
   res
 }
 
 #' @rdname diffmean
 #' @export
-diffprop<- function( ... ) {
+diffprop<- function( ..., only.2 = TRUE ) {
   p <- prop(...)
   nms <- names(p)
   res <- diff(p)
   names(res) <- if (length(nms) < 3) "diffprop" else paste(tail(nms,-1), head(nms, -1), sep="-")
+  if (length(nms) > 2 && only.2) {
+    stop("To compare more than two proportions, set only.2=FALSE")
+  }
   res
 }

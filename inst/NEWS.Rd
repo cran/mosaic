@@ -1,5 +1,27 @@
 \name{NEWS}
 \title{NEWS file for the mosaic package}
+\section{Changes in version 0.9.2}{
+\itemize{
+\item \code{tally} now produces counts by default for all formula shapes.  Proportions or percentages must be requested explicitly.  This is to avoid common errors, especially when feeding the results into \code{chisq.test}.
+\item Introduction of \code{msummary}.  Usually this is identical to \code{summary}, but for a few kids of objects it provides modified output that is less verbose.  
+\item By default \code{do * lm( )} will now keep track of the F statistic, too.
+\item
+\code{confint} applied to an object produced using \code{do} now does more appropriate things.
+\item \code{binom.test} and \code{prop.test} now set \code{success = 1} by default
+on 0-1 data to treat 0 like failure and 1 like success. Similarly, \code{prop} and \code{count} set \code{level = 1} by default.
+\item \code{CIsim} can now produce plots and does so by default when \code{samples <= 200}.
+\item implementation of \code{add=TRUE} improved for \code{plotDist}.
+\item Added \code{swap} which is useful for creating randomization
+distributions for paired designs.  The current implementation is a bit slow.  
+We'll improve that by implementing part of the code in C++.
+\item Some additional functions are now formula-aware: \code{MAD}, \code{SAD}, and \code{quantile}.
+\item \code{docFile} introduced to simplify accessing files included
+with package documentation.  \code{read.file()} enhanced to take a package
+as an argument and look among package documentation files.
+\item \code{factorize} introduced as a way to convert vectors with
+few unique values into factors.  Can be applied to an entire data frame.
+}
+}
 \section{Changes in version 0.9.1}{
 \itemize{
 \item The data sets formerly in this pacakge have been separated out into two

@@ -31,7 +31,7 @@ tryCatch(utils::globalVariables(c('.row')),
 #' 
 #' @param e1 an object (in cases documented here, the result of running \code{do})
 #' @param e2 an object (in cases documented here, an expression to be repeated)
-#' 
+#' @param x an object
 #' @param ... additional arguments
 #' 
 #' @note \code{do} is a thin wrapper around \code{Do} to avoid collision with
@@ -274,7 +274,17 @@ if(FALSE) {
 	}
 	if (inherits(object,c('lm','groupwiseModel')) ) {
 		sobject <- summary(object)
-		result <-  c( coef(object), sigma=sobject$sigma, r.squared = sobject$r.squared ) 
+    	Fstat <- sobject$fstatistic[1]
+		if (!is.null(Fstat)) {
+			names(Fstat) <- "F"
+			result <-  c(coef(object), sigma=sobject$sigma, 
+						 r.squared = sobject$r.squared, 
+						 Fstat)
+		} else {
+			result <-  c(coef(object), sigma=sobject$sigma, 
+						 r.squared = sobject$r.squared
+			)
+		}
 		names(result) <- nice_names(names(result))
 		return(result)
 	}
@@ -394,7 +404,7 @@ setMethod("*",
 		out.mode <- if (!is.null(e1@mode)) e1@mode else 'default'
 
     if (e1@algorithm >= 1) {
-      resultsList <- if( e1@parallel && require(parallel) )
+      resultsList <- if( e1@parallel && requireNamespace("parallel", quietly=TRUE) )
         parallel::mclapply( integer(n), function(...) { cull(e2()) } )
       else 
         lapply( integer(n), function(...) { cull(e2()) } )
