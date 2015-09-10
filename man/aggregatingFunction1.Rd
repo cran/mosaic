@@ -4,20 +4,22 @@
 \alias{aggregatingFunction1}
 \title{1-ary Aggregating functions}
 \usage{
-aggregatingFunction1(fun, input.multiple = FALSE, output.multiple = FALSE,
-  envir = parent.frame(), na.rm = getOption("na.rm", FALSE))
+aggregatingFunction1(fun, output.multiple = FALSE, envir = parent.frame(),
+  na.rm = getOption("na.rm", FALSE), style = c("flexible", "formula"))
 }
 \arguments{
 \item{fun}{a function that takes a numeric vector and computes a summary statistic,
 returning a numeric vector of length 1.}
 
-\item{input.multiple}{a boolean indicating whether \code{..fun..} can accept 2 vectors (e.g., \code{var})}
-
-\item{output.multiple}{a boolean indicating whether \code{..fun..} returns multiple values}
+\item{output.multiple}{a boolean indicating whether \code{fun} returns multiple values}
 
 \item{envir}{an environment in which evaluation takes place.}
 
 \item{na.rm}{the default value for na.rm in the resulting function.}
+
+\item{style}{one of \code{"flexible"} or \code{"formula"}.  In the latter case, the first
+argument must be a formula or evaluate to an object.  In the former case, bare names will
+be converted into formulas.}
 }
 \value{
 a function that generalizes \code{fun} to handle a formula/data frame interface.

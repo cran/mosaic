@@ -6,7 +6,8 @@
 \usage{
 panel.plotFun(object, ..., type = "l", npts = NULL, zlab = NULL,
   filled = TRUE, levels = NULL, nlevels = 10, surface = FALSE,
-  col.regions = topo.colors, alpha = NULL)
+  col.regions = topo.colors, alpha = NULL, discontinuity = NULL,
+  discontinuities = NULL)
 }
 \arguments{
 \item{object}{an object (e.g., a formula) describing a function}
@@ -37,6 +38,15 @@ panel.plotFun(object, ..., type = "l", npts = NULL, zlab = NULL,
 \item{col.regions}{a vector of colors or a function (\code{topo.colors} by default) for generating such}
 
 \item{alpha}{number from 0 (transparent) to 1 (opaque) for the fill colors}
+
+\item{discontinuity}{a positive number determining how sensitive the plot is to
+potential discontinuity.  Larger values result in less sensitivity.  The default is 1.
+Use \code{discontinuity = Inf} to disable discontinuity detection.  Discontinuity detection
+uses a crude numerical heuristic and may not give the desired results in all cases.}
+
+\item{discontinuities}{a vector of input values at which a function is
+discontinuous or \code{NULL} to use
+a heuristic to auto-detect.}
 }
 \description{
 Panel function for plotting functions

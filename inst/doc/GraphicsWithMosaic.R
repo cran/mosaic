@@ -107,8 +107,8 @@ plotDist("norm", mean=0, col="red", kind='histogram', under=TRUE)  # add, but un
 ## ------------------------------------------------------------------------
 # we need to get state names into the data frame and then fix two of them with
 # wrong state abbreviations.  Then we are ready to make maps
-sAnscombe <- Anscombe %>%
-group_by(state = rownames(Anscombe)) %>%
+sAnscombe <- car::Anscombe %>%
+group_by(state = rownames(car::Anscombe)) %>%
 summarise(income = sum(income)) %>%
 mutate(state = standardName(state, c(IO = "IA", KA = "KS"), quiet=TRUE))
 

@@ -8,8 +8,7 @@
 mosaic_formula(formula, groups = NULL, envir = parent.frame(),
   max.slots = 3)
 
-mosaic_formula_q(formula, groups = NULL, envir = parent.frame(),
-  max.slots = 3)
+mosaic_formula_q(formula, groups = NULL, max.slots = 3, ...)
 }
 \arguments{
 \item{formula}{a formula}
@@ -21,6 +20,8 @@ May also be \code{NULL}, a list, a data frame, or a pairlist.}
 
 \item{max.slots}{an integer specifying the maximum number of slots for the resulting formula.
 An error results from trying to create a formula that is too complex.}
+
+\item{...}{additional arguments (currently ignored)}
 }
 \description{
 These functions convert formauls into standard shapes, including by

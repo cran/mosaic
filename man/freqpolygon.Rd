@@ -3,21 +3,35 @@
 \name{freqpolygon}
 \alias{freqpolygon}
 \alias{panel.freqpolygon}
+\alias{prepanel.default.freqpolygon}
 \title{Frequency Polygons}
 \usage{
-freqpolygon(x, ..., panel = "panel.freqpolygon")
+freqpolygon(x, ..., panel = "panel.freqpolygon",
+  prepanel = "prepanel.default.freqpolygon")
 
-panel.freqpolygon(x, plot.points = "jitter", ref = FALSE, groups = NULL,
-  weights = NULL, jitter.amount = 0.01 * diff(current.panel.limits()$ylim),
-  type = "density", breaks = NULL, nint = NULL, center = NULL,
-  wdth = NULL, width = wdth, gcol = trellis.par.get("reference.line")$col,
+prepanel.default.freqpolygon(x, darg = list(), plot.points = FALSE,
+  ref = FALSE, groups = NULL, subscripts = TRUE, jitter.amount = 0.01 *
+  diff(current.panel.limits()$ylim), center = NULL, nint = NULL,
+  breaks = NULL, width = darg$width, type = "density", ...)
+
+panel.freqpolygon(x, darg = list(), plot.points = FALSE, ref = FALSE,
+  groups = NULL, weights = NULL, jitter.amount = 0.01 *
+  diff(current.panel.limits()$ylim), type = "density", breaks = NULL,
+  nint = NULL, center = NULL, width = darg$width,
+  gcol = trellis.par.get("reference.line")$col,
   glwd = trellis.par.get("reference.line")$lwd, h, v, ...,
-  identifier = "density")
+  identifier = "freqpoly")
 }
 \arguments{
 \item{x}{a formula or a numeric vector}
 
 \item{panel}{a panel function}
+
+\item{prepanel}{a prepanel function}
+
+\item{darg}{a list of arguments for the function computing the frequency polygon.
+This exists primarily for compatibility with \code{densityplot} and is unlikely
+to be needed by the end user.}
 
 \item{plot.points}{one of \code{TRUE}, \code{FALSE}, \code{"jitter"}, or \code{"rug"} indicating
 how points are to be displayed}
@@ -28,18 +42,17 @@ added (roughly equivalent to \code{h=0})}
 \item{groups,weights,jitter.amount,identifier}{as in \code{\link{densityplot}}
 or \code{\link{histogram}}}
 
-\item{type}{one of \code{'density'}, \code{'percent'}, or \code{'count'}}
-
-\item{breaks}{a vector of breaks for the frequency polygon bins}
-
-\item{nint}{an approximate number of bins for the frequency polygon}
+\item{subscripts}{as in other lattice prepanel functions}
 
 \item{center}{center of one of the bins}
 
-\item{wdth}{alternative to \code{width} to avoid conflict with \code{densityplot} argument
-names}
+\item{nint}{an approximate number of bins for the frequency polygon}
+
+\item{breaks}{a vector of breaks for the frequency polygon bins}
 
 \item{width}{width of the bins}
+
+\item{type}{one of \code{'density'}, \code{'percent'}, or \code{'count'}}
 
 \item{gcol}{color of guidelines}
 
@@ -56,9 +69,6 @@ a trellis object
 \description{
 Frequency polygons are an alternative to histograms that make it simpler to overlay multiple
 distributions.
-}
-\details{
-These functions are still under development.  Future improvements may be forthcoming.
 }
 \note{
 This function make use of \code{histogram} to determine overall layout.  Often

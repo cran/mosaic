@@ -8,6 +8,7 @@
 #' @param \dots additional arguments passed on to \code{\link{histogram}} 
 #' and \code{panel}.
 #' @param panel a panel function
+#' @param prepanel a prepanel function
 #'
 #' @return a trellis object
 #' @note This function make use of \code{histogram} to determine overall layout.  Often 
@@ -31,10 +32,82 @@
 
 freqpolygon <- function(x, 
                         ..., 
-                        panel="panel.freqpolygon") {
-  histogram(x, ..., panel=panel)
+                        panel="panel.freqpolygon",
+                        prepanel="prepanel.default.freqpolygon"
+                        ) {
+  densityplot(x, ..., panel=panel, prepanel = prepanel)
 }
 
+#' @rdname freqpolygon
+
+#' @export
+#' 
+prepanel.default.freqpolygon <- function(
+  x, darg = list(), plot.points = FALSE, ref = FALSE,
+  groups = NULL, subscripts = TRUE, 
+  jitter.amount = 0.01 * diff(current.panel.limits()$ylim), 
+  center = NULL, nint = NULL, breaks=NULL, width = darg$width, type = "density",
+  ...) 
+{
+  if (!is.numeric(x)) 
+    x <- as.numeric(x)
+  if (missing(breaks) || is.null(breaks)) {
+    breaks <- xhistogramBreaks(x, center=center, width=width, nint=nint)
+  } 
+  if (is.function(breaks) || is.character(breaks)) {
+    breaks <- do.call(breaks, list(x=x, center=center, width=width, nint=nint, ...) )
+  }
+  
+  if (sum(!is.na(x)) < 1) 
+    prepanel.null()
+  else if (sum(!is.na(x)) == 1) {
+    list(xlim = rep(x, 2), ylim = rep(0, 2), dx = 1, dy = 1)
+  }
+  else if (is.null(groups)) {
+    h <- hist(x, plot = FALSE, breaks=breaks, warn.unused=FALSE, ...)
+    h$height <- 
+      switch(
+        type,
+        'density' = h$density,
+        'count' = h$count,
+        'percent' = 100 * h$count / length(x),
+        h$density
+      )
+    quants <- quantile(x, c(0.15, 0.85), names = FALSE, na.rm = TRUE)
+    ok <- h$mids > quants[1] & h$mids < quants[2]
+    list(xlim = range(h$mids), ylim = range(h$height), dx = diff(h$mids[ok]), 
+         dy = diff(h$height[ok]))
+  } else {
+    vals <- sort(unique(groups))
+    xl <- range(x, finite = TRUE)
+    yl <- 0
+    dxl <- numeric(0)
+    dyl <- numeric(0)
+    for (i in seq_along(vals)) {
+      id <- (groups[subscripts] == vals[i])
+      if (sum(id, na.rm = TRUE) > 1) {
+
+        h <- do.call(hist, c(list(x = x[id], plot = FALSE, breaks = breaks, warn.unused = FALSE))) 
+        h$height <- 
+          switch(
+            type,
+            'density' = h$density,
+            'count' = h$count,
+            'percent' = 100 * h$count / length(x),
+            h$density
+          )
+        xl <- c(xl, h$mids)
+        yl <- c(yl, h$height)
+        quants <- quantile(x[id], c(0.15, 0.85), names = FALSE, na.rm = TRUE)
+        ok <- h$mids > quants[1] & h$mids < quants[2]
+        dxl <- c(dxl, diff(h$mids[ok]))
+        dyl <- c(dyl, diff(h$height[ok]))
+      }
+    }
+    list(xlim = range(xl, finite = TRUE), 
+         ylim = range(yl, finite = TRUE), dx = dxl, dy = dyl)
+  }
+}
 
 
 #' @rdname freqpolygon
@@ -49,40 +122,46 @@ freqpolygon <- function(x,
 #' @param nint an approximate number of bins for the frequency polygon
 #' @param center center of one of the bins
 #' @param width width of the bins
-#' @param wdth alternative to \code{width} to avoid conflict with \code{densityplot} argument
-#' names 
 #' @param h,v a vector of values for additional horizontal and vertical lines
 #' @param ref a logical indicating whether a horizontal reference line should be 
 #' added (roughly equivalent to \code{h=0})
-#' @details These functions are still under development.  Future improvements may be forthcoming.
+#' @param darg a list of arguments for the function computing the frequency polygon.
+#'   This exists primarily for compatibility with \code{densityplot} and is unlikely
+#'   to be needed by the end user.
+#' @param subscripts as in other lattice prepanel functions
 #' @export
 
-panel.freqpolygon <- function (x, plot.points = "jitter", ref = FALSE, 
-          groups = NULL, weights = NULL, 
-          jitter.amount = 0.01 * diff(current.panel.limits()$ylim), 
-          type='density', 
-          breaks=NULL, 
-          nint= NULL,
-          center=NULL, 
-          wdth=NULL,
-          width=wdth,
-          gcol=trellis.par.get('reference.line')$col,
-          glwd=trellis.par.get('reference.line')$lwd,
-          h, v, 
-          ..., identifier = "density") 
-{
-  if (missing(breaks) || is.null(breaks)) {
-    breaks <- xhistogramBreaks(x, center=center, width=width, nint=nint)
-  } 
-  
+panel.freqpolygon <- 
+  function (
+    x, darg=list(),
+    plot.points = FALSE, ref = FALSE, 
+    groups = NULL, weights = NULL, 
+    jitter.amount = 0.01 * diff(current.panel.limits()$ylim), 
+    type='density', 
+    breaks=NULL, 
+    nint= NULL,
+    center=NULL, 
+    width = darg$width,
+    gcol=trellis.par.get('reference.line')$col,
+    glwd=trellis.par.get('reference.line')$lwd,
+    h, v, 
+    ..., identifier = "freqpoly") 
+  {
+    if (missing(breaks) || is.null(breaks)) {
+      breaks <- xhistogramBreaks(x, center=center, width=width, nint=nint)
+    } 
+    if (is.function(breaks) || is.character(breaks)) {
+      breaks <- do.call(breaks, list(x=x, center=center, width=width, nint=nint, ...) )
+    }
+    
 	if (ref) {
 		reference.line <- trellis.par.get("reference.line")
 		panel.abline(h = 0, col = reference.line$col, lty = reference.line$lty, 
 					 lwd = reference.line$lwd, identifier = paste(identifier, "abline"))
 	}
 	if (!is.null(groups)) {
-		return(panel.superpose(x, plot.points = plot.points, 
-						ref = FALSE, groups = groups, weights = weights, 
+		return(panel.superpose(x, darg = darg, plot.points = plot.points, 
+						ref = FALSE, groups = groups, 
 						panel.groups = panel.freqpolygon, jitter.amount = jitter.amount, 
 						type = type, breaks=breaks, nint=nint, ...))
 	}
@@ -129,3 +208,9 @@ panel.freqpolygon <- function (x, plot.points = "jitter", ref = FALSE,
 
 }
 
+# copied from lattice because it isn't exported there.
+prepanel.null <- function () 
+{
+  list(xlim = rep(NA_real_, 2), ylim = rep(NA_real_, 2), dx = NA_real_, 
+       dy = NA_real_)
+}

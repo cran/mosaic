@@ -41,38 +41,60 @@ mosaic_formula <- function(
     max.slots=max.slots)
 }
 
+#' Convert lazy objects into formulas
+#' 
+#' Convert lazy objects into a formula
+#' 
+#' @param lazy_formula an object of class \code{lazy}
+#' @param envir an environment that will be come the environment of the returned formula
+#' @return a formula
+#' @details The expression of the lazy object is evaluated in its environment.  If the
+#' result is not a formula, then the formula is created with an empty left hand side
+#' and the expression on the right hand side.
+#' 
+#' @examples
+#' formularise(lazyeval::lazy(foo))
+#' formularise(lazyeval::lazy(y ~ x))
+#' bar <- a ~ b
+#' formularise(lazyeval::lazy(bar))
+#' @export
+ 
+formularise <- function(lazy_formula, envir = parent.frame()) {
+  safe_formula <- 
+    tryCatch(eval(lazy_formula$expr, lazy_formula$env),
+             error = function(e) e)
+  
+  new_formula <- ~ placeholder
+  new_formula[[2]] <- lazy_formula$expr
+  environment(new_formula) <- envir  # lazy_formula$env
+  
+  if (inherits(safe_formula, "formula")) 
+    safe_formula else new_formula
+}
+
+
 #' @rdname mosaicformula
+#' @param ... additional arguments (currently ignored)
 #' @export
 mosaic_formula_q <- function( formula, 
-                                groups=NULL, 
-                                envir=parent.frame(), 
-                                max.slots = 3
-                                ) {
+                              groups=NULL, 
+                              # envir = parent.frame(),
+                              max.slots = 3,
+                              ...
+) {
+  lazy_groups <- lazyeval::lazy(groups)
   
-  formula_name <- eval(substitute( 
-    substitute(formula), parent.frame()
-    ))
-  
-  if ( ! .is.formula(formula)) {
-    res <-  substitute ( 
-      y ~ g, list( y = formula_name, g=substitute(groups,parent.frame()) ) 
-    ) 
-    slots <- eval( substitute( 
-      alist(y, g), env= list( y = substitute( (.z) , list(.z=formula_name) ), 
-                              g=substitute(groups,parent.frame()) ) 
-    ))
-  } else { 
-    slots <- alist()
-    slots <- c(slots, lhs(formula), rhs(formula), condition(formula), 
-               substitute(groups, parent.frame()))
-  }
+  slots <- alist()
+  slots <- c(slots, 
+             lhs(formula), rhs(formula), 
+             condition(formula), lazy_groups$expr)
   
   if (length(slots) > max.slots) {
     stop("Invalid formula specification.  Too many slots (",  
-            length(slots), ">", max.slots, ").")
+         length(slots), ">", max.slots, ").")
     return(NULL)
   }
-
+  
   if (length(slots) == 1) {
     res <- ~ x
     res[[2]] <- slots[[1]]
@@ -88,9 +110,19 @@ mosaic_formula_q <- function( formula,
   } else {
     res <- formula
   }
-  environment(res) <- envir
-  return(res)
+  environment(res) <- environment(formula)
+  res
 }
+
+
+# evaluate a lazy object and return the unevaluated expression if the expression
+# doesn't evaluate to an existing object.
+
+safe_eval <- function(x) {
+  tryCatch(lazyeval::lazy_eval(x), 
+           error = function(e) x$expr)
+}
+
 
 .fetchFromDots <- function( dots, name, class='data.frame', n=1, default=NULL ) {
   result <- dots[[name]]
@@ -176,15 +208,16 @@ tryCatch(utils::globalVariables(c('.')),
 #' -- ideally supplying a data frame that contains the variables mentioned
 #' in \code{formula}.
 #' @param FUN a function to apply to each subset 
-#' @param subset a logical indicating a subset of \code{data} to be processed.
-#' @param drop a logical indicating whether unused levels should be dropped.
-#' @param .format format used for aggregation. \code{"default"} and \code{"flat"} are equivalent.  
-#' @param overall currently unused
-#' @param .name a name used for the resulting object
 #' @param groups grouping variable that will be folded into the formula (if there is room for it).  
 #' This offers some additional flexibility in how formulas can be specified.
-#' @param .multiple a logical indicating whether FUN returns multiple values
+#' @param subset a logical indicating a subset of \code{data} to be processed.
+#' @param drop a logical indicating whether unused levels should be dropped.
 #' @param \dots additional arguments passed to \code{FUN}
+#' @param .format format used for aggregation. \code{"default"} and \code{"flat"} are equivalent.  
+#' @param .overall currently unused
+#' @param .name a name used for the resulting object
+#' @param .envir an environment in which to evaluate expressions 
+#' @param .multiple a logical indicating whether FUN returns multiple values
 #'
 #' @examples
 #' if (require(mosaicData)) {
@@ -201,19 +234,32 @@ tryCatch(utils::globalVariables(c('.')),
 #' }
 #'
 #' @export
-maggregate <- function(formula, data=parent.frame(), FUN, subset, 
-                       overall=mosaic.par.get("aggregate.overall"), 
-                       .format=c('default', 'table', 'flat'), drop=FALSE, 
-                       .multiple=FALSE, 
-                       groups=NULL, 
-                       .name = deparse(substitute(FUN)), 
-                       ...) {
+maggregate <- 
+  function(
+    formula, 
+    data=parent.frame(), 
+    FUN, 
+    groups=NULL, 
+    subset, 
+    drop=FALSE, 
+    ...,
+    .format=c('default', 'table', 'flat'), 
+    .overall=mosaic.par.get("aggregate.overall"), 
+    .multiple=FALSE, 
+    .name = deparse(substitute(FUN)), 
+    .envir = parent.frame () # if (is.list(data) || is.pairlist(data)) parent.frame() else baseenv() 
+    ) {
+  
+  formula <- mosaic_formula_q(formula, groups=groups, envir = .envir)
+  
+  if (length(formula) == 2) { 
+    return(FUN( eval(formula[[2]], data, .envir), ...))
+  }
+  
   dots <- list(...)
   groupName <- ".group"  # gets changed to something better later when possible.
-  formula <- mosaic_formula_q(formula, groups=groups, parent.frame()) # as.environment(data))
-
+  
   .format <- match.arg(.format)
-
   evalF <- evalFormula(formula, data=data)
   
   if (!missing(subset)) {
@@ -222,13 +268,13 @@ maggregate <- function(formula, data=parent.frame(), FUN, subset,
     if (!is.null(evalF$right))         evalF$right <- evalF$right[subset,]
     if (!is.null(evalF$condition)) evalF$condition <- evalF$condition[subset,]
   }
-# this should now be standardized by the call to mosaic_formula_q() above.
-#  if ( is.null( evalF$left ) ) {
-#    evalF$left <- evalF$right
-#    evalF$right <- evalF$condition
-#    evalF$condition <- NULL
-#  }
-    
+  # this should now be standardized by the call to mosaic_formula_q() above.
+  #  if ( is.null( evalF$left ) ) {
+  #    evalF$left <- evalF$right
+  #    evalF$right <- evalF$condition
+  #    evalF$condition <- NULL
+  #  }
+  
   if ( is.null(evalF$left) || ncol(evalF$left) < 1 )  {
     if (ncol(evalF$right) > 1) warning("Too many variables in rhs; ignoring all but first.")
     if (.format=="table") {
@@ -245,9 +291,9 @@ maggregate <- function(formula, data=parent.frame(), FUN, subset,
                dplyr::do( do.call(FUN, list(evalF$right[,1], ...)) ) %>%
                as.data.frame()
       )
-#      return(plyr::ddply(evalF$right[,1,drop=FALSE], names(NULL),
-#                   function(x) do.call(FUN, list(evalF$right[,1], ...)) 
-#      )[,-1])  # remove the .id column since it is uninteresting here.
+      #      return(plyr::ddply(evalF$right[,1,drop=FALSE], names(NULL),
+      #                   function(x) do.call(FUN, list(evalF$right[,1], ...)) 
+      #      )[,-1])  # remove the .id column since it is uninteresting here.
     }
     return( do.call(FUN, alist(evalF$right[,1], ...) ) )
   } else {
@@ -257,16 +303,16 @@ maggregate <- function(formula, data=parent.frame(), FUN, subset,
       ldata <- joinFrames(evalF$left[,1,drop=FALSE], evalF$right, evalF$condition) 
       ldata$.var <- ldata[, 1]
       gdata <- do.call( group_by, c(list(ldata),  
-                        lapply(union(names(evalF$right), names(evalF$condition)),
-                        as.name )) )
+                                    lapply(union(names(evalF$right), names(evalF$condition)),
+                                           as.name )) )
       res <- as.data.frame(
         dplyr::do(gdata, foo = FUN( as.data.frame(.)[, 1], ...) ) )
       names(res)[ncol(res)] <- gsub(".*::", "", .name)
-#      res <-  plyr::ddply( 
-#        joinFrames(evalF$left[,1,drop=FALSE], evalF$right, evalF$condition), 
-#        union(names(evalF$right), names(evalF$condition)),
-#        function(x) do.call(FUN, list(x[,1], ...))
-#      )
+      #      res <-  plyr::ddply( 
+      #        joinFrames(evalF$left[,1,drop=FALSE], evalF$right, evalF$condition), 
+      #        union(names(evalF$right), names(evalF$condition)),
+      #        function(x) do.call(FUN, list(x[,1], ...))
+      #      )
       
     } else {
       res <- lapply( split( evalF$left[, 1], 

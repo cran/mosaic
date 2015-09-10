@@ -1,4 +1,4 @@
-## ----setupRnw,include=FALSE-----------------------------------------
+## ----setupRnw, include=FALSE----------------------------------------
 # source('../setup.R')
 ## @knitr setup
 #setCacheDir("cache")
@@ -21,7 +21,7 @@ opts_chunk$set(
   fig.show="hold"
 )
 
-## ----eval=FALSE,echo=TRUE-------------------------------------------
+## ----eval=FALSE, echo=TRUE------------------------------------------
 #  install.packages("mosaic")
 
 ## ----moreSetup------------------------------------------------------
@@ -32,7 +32,7 @@ options(digits=3)
 ## -------------------------------------------------------------------
 Mustangs <- read.file("http://www.mosaic-web.org/go/datasets/MustangPrice.csv")
 
-## ----dot,fig.width=4, fig.height=2----------------------------------
+## ----dot, fig.width=4, fig.height=2---------------------------------
 histogram(~Price, data=Mustangs)
 
 ## ----meanmust-------------------------------------------------------
@@ -45,7 +45,7 @@ mean(~Price, data=Mustangs)
 #  mean(~Price, data=Mustangs)
 
 ## -------------------------------------------------------------------
-simple=c(1,2,3,4,5)
+simple=c(1, 2, 3, 4, 5)
 resample(simple)
 resample(simple)
 resample(simple)
@@ -70,17 +70,17 @@ do(5) * mean(~Price, data=resample(Mustangs))
 ## -------------------------------------------------------------------
 Mustangs.Price.boot <- do(1000) * mean(~Price, data=resample(Mustangs))
 
-## ----hist,fig.width=4, fig.height=2---------------------------------
-histogram(~ result, data=Mustangs.Price.boot, xlab="Mean Mustang Price (in thousand dollars)")
+## ----hist, fig.width=4, fig.height=2--------------------------------
+histogram(~ mean, data=Mustangs.Price.boot, xlab="Mean Mustang Price (in thousand dollars)")
 
 ## ----confint--------------------------------------------------------
 confint(Mustangs.Price.boot, level=0.90, method="quantile")
 confint(Mustangs.Price.boot, level=0.90, method="stderr")
 
 ## ----qdata----------------------------------------------------------
-qdata(c(.05, .95), result, data=Mustangs.Price.boot)
+qdata(c(.05, .95), ~mean, data=Mustangs.Price.boot)
 # alternative
-cdata(.90, result, data=Mustangs.Price.boot)
+cdata(.90, ~mean, data=Mustangs.Price.boot)
 
 
 ## ----tstar----------------------------------------------------------
@@ -88,8 +88,8 @@ tstar <- qt(.95, df=24)
 zstar <- qnorm(.95)
 
 ## ----margin---------------------------------------------------------
-tstar * sd(~result,data=Mustangs.Price.boot)
-zstar * sd(~result,data=Mustangs.Price.boot)
+tstar * sd(~mean, data=Mustangs.Price.boot)
+zstar * sd(~mean, data=Mustangs.Price.boot)
 
 ## ----proptable------------------------------------------------------
 prop(~ rbinom(1000, prob=0.5, size=428) >= 240)
@@ -106,11 +106,11 @@ binom.test(240, 248)
 ## ----coinflip-------------------------------------------------------
 do(1) * rflip(428)
 
-## ----flips1,fig.width=4, fig.height=3-------------------------------
+## ----flips1, fig.width=4, fig.height=3------------------------------
 NFL.null <- do(1000) * rflip(428)
 prop(~ heads >= 240, data=NFL.null)
 
-## ----flips,fig.width=4, fig.height=2--------------------------------
+## ----flips, fig.width=4, fig.height=2-------------------------------
 histogram(~ heads, groups=(heads >= 240), data=NFL.null)
 
 ## ----fetchsleep-----------------------------------------------------
@@ -130,10 +130,10 @@ diff(mean(Words ~ shuffle(Group), data=Sleep))
 ## -------------------------------------------------------------------
 diff(mean(Words ~ shuffle(Group), data=Sleep))
 
-## ----setseed134,echo=FALSE------------------------------------------
+## ----setseed134, echo=FALSE-----------------------------------------
 set.seed(134) # make sure the result below is "typical"
 
-## ----sleep,tidy=FALSE,fig.width=4, fig.height=2---------------------
+## ----sleep, tidy=FALSE, fig.width=4, fig.height=2-------------------
 Sleep.null <- do(1000) * diff(mean(Words ~ shuffle(Group), data=Sleep))
 histogram(~ Sleep, groups=(Sleep >= obs),  data=Sleep.null, width=0.4,
   xlab="Distribution of difference in means\nunder the null hypothesis")
@@ -143,27 +143,29 @@ cor(Price, Miles, data=Mustangs)
 
 ## -------------------------------------------------------------------
 Mustangs.cor.boot <- do(1000) * cor(Price, Miles, data=resample(Mustangs))
-quantiles <- qdata(c(.025, .975), result, data=Mustangs.cor.boot); quantiles
+quantiles <- qdata(c(.025, .975), ~cor, data=Mustangs.cor.boot); quantiles
 
-## ----cor,fig.width=4, fig.height=2, tidy=FALSE----------------------
-histogram(~ result, data=Mustangs.cor.boot,
-  groups=cut(result, c(-Inf, quantiles$quantile, Inf)),
+## ----cor, fig.width=4, fig.height=2, tidy=FALSE---------------------
+histogram(~ cor, data=Mustangs.cor.boot,
+  groups=cut(cor, c(-Inf, quantiles$quantile, Inf)),
   n=30) 
 confint(Mustangs.cor.boot)
 
-## ----price-mileage-graph,fig.width=4, fig.height=3------------------
+## ----price-mileage-graph, fig.width=4, fig.height=3-----------------
 xyplot( Price ~ Miles, data=Mustangs )
 
 ## ----mustangregression----------------------------------------------
 lm(Price ~ Miles, data=Mustangs)
 
 ## -------------------------------------------------------------------
-mean( Price, data=Mustangs )
+mean( ~Price, data=Mustangs )
 
 ## -------------------------------------------------------------------
 lm( Price ~ 1, data=Mustangs)
 
 ## -------------------------------------------------------------------
+KidsFeet %>% select(-name, -birthmonth) %>% rescale() -> KidsFeet2
+KidsFeet %>% select(-name, -birthmonth) %>% rescale() -> KidsFeet2
 mean( Price ~ 1, data=Mustangs)
 
 ## -------------------------------------------------------------------

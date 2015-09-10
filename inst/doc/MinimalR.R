@@ -18,7 +18,8 @@ opts_chunk$set(
 	eval=FALSE,
 	tidy=FALSE,
 	fig.align='center',
-	fig.show='hold'
+	fig.show='hold',
+	message=FALSE
 	)
 
 ## ------------------------------------------------------------------------

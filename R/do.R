@@ -153,6 +153,8 @@ nice_names <- function(x) {
 	return(x)
 }
 
+null2na <- function(x) if (is.null(x)) NA else x
+
 #' Repeater objects
 #'
 #' Repeater objects can be used with the \code{*} operator to repeat
@@ -279,7 +281,7 @@ if(FALSE) {
       dfTotal=sum(object$Df)
     ) )
   }
-  if (any(class(object)=='table')){
+  if (inherits(object, 'table')){
     result <- data.frame(object)
     res <- result[[ncol(result)]]
     nms <- as.character(result[[1]])
@@ -291,73 +293,92 @@ if(FALSE) {
     names(res) <- nms
     return(res)
   }
-	if (any(class(object)=='aggregated.stat')) {
-		result <- object
-		res <- as.vector(result[, "S"])  # ncol(result)]
-		names(res) <- paste( attr(object,'stat.name'), 
-						.squash_names(object[,1:(ncol(object)-3),drop=FALSE]), sep=".")
-		return(res)
-	} #
-	if (any(class(object)=='lme')){ # for mixed effects models
-		result <- object
-		names(result) <- nice_names(names(result))
-		return( object$coef$fixed )
-	}
-	if (inherits(object,c('lm','groupwiseModel')) ) {
-		sobject <- summary(object)
-    	Fstat <- sobject$fstatistic[1]
-		if (!is.null(Fstat)) {
-			names(Fstat) <- "F"
-			result <-  c(coef(object), sigma=sobject$sigma, 
-						 r.squared = sobject$r.squared, 
-						 Fstat)
-		} else {
-			result <-  c(coef(object), sigma=sobject$sigma, 
-						 r.squared = sobject$r.squared
-			)
-		}
-		names(result) <- nice_names(names(result))
-		return(result)
-	}
-	if (any(class(object)=='htest') ) {
-		result <-  data.frame( 
-					  statistic = object$statistic, 
-		              parameter = object$parameter,
-					  p.value = object$p.value,
-					  conf.level = attr(object$conf.int,"conf.level"),
-					  lower = object$conf.int[1],
-					  upper = object$conf.int[2],
-					  method = object$method,
-					  alternative = object$alternative,
-					  data = object$data.name
-					  )
-		if ( ! is.null( names(object$statistic) ) ) names(result)[1] <- names(object$statistic)
-		return(result)
-	}
-	if (any(class(object)=='table') ) {
-		nm <- names(object)
-		result <-  as.vector(object)
-		names(result) <- nm
-		return(result)
-	}
-	if (any(class(object)=='cointoss')) {
-		return( c(n=attr(object,'n'), 
-				heads=sum(attr(object,'sequence')=='H'),
-				tails=sum(attr(object,'sequence')=='T'),
-        prop=sum(attr(object,'sequence')=="H") / attr(object,'n')
-				) )
-	}
-	if (is.matrix(object) && ncol(object) == 1) {
-		nn <- rownames(object)
-		object <- as.vector(object)
-		if (is.null(nn)) {
-			names(object) <- paste('v',1:length(object),sep="")
-		} else {
-			names(object) <- nn
-		}
-		return(object)
-	}
-	return(object) }
+  if (inherits(object, 'aggregated.stat')) {
+    result <- object
+    res <- as.vector(result[, "S"])  # ncol(result)]
+    names(res) <- paste( attr(object,'stat.name'), 
+                         .squash_names(object[,1:(ncol(object)-3),drop=FALSE]), sep=".")
+    return(res)
+  } #
+  if (inherits(object, 'lme')){ # for mixed effects models
+    result <- object
+    names(result) <- nice_names(names(result))
+    return( object$coef$fixed )
+  }
+  if (inherits(object,c('lm','groupwiseModel')) ) {
+    sobject <- summary(object)
+    Fstat <- sobject$fstatistic[1]
+    DFE <- sobject$fstatistic["dendf"]
+    DFM <- sobject$fstatistic["numdf"]
+    if (!is.null(Fstat)) {
+      names(Fstat) <- "F"
+      result <-  c(coef(object), sigma=sobject$sigma, 
+                   r.squared = sobject$r.squared, 
+                   Fstat,
+                   DFM,
+                   DFE)
+    } else {
+      result <-  c(coef(object), sigma=sobject$sigma, 
+                   r.squared = sobject$r.squared
+      )
+    }
+    names(result) <- nice_names(names(result))
+    return(result)
+  }
+  if (inherits(object,'htest')) {
+    if (is.null(object$conf.int)) {
+      result <-  data.frame( 
+        statistic = null2na(object$statistic), 
+        parameter = null2na(object$parameter),
+        p.value = null2na(object$p.value),
+        method = null2na(object$method),
+        alternative = null2na(object$alternative),
+        data = null2na(object$data.name)
+      )
+    } else {
+      result <-  data.frame( 
+        statistic = null2na(object$statistic), 
+        parameter = null2na(object$parameter),
+        p.value = null2na(object$p.value),
+        conf.level = attr(object$conf.int,"conf.level"),
+        lower = object$conf.int[1],
+        upper = object$conf.int[2],
+        method = null2na(object$method),
+        alternative = null2na(object$alternative),
+        data = null2na(object$data.name)
+      )
+    }
+    if ( !is.null(names(object$statistic)) ) 
+      names(result)[1] <-  names(object$statistic)
+    if ( !is.null(names(object$parameter)) ) 
+      names(result)[2] <- names(object$parameter)
+    return(result)
+  }
+  if (inherits(object, 'table') ) {
+    nm <- names(object)
+    result <-  as.vector(object)
+    names(result) <- nm
+    return(result)
+  }
+  if (inherits(object, 'cointoss')) {
+    return( c(n=attr(object,'n'), 
+              heads=sum(attr(object,'sequence')=='H'),
+              tails=sum(attr(object,'sequence')=='T'),
+              prop=sum(attr(object,'sequence')=="H") / attr(object,'n')
+    ) )
+  }
+  if (is.matrix(object) && ncol(object) == 1) {
+    nn <- rownames(object)
+    object <- as.vector(object)
+    if (is.null(nn)) {
+      names(object) <- paste('v',1:length(object),sep="")
+    } else {
+      names(object) <- nn
+    }
+    return(object)
+  }
+  return(object) 
+}
 
 # #' @aliases print,repeater-method
 #' @rdname do
@@ -377,7 +398,7 @@ print.repeater <- function(x, ...)
   # see if we really just have a vector
   ul <- unlist( l )
   if ( length(ul) == length(l) ) {
-    result <- data.frame(result=as.vector(ul))
+    result <- data.frame(..result.. = as.vector(ul))
     row.names(result) <- NULL
     if( !is.null(names(l[[1]])) ) names(result) <- names(l[[1]])
     return(result)
@@ -416,119 +437,53 @@ print.repeater <- function(x, ...)
 #' @aliases *,repeater,ANY-method
 #' @export
 
-setMethod("*",
-    signature(e1 = "repeater", e2="ANY"),
-    function (e1, e2) 
-    {
-		e2unevaluated = substitute(e2)
-		if ( ! is.function(e2) ) {
-      frame <- parent.frame()
-			e2 = function(){eval(e2unevaluated, envir=frame) }   
-		}
-		n = e1@n
-
-		cull = e1@cull
-		if (is.null(cull)) {
-			cull <- .cull_for_do
-		}
+setMethod(
+  "*",
+  signature(e1 = "repeater", e2="ANY"),
+  function (e1, e2) 
+  {
+    e2_lazy <- lazyeval::lazy(e2)
+    #		e2unevaluated = substitute(e2)
+    #		if ( ! is.function(e2) ) {
+    #      frame <- parent.frame()
+    #			e2 = function(){eval(e2unevaluated, envir=frame) }   
+    #		}
+    n = e1@n
     
-		out.mode <- if (!is.null(e1@mode)) e1@mode else 'default'
-
-    if (e1@algorithm >= 1) {
-      resultsList <- if( e1@parallel && "package:parallel" %in% search() ) {
-        # requireNamespace("parallel", quietly=TRUE) )
-        message("Using `parallel'.  Set seed with set.rseed().")
-        parallel::mclapply( integer(n), function(...) { cull(e2()) } )
-      } else {
-        lapply( integer(n), function(...) { cull(e2()) } )
-      }
-          
-      if (out.mode=='default') {  # is there any reason to be fancier?
-        out.mode = 'data.frame'
-      }
-      
-      result <- switch(out.mode, 
-                    "list" = resultsList,
-                    "data.frame" = .list2tidy.data.frame( resultsList ),
-                    "matrix" = as.matrix( do.call( rbind, resultsList) ),
-                    "vector" = unlist(resultsList)  
-      ) 
-      class(result) <- c(paste('do', class(result)[1], sep="."), class(result))
-	  if (inherits( result, "data.frame")) {
-		  names(result) <- nice_names(names(result))
-	  }
-      return(result)
+    cull = e1@cull
+    if (is.null(cull)) {
+      cull <- .cull_for_do
     }
-  
-    ## pre 1.0 algorithm...
-    message("Using older algorithm for do()")
     
-		res1 = cull(e2())  # was (...)
-		nm = names(res1)
-
-		if (!is.null(e1@mode)) { 
-			out.mode <- e1@mode 
-		} else {
-			out.mode <- 'list'
-
-			if ( is.vector( res1) || is.data.frame(res1) ) {
-				if (is.null(nm)) { 
-					out.mode <- 'matrix' 
-				} else {
-					out.mode <- 'data.frame'
-				}
-			}
-		}
-
-
-		if ( out.mode == 'list' ) {
-			result <- list()
-			result[[1]] <- res1
-			if (n < 2) return (res1) 
-			for (k in 2:n) {
-				result[[k]] <- cull(e2()) # was (...)
-			}
-			return(result)
-		}
-
-		if (out.mode == 'data.frame') {
-			result <- .make.data.frame(res1)
-      result$do.ind <- 1
-      result$do.row <- 1:nrow(result)
-			if (n>1) {
-			  for (k in 2:n) {
-			  	res2 <- .make.data.frame(cull(e2()))
-          res2$do.ind <- k
-          res2$do.row <- 1:nrow(res2)
-				# print(res2)
-				# result <- rbind( result, cull(e2()) ) 
-				  result <- .merge_data_frames( result, res2)
-			  }
-			}
-			# rownames(result) <- 1:nrow(result)
-			# names(result) <- nm
-      # mark result as having originated with do()
-      if (all(result$do.row == 1)) { result[["do.row"]] <- NULL; result[["do.ind"]] <- NULL }
-      
-      class(result) <- c(paste('do', class(result)[1], sep="."), class(result))
-			return(result)
-		}
-
-		result <- matrix(nrow=n,ncol=length(res1))
-		result[1,] <- res1
-
-		if (n > 1) {
-			for (k in 2:n) {
-				result[k,] <- cull(e2()) # was (...)
-			}
-		}
-
-		if (dim(result)[2] == 1 & is.null(nm) ) result <- data.frame(result=result[,1]) 
-
-    class(result) <- c(paste("do",class(result)[1], sep="."), class(result))
-	if (inherits( result, "data.frame")) { 
-		names(result) <- nice_names(names(result))
-	}
+    out.mode <- if (!is.null(e1@mode)) e1@mode else 'default'
+    
+    resultsList <- if( e1@parallel && "package:parallel" %in% search() ) {
+      if (getOption("mosaic:parallelMessage", TRUE)) {
+        message("Using parallel package.\n",
+                "  * Set seed with set.rseed().\n", 
+                "  * Disable this message with options(`mosaic:parallelMessage` = FALSE)\n")
+      }
+      parallel::mclapply( integer(n), function(...) { cull(lazyeval::lazy_eval(e2_lazy)) } )
+    } else {
+      lapply( integer(n), function(...) { cull(lazyeval::lazy_eval(e2_lazy)) } )
+    }
+    
+    if (out.mode=='default') {  # is there any reason to be fancier?
+      out.mode = 'data.frame'
+    }
+    
+    result <- switch(out.mode, 
+                     "list" = resultsList,
+                     "data.frame" = .list2tidy.data.frame( resultsList ),
+                     "matrix" = as.matrix( do.call( rbind, resultsList) ),
+                     "vector" = unlist(resultsList)  
+    ) 
+    class(result) <- c(paste('do', class(result)[1], sep="."), class(result))
+    if (inherits( result, "data.frame")) {
+      names(result) <- nice_names(names(result))
+      names(result)[names(result) == "..result.."] <- as.character(e2_lazy$expr[[1]])
+    }
+    attr(result, "lazy") <- e2_lazy
+    if (out.mode == "data.frame") attr(result, "culler") <- cull
     return(result)
-	}
-)
+  })

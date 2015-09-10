@@ -7,13 +7,13 @@
 \alias{mUniplot}
 \title{Interactive plotting}
 \usage{
-mPlot(data, format = plotTypes, default = format, system = c("lattice",
-  "ggplot2"), show = FALSE, title = "", ...)
+mPlot(data, format, default = format, system = c("lattice", "ggplot2"),
+  show = FALSE, title = "", ...)
 
 mMap(data, default = "map", system = "ggplot2", show = FALSE,
   title = title, ...)
 
-mScatter(data, default = c("scatter", "jitter", "boxplot", "violin"),
+mScatter(data, default = c("scatter", "jitter", "boxplot", "violin", "line"),
   system = c("lattice", "ggplot2"), show = FALSE, title = "")
 
 mUniplot(data, default = c("histogram", "density", "frequency polygon"),

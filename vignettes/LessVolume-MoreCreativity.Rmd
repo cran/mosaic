@@ -53,7 +53,7 @@ and modeling to students in colleges and universities.
  * more information at [mosaic-web.org](http://mosaic-web.org)
  
  * the `mosaic` package is available via 
-     * [CRAN](http://cran.r-project.org/web/packages/mosaic/index.html)
+     * [CRAN](http://cran.r-project.org/package=mosaic)
      * [github](https://github.com/ProjectMOSAIC/mosaic) 
          * updates more frequently than CRAN
          * use `devtools::install_github(ProjectMOSAIC/mosaic)` to install 
@@ -418,7 +418,8 @@ xyplot( births ~ date, data=Births78,
             pch=16, cex=1.2, alpha=.8)))
 ```
 
-**Notes:** 
+**Notes** 
+
  * `wday()` is in the `lubridate` package
  * This version of the plot reveals a clear weekend (and holiday) pattern.  Typically, I like to have students conjecture about the "double wave" pattern and see if we can build plots to test their conjectures.
 
@@ -538,6 +539,7 @@ secure in their ability to use these functions.
 
 ## Some other things
 The `mosaic` package includes some other things, too
+
  * data sets (they have now been moved to separate `mosaicData` and `NHANES` packages)
  * xtras: `xchisq.test()`, `xpnorm()`, `xqqmath()`
    * these functions add a bit of extra output to the similarly named functions that don't have a leading `x`

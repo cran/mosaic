@@ -1,14 +1,14 @@
 Package: mosaic
 Type: Package
 Title: Project MOSAIC Statistics and Mathematics Teaching Utilities
-Version: 0.10.0
-Date: 2015-05-21
-Depends: R (>= 3.0.0), car, dplyr, lattice (>= 0.20-21), ggplot2,
+Version: 0.11
+Date: 2015-09-10
+Depends: R (>= 3.0.0), dplyr, lattice (>= 0.20-21), ggplot2, car,
         mosaicData
-Imports: lazyeval, MASS, grid, reshape2, plyr, readr, methods, utils,
-        splines, latticeExtra, gridExtra, ggdendro
+Imports: lazyeval, MASS, grid, reshape2, readr, methods, utils,
+        splines, latticeExtra, ggdendro, gridExtra
 Suggests: lubridate, fastR, magrittr, NHANES, RCurl, sp, maptools, vcd,
-        testthat, tidyr, knitr, tools, parallel, mapproj
+        testthat, tidyr, knitr, tools, parallel, mapproj, rgl
 Enhances: manipulate
 VignetteBuilder: knitr
 Author: Randall Pruim <rpruim@calvin.edu>, Daniel Kaplan
@@ -24,6 +24,6 @@ License: GPL (>= 2)
 LazyLoad: yes
 LazyData: yes
 NeedsCompilation: no
-Packaged: 2015-05-21 13:08:22 UTC; rpruim
+Packaged: 2015-09-10 06:48:55 UTC; rpruim
 Repository: CRAN
-Date/Publication: 2015-05-22 18:55:30
+Date/Publication: 2015-09-10 09:38:52
