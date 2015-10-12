@@ -7,7 +7,6 @@
 \alias{do}
 \alias{do.default}
 \alias{do.numeric}
-\alias{print,repeater-method}
 \alias{print.repeater}
 \title{Do Things Repeatedly}
 \usage{
@@ -50,7 +49,7 @@ situations.}
 \item{parallel}{a logical indicating whether parallel computation should be attempted
   using the \pkg{parallel} package (if it is installed and loaded).}
 
-\item{x}{an object}
+\item{x}{an object created by \code{do}.}
 
 \item{e1}{an object (in cases documented here, the result of running \code{do})}
 
@@ -63,8 +62,6 @@ situations.}
 \description{
 \code{do()} provides a natural syntax for repetition tuned to assist
 with replication and resampling methods.
-
-#
 }
 \note{
 \code{do} is a thin wrapper around \code{Do} to avoid collision with

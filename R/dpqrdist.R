@@ -108,7 +108,8 @@ pdist <- function (dist="norm", q, plot = TRUE, verbose = FALSE, invisible=FALSE
 #' @param verbose a logical
 #' @param invisible a logical
 #' @param digits the number of digits desired
-#' @param xlim x limits
+#' @param xlim x limits.  By default, these are chosen to show the central 99.8\% 
+#'   of the distribution.
 #' @param ylim y limits
 #' @param vlwd width of vertical lines
 #' @param vcol color of vertical lines
@@ -121,15 +122,17 @@ pdist <- function (dist="norm", q, plot = TRUE, verbose = FALSE, invisible=FALSE
 #' @details The most general function is \code{qdist} which can work with 
 #' any distribution for which a q-function exists.  As a convenience, wrappers are 
 #' provided for several common distributions.
+#' 
 #' @return a vector of quantiles; a plot is printed as a side effect
 #' @examples
-#' qdist("norm", seq(.2, .8, by=.10))
-#' xqnorm(seq(.2, .8, by=.10), mean=100, sd=10)
+#' qdist("norm", seq(.2, .8, by = 0.10))
+#' xqnorm(seq(.2, .8, by = 0.10), mean = 100, sd = 10)
 #' qdist("unif", .5)
-#' xqgamma(.5, shape=3, scale=4)
-#' xqchisq(c(.25,.5,.75), df=3)
-#' xpbinom( c(480, 500, 510), size=1000, prob=0.48)
-#' xqpois( c(0.25, 0.5, 0.75), lambda=6, lwd=3, vlwd=2)
+#' xqgamma(.5, shape = 3, scale = 4)
+#' xqchisq(c(.25,.5,.75), df = 3)
+#' xpbinom( c(480, 500, 510), size = 1000, prob = 0.48)
+#' xpbinom( c(40, 60), size = 100, prob = 0.5)
+#' xqpois( c(0.25, 0.5, 0.75), lambda = 6, lwd = 3, vlwd = 2)
 #' @export 
 
 qdist <- function (dist="norm", p, plot = TRUE, verbose = FALSE, invisible=FALSE, 
@@ -200,6 +203,7 @@ plot_multi_dist <- function(dist, p, q, xlim, ylim, digits=4, resolution=5000,
   if (discrete) {
     xdata <- unique(dpqrdist(dist, type="q", p=ppoints(resolution), ...))
     step = min(diff(xdata))
+    xlim = c(-step/2, step/2) + xlim  # widen by half step in each direction
     fill <- seq( min(xdata) -1.5 * step , max(xdata) + 1.5*step, length.out=resolution)
     xdata <- c(xdata, fill) 
     xdata <- dpqrdist(dist, type="q", p=dpqrdist(dist, type="p", q=xdata, ...), ...)
@@ -214,8 +218,6 @@ plot_multi_dist <- function(dist, p, q, xlim, ylim, digits=4, resolution=5000,
     ylim = c(0, 1.4 * ymax)
   }
   
-  groups <- sapply(xdata, function(x) {sum(x < q)})
-  
   # this could be funny if limits don't span q
   p <- c(0, p, 1)
   q <- c(xlim[1], q, xlim[2])
@@ -228,16 +230,16 @@ plot_multi_dist <- function(dist, p, q, xlim, ylim, digits=4, resolution=5000,
     list(
       ydata ~ xdata, 
       xlim = xlim, ylim = ylim, 
-      groups = sapply(xdata, function(x) {sum(x < q)}),
+      groups = sapply(xdata, function(x) {sum(x <= q)}),
       type= if (discrete) c('p','h') else 'h',
       xlab = "", ylab = if (discrete) "probability" else "density", 
       panel = 
         if (discrete) {
           function(x, y, ...) {
             # panel.xyplot(x,y,...)
-            panel.segments(q, 0, q, unit(ymax,'native') + unit(.2,'lines'), 
+            panel.segments(q, 0, q, grid::unit(ymax,'native') + grid::unit(.2,'lines'), 
                            col = vcol, lwd=vlwd)
-            grid.text(x=mid(q), y=unit(ymax,'native') + unit(1.0,'lines'), default.units='native',
+            grid.text(x=mid(q), y=grid::unit(ymax,'native') + grid::unit(1.0,'lines'), default.units='native',
                       rot=rot,
                       check.overlap=TRUE,
                       paste("", round(diff(p), 3), sep = ""), 
@@ -247,9 +249,9 @@ plot_multi_dist <- function(dist, p, q, xlim, ylim, digits=4, resolution=5000,
         } else {
           function(x, y, ...) {
             panel.xyplot(x, y, ...)
-            panel.segments(q, 0, q, unit(ymax,'native') + unit(.2,'lines'), 
+            panel.segments(q, 0, q, grid::unit(ymax,'native') + grid::unit(.2,'lines'), 
                            col = vcol, lwd=vlwd)
-            grid.text(x=mid(q), y=unit(ymax,'native') + unit(1.0,'lines'), default.units='native',
+            grid.text(x=mid(q), y=grid::unit(ymax,'native') + grid::unit(1.0,'lines'), default.units='native',
                       rot=rot,
                       check.overlap=TRUE,
                       paste("", round(diff(p), 3), sep = ""), 

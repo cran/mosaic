@@ -202,7 +202,7 @@ confint(Mustangs.lm.boot)
 
 ## -------------------------------------------------------------------
 HELPrct.null <- do(1000) * lm(homeless=="homeless" ~ shuffle(sex), data=HELPrct)
-prop(~ abs(sexmale) > 0.1146, data=HELPrct.null)
+prop(~ abs(sex.male) > 0.1146, data=HELPrct.null)
 
 ## -------------------------------------------------------------------
 Mustangs.boot1 <- do(1000) * lm( Price ~ Age, data=resample(Mustangs))

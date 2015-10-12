@@ -107,7 +107,7 @@ nflip <- function(n=1, prob=.5, ...) {
 #' tally(~ sex, data=Small)
 #' tally(~ sex, data=resample(Small, groups=sex)) 
 #' # shuffled can be used to reshuffle some variables within groups
-#' # orig.ids shows where the values were in original data frame.
+#' # orig.id shows where the values were in original data frame.
 #' Small <- mutate(Small, 
 #'    id1 = paste(sex,1:10, sep=":"),  
 #'    id2 = paste(sex,1:10, sep=":"))
@@ -264,7 +264,7 @@ sample.data.frame <- function(x, size, replace = FALSE, prob = NULL, groups=NULL
   }
   
   result <-  result[ , union(fixed,shuffled), drop=FALSE]
-  if (orig.ids) result$orig.ids <- idsString
+  if (orig.ids) result$orig.id <- idsString
   
   
   if (invisibly.return) { return(invisible(result)) } else {return(result)}
@@ -351,33 +351,42 @@ sample.lm <-
         (1 - 2 * rbinom(size, 1, 0.5)) * resample(resid(x))
     }
     res$new_response <- fitted(x) + res$new_resid
-    
+   
+     
     if (is.null(transformation)) {
-      transformation <- identity
-      left <- lhs(formula(x))
-      if (length(left) == 2) {       # foo ( stuff )
-        if (is.name(left[[2]])) {    # stuff is a name
-          transformation <- 
-            switch( 
-              as.character(left[[1]]),
-              "log" = exp,
-              "log10" = function(x) {10^x},
-              "log2" = function(x) {2^x},
-              "sqrt" = function(x) x^2,
-              identity
-            )
-        }   # could have identify if stuff is not a name or foo is not a known function
-        if (identical(transformation, identity)) {
-          warning("You may need to specify transformation to get the desired results.")
-        } 
-      }
-      if (length(left) > 2) {
-        warning("You may need to specify transformation to get the desired results.")
-      }
+      transformation <- inferTransformation(formula(x))
     }
     res[[1]] <- do.call(transformation, list(res$new_response))
+    # remove "scratch columns"
+    res <- res %>% 
+      select_(.dots = setdiff(names(res), c("resid", "new_resid", "new_response")))
     res
   }
+
+inferTransformation <- function(formula) {
+  transformation <- identity
+  left <- lhs(formula)
+  if (length(left) == 2) {       # foo ( stuff )
+    if (is.name(left[[2]])) {    # stuff is a name
+      transformation <- 
+        switch( 
+          as.character(left[[1]]),
+          "log" = exp,
+          "log10" = function(x) {10^x},
+          "log2" = function(x) {2^x},
+          "sqrt" = function(x) x^2,
+          identity
+        )
+    }   # could have identity if stuff is not a name or foo is not a known function
+    if (identical(transformation, identity)) {
+      warning("You may need to specify transformation to get the desired results.")
+    } 
+  }
+  if (length(left) > 2) {
+    warning("You may need to specify transformation to get the desired results.")
+  }
+  transformation
+}
 
 #' Resample a Linear Model
 #' 

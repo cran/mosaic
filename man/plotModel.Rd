@@ -39,6 +39,11 @@ predictors using the \code{rgl} package.
 Currently, only linear regression models and
 generalized linear regression models are supported.
 }
+\section{Caution}{
+
+This is still underdevelopment.  The API is subject to change, and some
+use cases may not work yet.  Watch for improvments in subsequent versions of the package.
+}
 \examples{
 require(mosaic)
 
@@ -56,7 +61,7 @@ plotModel(mod)
 # multiple categorical vars
 mod <- lm( mpg ~ wt + factor(cyl) + factor(vs) + factor(am), data = mtcars)
 plotModel(mod)
-plotModel(mod, key = ~am)
+plotModel(mod, mpg ~ am)
 
 # interaction
 mod <- lm( mpg ~ wt + factor(cyl) + wt:factor(cyl), data = mtcars)
@@ -82,9 +87,9 @@ mod <- lm( mpg ~ wt + hp + factor(cyl) + factor(vs), data = mtcars)
 plotModel(mod)
 
 # interaction planes
-# not work -- need better logic in function
 mod <- lm( mpg ~ wt + hp + wt * factor(cyl), data = mtcars)
 plotModel(mod)
+plotModel(mod, system="g") + facet_wrap( ~ cyl )
 }
 \author{
 Ben Baumer, Galen Long, Randall Pruim

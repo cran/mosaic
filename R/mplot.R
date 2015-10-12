@@ -27,12 +27,12 @@ mplot.default <- function(object, ...) {
 
 #' @rdname mplot
 #' @param data a data frame containing the variables that might be used in the plot.
-#' Note that for maps, the data frame must contain coordinates of the polygons 
-#' comprising the map and a variable for determining which corodiantes are part
-#' of the same region.  See \code{\link{sp2df}} for one way to create such
-#' a data frame.  Typically \code{\link{merge}} will be used to combine the map
-#' data with some auxilliary data to be displayed as fill color on the map, although
-#' this is not necessary if all one wants is a map.
+# Note that for maps, the data frame must contain coordinates of the polygons 
+# comprising the map and a variable for determining which corodiantes are part
+# of the same region.  See \code{\link{sp2df}} for one way to create such
+# a data frame.  Typically \code{\link{merge}} will be used to combine the map
+# data with some auxilliary data to be displayed as fill color on the map, although
+# this is not necessary if all one wants is a map.
 #' @param format,default default type of plot to create; one of 
 #' \code{"scatter"},
 #' \code{"jitter"},
@@ -41,9 +41,11 @@ mplot.default <- function(object, ...) {
 #' \code{"histogram"},
 #' \code{"density"},
 #' \code{"frequency polygon"},
-#' \code{"xyplot"}, 
 #' or
-#' \code{"map"}.  Unique prefixes suffice.
+# \code{"xyplot"}. 
+# or
+#' \code{"map"}.  
+#' Unique prefixes suffice.
 #' @param system which graphics system to use (initially) for plotting (\pkg{ggplot2} 
 #'   or \pkg{lattice}).  A check box will allow on the fly change of plotting system.
 #' @param show a logical, if \code{TRUE}, the code will be displayed each time the plot is 
@@ -114,7 +116,7 @@ mplot.lm <- function(object, which=c(1:3, 7),
   g1 <- ggplot(fdata, aes(.fitted, .resid)) +
     geom_point()  +
     geom_smooth(se=FALSE) +
-    geom_hline(linetype=2, size=.2) +
+    geom_hline(linetype=2, size=.2, yintercept=0) +
     scale_x_continuous("Fitted Values") +
     scale_y_continuous("Residual") +
     labs(title="Residuals vs Fitted")
@@ -201,7 +203,7 @@ mplot.lm <- function(object, which=c(1:3, 7),
   g5 <- ggplot(fdata, aes(.hat, .stdresid)) +
     geom_point() +
     geom_smooth(se=FALSE) +
-    geom_hline(linetype=2, size=.2) +
+    geom_hline(linetype=2, size=.2, yintercept = 0) +
     scale_x_continuous("Leverage") +
     scale_y_continuous("Standardized Residuals") +
     labs(title="Residuals vs Leverage")
@@ -294,16 +296,16 @@ mplot.data.frame <- function (object, format, default = format,
                               title = "", ...
                               ) {
   plotTypes <- c('scatter', 'jitter', 'boxplot', 'violin', 'histogram', 
-                 'density', 'frequency polygon', 'xyplot', 'map')
+                 'density', 'frequency polygon', 'xyplot')
   if (missing(default) & missing(format)) {
     choice <- 
       menu(title = "Choose a plot type.",
            choices = c(
              "1-variable (histogram, density plot, etc.)",
-             "2-variable (scatter, boxplot, etc.)", 
-             "map")
+             "2-variable (scatter, boxplot, etc.)" 
+           )
       )
-    default <- c("histogram", "scatter", "map") [choice]
+    default <- c("histogram", "scatter") [choice]
   }
   default <- match.arg(default, plotTypes)
   system <- match.arg(system)
@@ -316,12 +318,12 @@ mplot.data.frame <- function (object, format, default = format,
                                    ", default=default, system=system, show=show, title=title)"))
     ))
   }
-  if (default == "map") {
-    return(eval(parse(
-      text = paste("mMap(", dataName, 
-                   ", default=default, system=system, show=show, title=title)"))
-    ))
-  }
+#   if (default == "map") {
+#     return(eval(parse(
+#       text = paste("mMap(", dataName, 
+#                    ", default=default, system=system, show=show, title=title)"))
+#     ))
+#   }
   return(eval(parse(
     text = paste("mUniplot(", dataName, 
                  ", default=default, system=system, show=show, title=title)"))
@@ -427,7 +429,7 @@ mplot.summary.lm <- function(object,
                   ymin=lower, ymax=upper, 
                   color=signif)) + # (pval < (1-level)/2))) + 
     geom_pointrange(size=1.2) + 
-    geom_hline(x=0, color="red", alpha=.5, linetype=2) + 
+    geom_hline(yintercept = 0, color = "red", alpha = .5, linetype = 2) + 
     labs(x="coefficient", title = paste0(format(100*level), "% confidence intervals") ) +
     theme(legend.position="none") +
     coord_flip()
