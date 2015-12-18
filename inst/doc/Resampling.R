@@ -78,9 +78,9 @@ confint(Mustangs.Price.boot, level=0.90, method="quantile")
 confint(Mustangs.Price.boot, level=0.90, method="stderr")
 
 ## ----qdata----------------------------------------------------------
-qdata(c(.05, .95), ~mean, data=Mustangs.Price.boot)
+qdata(~mean, c(.05, .95), data=Mustangs.Price.boot)
 # alternative
-cdata(.90, ~mean, data=Mustangs.Price.boot)
+cdata(~mean, .90, data=Mustangs.Price.boot)
 
 
 ## ----tstar----------------------------------------------------------
@@ -143,7 +143,7 @@ cor(Price, Miles, data=Mustangs)
 
 ## -------------------------------------------------------------------
 Mustangs.cor.boot <- do(1000) * cor(Price, Miles, data=resample(Mustangs))
-quantiles <- qdata(c(.025, .975), ~cor, data=Mustangs.cor.boot); quantiles
+quantiles <- qdata(~cor, c(.025, .975), data=Mustangs.cor.boot); quantiles
 
 ## ----cor, fig.width=4, fig.height=2, tidy=FALSE---------------------
 histogram(~ cor, data=Mustangs.cor.boot,

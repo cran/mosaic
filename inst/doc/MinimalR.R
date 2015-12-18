@@ -213,15 +213,15 @@ xyplot(Sepal.Length ~ Sepal.Width,
         groups=Species, data=iris) 
 
 ## ----fig.keep="last", tidy=FALSE, fig.height=2.3----
-model <- lm(weight ~ height + gender, 
-            data=Heightweight)
-wt <- makeFun(model)
-wt( height=72, gender="male")
-xyplot(weight ~ height, groups=gender, 
-       data=Heightweight)
-plotFun(wt(h,gender="male") ~ h, 
+model <- lm(length ~ width + sex, 
+            data=KidsFeet)
+ln <- makeFun(model)
+ln( width=8.25, sex="B")
+xyplot(length ~ width, groups=sex, 
+       data=KidsFeet)
+plotFun(ln(w, sex="B") ~ w, 
         add=TRUE, col="skyblue")
-plotFun(wt(h,gender="female") ~ h, 
+plotFun(ln(w,sex="G") ~ w, 
         add=TRUE, col="navy")
 
 ## ----fig.height=1.75------------------

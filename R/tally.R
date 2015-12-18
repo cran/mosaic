@@ -1,4 +1,5 @@
-
+#' Turn logicals into factors; leave other things alone
+#' 
 #' Turn logicals into factors; leave other things alone
 #'
 #' @param x a vector or data frame
@@ -14,6 +15,8 @@
 logical2factor  <- function(x, ...) { UseMethod('logical2factor') }
 
 #' @rdname logical2factor
+#' @export
+#' 
 logical2factor.default  <- function( x, ... ) {
 	if (is.logical(x)) {
 		x <- factor(x, levels=c(TRUE,FALSE), labels=c("TRUE","FALSE"))
@@ -83,13 +86,26 @@ logical2factor.data.frame  <- function( x, ... ) {
 #' tally( ~ sex, data=HELPrct, useNA="always")
 #' # show NAs if any are there
 #' tally( ~ link, data=HELPrct)
-#' # ignfore the NAs
+#' # ignore the NAs
 #' tally( ~ link, data=HELPrct, useNA="no")
 #' }
 #' @export
-
+#' 
 tally <- function(x, ...) {
-  UseMethod("tally")
+  lx <- lazyeval::lazy(x)
+  tryCatch(tally_internal(x, ...), error = function(e) { 
+    message( "First argument should be a formula... But I'll try to guess what you meant")
+    form <- substitute( ~ X, list(X = lx$expr))
+    class(form) <- "formula"
+    environment(form) <- lx$env
+    tally_internal(form, ...)
+  })
+} 
+#' 
+#' @rdname tally
+
+tally_internal <- function(x, ...) {
+  UseMethod("tally_internal")
 }
 
 #' @rdname tally
@@ -97,9 +113,8 @@ tally <- function(x, ...) {
 #'   see \code{\link[dplyr]{tally}} in \pkg{dplyr}
 #' @param sort a logical, 
 #'   see \code{\link[dplyr]{tally}} in \pkg{dplyr}
-#' @export
 
-tally.tbl <- function(x, wt, sort=FALSE, ..., envir=parent.frame()) {
+tally_internal.tbl <- function(x, wt, sort=FALSE, ..., envir=parent.frame()) {
   if (missing(wt)) {
     return(do.call(dplyr::tally, list(x, sort=sort), envir=envir))
   } else {
@@ -108,24 +123,24 @@ tally.tbl <- function(x, wt, sort=FALSE, ..., envir=parent.frame()) {
 }
 
 #' @rdname tally
-#' @export
 
-tally.default <- function(x, data=parent.frame(), 
+tally_internal.data.frame <- function(x, wt, sort=FALSE, ..., envir=parent.frame()) {
+  if (missing(wt)) {
+    return(do.call(dplyr::tally, list(x, sort=sort), envir=envir))
+  } else {
+    return(do.call(dplyr::tally, list(x, wt=substitute(wt), sort=sort), envir=envir))
+  }
+}
+
+#' @rdname tally
+
+tally_internal.formula <- function(x, data = parent.frame(2), 
                       format=c('count', 'proportion', 'percent', 'data.frame', 'sparse', 'default'), 
                       margins=FALSE,
                       quiet=TRUE,
                       subset, 
                       useNA = "ifany", ...) {
-	format <- match.arg(format)
-  if (! .is.formula(x) ) {
-      formula <- ~ x
-      formula[[2]] <- substitute(x)
-      message( "First argument should be a formula... But I'll try to guess what you meant")
-      return(
-        do.call(mosaic::tally, list(formula, data=data, format=format, margins=margins, quiet=quiet, ...))
-      )  
-  }
-  
+ 	format <- match.arg(format)
 	formula <- x
 	evalF <- evalFormula(formula,data)
 
@@ -175,6 +190,22 @@ tally.default <- function(x, data=parent.frame(),
 	return(res)
 }
 
+tally_internal.default <- 
+  function(x, format=c('count', 'proportion', 'percent', 'data.frame', 'sparse', 'default'), 
+           margins=FALSE,
+           quiet=TRUE,
+           subset, 
+           useNA = "ifany", 
+           data = parent.frame(2),
+           ...) {
+    D <- data_frame(X = x)
+    tally_internal( 
+      ~ X, data = D, format = format, margins = margins, 
+      quiet = quiet, subset = subset, useNA = useNA,
+      ...)
+  }
+    
+  
 #' return a vector of row or column indices
 #'
 #' @param x an object that may or may not have any rows or columns
@@ -206,6 +237,8 @@ rows <- function(x, default=c()) {
 }
 
 #' Compute proportions, percents, or counts for a single level
+#' 
+#' Compute proportions, percents, or counts for a single level
 #'
 #' @rdname prop
 #' @param x an R object, usually a formula
@@ -220,11 +253,18 @@ rows <- function(x, default=c()) {
 #'   ignored.
 #' @param format one of \code{proportion}, \code{percent}, or \code{count},
 #'        possibly abbrevaited
+#' @param pval.adjust a logical indicating whether the "p-value" adjustment should be 
+#' applied.  This adjustment adds 1 to the numerator and denominator counts.
 #' @param quiet a logical indicating whether messages regarding the 
 #'   target level should be supressed.
 #'
 #' @note For 0-1 data, level is set to 1 by default since that a standard 
 #' coding scheme for success and failure.
+#' 
+#' @details
+#' \code{prop1} is intended for the computation of p-values from randomization
+#' distributions and differs from \code{prop} only in its default value of 
+#' \code{pval.adjust}.
 #' 
 #' @examples
 #' if (require(mosaicData)) {
@@ -236,10 +276,23 @@ rows <- function(x, default=c()) {
 #' }
 #' @export
 
-prop <- function(x, data=parent.frame(), useNA = "no", ..., level=NULL, 
+prop <- function(x, data=parent.frame(), useNA = "no", ..., 
+                 level=NULL, 
                  long.names=TRUE, sep=".", 
-                 format="proportion", quiet=TRUE) {
-  T <- mosaic::tally(x, data=data, useNA = useNA, ..., format=format)
+                 format="proportion", 
+                 quiet=TRUE,
+                 pval.adjust = FALSE) {
+  T <- mosaic::tally(x, data=data, useNA = useNA, ...)
+  n <- sum(T)
+  if (pval.adjust) {
+    n <- n + 1
+    T <- T + 1
+  }
+  
+  if (format == "percent") {
+    T <- T * 100
+  }
+  
   if (length(dim(T)) < 1) stop("Insufficient dimensions.")
   lnames <- dimnames(T)[[1]]
   if (is.null(level)) {
@@ -258,14 +311,14 @@ prop <- function(x, data=parent.frame(), useNA = "no", ..., level=NULL,
                     paste(setdiff(lnames,level), collapse=", "), "\n" ) )
   if ( length(dim(T)) == 2) {
     idx <- match(level, lnames)
-    result <- T[idx,]
+    result <- T[idx,] / n
     if (long.names)
       names(result) <- paste(level, names(result), sep=sep)
     return(result)
   }
   if ( length(dim(T)) == 1) {
     idx <- match(level, names(T))
-    result <- T[idx]
+    result <- T[idx] / n
     return(result)
   }
   stop(paste('Too many dimensions (', length(dim(T)), ")",sep=""))
@@ -273,8 +326,18 @@ prop <- function(x, data=parent.frame(), useNA = "no", ..., level=NULL,
 
 #' @rdname prop
 #' @export
+prop1 <- function(..., pval.adjust = TRUE) {
+  prop(..., pval.adjust = pval.adjust)
+}
+
+#' @rdname prop
+#' @export
 
 count <- function(x, data=parent.frame(), ..., format="count") {
+	prop(x, data=data, ..., format=format)
+}
+
+count_ <- function(x, data=parent.frame(), ..., format="count") {
 	prop(x, data=data, ..., format=format)
 }
 

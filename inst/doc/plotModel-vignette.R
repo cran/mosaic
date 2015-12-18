@@ -38,44 +38,52 @@ plotModel(mod)
 
 # GLM with interaction
 mod <- glm(vs ~ wt + factor(cyl), data=mtcars, family = 'binomial')
-plotModel(mod)
+plotModel(mod, jitter.y = TRUE)
+
+# GLM adjusted for factor response
+
+mod <- glm( sex ~ width, data = KidsFeet, family = binomial())
+plotModel(mod, jitter.y = TRUE)
 
 # facets
 mod <- lm(mpg ~ poly(wt,2) + factor(cyl) * factor(am), data=mtcars)
 plotModel(mod, mpg ~ wt | factor(cyl))
 
 ## ------------------------------------------------------------------------
-mod <- lm( mpg ~ factor(cyl), data = mtcars)
-plotModel(mod, system="g")
+knitr::opts_chunk$set(eval = FALSE)
 
-# SLR
-mod <- lm( mpg ~ wt, data = mtcars)
-plotModel(mod, system="g")
-
-# parallel slopes
-mod <- lm( mpg ~ wt + factor(cyl), data=mtcars)
-plotModel(mod, system = "g")
-
-# multiple categorical vars
-mod <- lm( mpg ~ wt + factor(cyl) + factor(vs) + factor(am), data = mtcars)
-plotModel(mod, system="g")
-plotModel(mod, mpg ~ am, system="g")
-
-# interaction
-mod <- lm( mpg ~ wt + factor(cyl) + wt:factor(cyl) + factor(am), data = mtcars)
-plotModel(mod, system="g")
-plotModel(mod, system="g") + facet_grid( . ~ cyl)
-
-# polynomial terms
-mod <- lm( mpg ~ wt + I(wt^2), data = mtcars)
-plotModel(mod, system="g")
-
-# GLM
-mod <- glm(vs ~ wt, data=mtcars, family = 'binomial')
-plotModel(mod, system="g")
-
-# GLM with interaction
-mod <- glm(vs ~ wt + factor(cyl), data=mtcars, family = 'binomial')
-plotModel(mod, system="g")
-plotModel(mod, system="g") + facet_grid(. ~ cyl)
+## ------------------------------------------------------------------------
+#  mod <- lm( mpg ~ factor(cyl), data = mtcars)
+#  plotModel(mod, system="g")
+#  
+#  # SLR
+#  mod <- lm( mpg ~ wt, data = mtcars)
+#  plotModel(mod, system="g")
+#  
+#  # parallel slopes
+#  mod <- lm( mpg ~ wt + factor(cyl), data=mtcars)
+#  plotModel(mod, system = "g")
+#  
+#  # multiple categorical vars
+#  mod <- lm( mpg ~ wt + factor(cyl) + factor(vs) + factor(am), data = mtcars)
+#  plotModel(mod, system="g")
+#  plotModel(mod, mpg ~ am, system="g")
+#  
+#  # interaction
+#  mod <- lm( mpg ~ wt + factor(cyl) + wt:factor(cyl) + factor(am), data = mtcars)
+#  plotModel(mod, system="g")
+#  plotModel(mod, system="g") + facet_grid( . ~ cyl)
+#  
+#  # polynomial terms
+#  mod <- lm( mpg ~ wt + I(wt^2), data = mtcars)
+#  plotModel(mod, system="g")
+#  
+#  # GLM
+#  mod <- glm(vs ~ wt, data=mtcars, family = 'binomial')
+#  plotModel(mod, system="g")
+#  
+#  # GLM with interaction
+#  mod <- glm(vs ~ wt + factor(cyl), data=mtcars, family = 'binomial')
+#  plotModel(mod, system="g")
+#  plotModel(mod, system="g") + facet_grid(. ~ cyl)
 
