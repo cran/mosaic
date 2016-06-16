@@ -4,15 +4,22 @@
 \alias{confint}
 \alias{confint.data.frame}
 \alias{confint.do.data.frame}
+\alias{confint.do.tbl_df}
 \alias{confint.numeric}
 \alias{confint.summary.lm}
 \title{Confidence interval methods for output of resampling}
 \usage{
 \method{confint}{numeric}(object, parm, level = 0.95, ...,
-  method = "stderr", margin.of.error = "stderr" \%in\% method == "stderr")
+  method = "percentile", margin.of.error = "stderr" \%in\% method ==
+  "stderr")
+
+\method{confint}{do.tbl_df}(object, parm, level = 0.95, ...,
+  method = "percentile", margin.of.error = "stderr" \%in\% method,
+  df = NULL)
 
 \method{confint}{do.data.frame}(object, parm, level = 0.95, ...,
-  method = "stderr", margin.of.error = "stderr" \%in\% method, df = NULL)
+  method = "percentile", margin.of.error = "stderr" \%in\% method,
+  df = NULL)
 
 \method{confint}{data.frame}(object, parm, level = 0.95, ...)
 
@@ -94,9 +101,7 @@ if (require(mosaicData)) {
   bootstrap2 <- do(500)*mean( resample(1:10) ) 
   confint(bootstrap2)
 }
-if (require(mosaicData)) {
 confint( summary(lm(width ~ length * sex, data=KidsFeet)) )
-}
 }
 \references{
 Tim C. Hesterberg (2015): What Teachers Should Know about the Bootstrap: 

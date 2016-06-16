@@ -4,6 +4,7 @@
 require(mosaic)
 require(mosaicData)
 require(NHANES)
+require(gridExtra)
 
 ## ----include=FALSE-------------------------------------------------------
 # Some customization.  You can alter or delete as desired (if you know what you are doing).
@@ -34,8 +35,8 @@ ladd( panel.rect(x=0, y=0, width=2, height=2, col="gray80", fill="lightskyblue")
 
 ## ---- fig.height=8-------------------------------------------------------
 require(gridExtra)
-mod <- lm( width ~ length * sex, data=KidsFeet )
-mplot(mod, which=1:7, multiplot = TRUE, ncol=2)
+mod <- lm(width ~ length * sex, data = KidsFeet)
+mplot(mod, which = 1:7, multiplot = TRUE, ncol = 2)
 
 ## ---- fig.height=8-------------------------------------------------------
 mplot(mod, which=1:7, system="ggplot", ncol=2)
@@ -105,22 +106,12 @@ plotDist("norm", mean=5, col="green", kind='histogram', add=TRUE)  # add, overto
 plotDist("norm", mean=0, col="red", kind='histogram', under=TRUE)  # add, but underneath!
 
 ## ------------------------------------------------------------------------
-# we need to get state names into the data frame and then fix two of them with
-# wrong state abbreviations.  Then we are ready to make maps
-sAnscombe <- car::Anscombe %>%
-group_by(state = rownames(car::Anscombe)) %>%
-summarise(income = sum(income)) %>%
-mutate(state = standardName(state, c(IO = "IA", KA = "KS"), quiet=TRUE))
+mUSMap(USArrests %>% mutate(state = row.names(.)), key="state", fill = "UrbanPop") 
 
-mUSMap(sAnscombe, key="state", fill="income")
-mUSMap(sAnscombe, key="state", fill="income", style="real") 
+## ------------------------------------------------------------------------
+mUSMap(USArrests %>% mutate(state = row.names(.)), key="state", fill = "Murder") 
 
-# A sillier example
-if (require(mapproj)) {
-Countries %>% mutate( nletters = nchar(gapminder) ) %>%
-  mWorldMap( key="gapminder", fill="nletters") + coord_map()
-} else {
-Countries %>% mutate( nletters = nchar(gapminder) ) %>%
-  mWorldMap( key="gapminder", fill="nletters") 
-}
+## ------------------------------------------------------------------------
+Countries %>% mutate(nletters = nchar(gapminder)) %>%
+  mWorldMap(key="gapminder", fill="nletters") 
 

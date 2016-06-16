@@ -5,6 +5,7 @@
 \alias{makeFun.formula}
 \alias{makeFun.function}
 \alias{makeFun.glm}
+\alias{makeFun.groupwiseModel}
 \alias{makeFun.lm}
 \alias{makeFun.nls}
 \title{Create a function from a formula}
@@ -17,12 +18,14 @@ makeFun(object, ...)
 \method{makeFun}{formula}(object, ..., strict.declaration = TRUE,
   use.environment = TRUE, suppress.warnings = FALSE)
 
-\method{makeFun}{lm}(object, ..., transform = NULL)
+\method{makeFun}{lm}(object, ..., transformation = NULL)
 
 \method{makeFun}{glm}(object, ..., type = c("response", "link"),
-  transform = NULL)
+  transformation = NULL)
 
-\method{makeFun}{nls}(object, ..., transform = NULL)
+\method{makeFun}{nls}(object, ..., transformation = NULL)
+
+\method{makeFun}{groupwiseModel}(object, ..., transformation = NULL)
 }
 \arguments{
 \item{object}{an object from which to create a function.  This should generally
@@ -41,12 +44,12 @@ unless \code{suppress.warnings} is \code{TRUE}.}
 
 \item{suppress.warnings}{A logical indicating whether warnings should be suppressed.}
 
-\item{transform}{a function used to transform the response.
+\item{transformation}{a function used to transform the response.
 This can be useful to invert a transformation used on the response
 when creating the model.  If \code{NULL}, an attempt will be made to infer
 the transformation from the model formula. A few simple transformations 
 (\code{log}, \code{log2}, \code{sqrt}) are recognized.  For other transformations,
-\code{transform} should be provided explicitly.}
+\code{transformation} should be provided explicitly.}
 
 \item{type}{one of \code{'response'} (default) or \code{'link'} specifying scale to be used
 for value of function returned.}
@@ -77,7 +80,7 @@ g <- makeFun( sin(x^2 * b) ~ x & y & a, a=2 ); g
 h <- makeFun( a * sin(x^2 * b) ~ b & y, a=2, y=3); h
 if (require(mosaicData)) {
 model <- lm( log(length) ~ log(width), data=KidsFeet)
-f <- makeFun(model, transform=exp)
+f <- makeFun(model, transformation = exp)
 f(8.4)
 head(KidsFeet,1)
 }
@@ -98,5 +101,8 @@ fit <- makeFun(model)
 xyplot(wage ~ exper, data=CPS85)
 plotFun(fit(exper) ~ exper, add=TRUE)
 }
+mod <- gwm(wage ~ sector, data = CPS85)
+modfun <- makeFun(mod)
+modfun(sector = "prof")
 }
 

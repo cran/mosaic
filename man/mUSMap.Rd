@@ -37,20 +37,7 @@ arguments passed, it returns this data or a ggplot object constructed
 with the data.
 }
 \examples{
-
-sAnscombe <- Anscombe \%>\% 
-  group_by(state = rownames(Anscombe)) \%>\% 
-  summarise(income = sum(income)) \%>\%
-  mutate(state = standardName(state, c(IO = "IA", KA = "KS"), quiet=TRUE))
-
-mUSMap(sAnscombe, key="state", fill="income")
-
-mUSMap(sAnscombe, key="state", plot="frame") +
-geom_point()
-
-mergedData <- mUSMap(sAnscombe, key="state", plot="none")
-
-ggplot(mergedData, aes(x=long, y=lat, group=group, order=order)) +
-geom_polygon(aes(fill=state), color="darkgray") + guides(fill=FALSE) 
+USArrests2 <- USArrests \%>\% mutate(state = row.names(.))
+mUSMap(USArrests2, key="state", fill = "UrbanPop") 
 }
 

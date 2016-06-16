@@ -8,7 +8,7 @@
 #' of converting \code{x} into a factor with levels \code{TRUE}
 #' and \code{FALSE} (in that order);  if \code{x} is a data frame,
 #' a data frame with all logicals converted to factors in this manner.
-#'
+
 #' @rdname logical2factor
 #' @export
 
@@ -16,7 +16,7 @@ logical2factor  <- function(x, ...) { UseMethod('logical2factor') }
 
 #' @rdname logical2factor
 #' @export
-#' 
+ 
 logical2factor.default  <- function( x, ... ) {
 	if (is.logical(x)) {
 		x <- factor(x, levels=c(TRUE,FALSE), labels=c("TRUE","FALSE"))
@@ -68,6 +68,7 @@ logical2factor.data.frame  <- function( x, ... ) {
 #' @param useNA as in \code{\link{table}}, but the default here is \code{"ifany"}.
 #' @param envir an environment in which to evaluate
 #' @param ... additional arguments passed to \code{\link{table}}
+#' @return A object of class \code{"table"}, unless passing through to \pkg{dplyr}.
 #' @details
 #' The \pkg{dplyr} package also exports a \code{\link[dplyr]{tally}} function.  If \code{x} inherits 
 #' from class \code{"tbl"}, then \pkg{dplyr}'s \code{tally} is called.  This makes it
@@ -77,11 +78,11 @@ logical2factor.data.frame  <- function( x, ... ) {
 #' @examples
 #' if (require(mosaicData)) {
 #' tally( ~ substance, data=HELPrct)
-#' tally( ~ substance & sex , data=HELPrct)
+#' tally( ~ substance + sex , data=HELPrct)
 #' tally( sex ~ substance, data=HELPrct)   # equivalent to tally( ~ sex | substance, ... )
 #' tally( ~ substance | sex , data=HELPrct)
 #' tally( ~ substance | sex , data=HELPrct, format='count')
-#' tally( ~ substance & sex , data=HELPrct, format='percent')
+#' tally( ~ substance + sex , data=HELPrct, format='percent')
 #' # force NAs to show up
 #' tally( ~ sex, data=HELPrct, useNA="always")
 #' # show NAs if any are there
@@ -90,22 +91,9 @@ logical2factor.data.frame  <- function( x, ... ) {
 #' tally( ~ link, data=HELPrct, useNA="no")
 #' }
 #' @export
-#' 
-tally <- function(x, ...) {
-  lx <- lazyeval::lazy(x)
-  tryCatch(tally_internal(x, ...), error = function(e) { 
-    message( "First argument should be a formula... But I'll try to guess what you meant")
-    form <- substitute( ~ X, list(X = lx$expr))
-    class(form) <- "formula"
-    environment(form) <- lx$env
-    tally_internal(form, ...)
-  })
-} 
-#' 
-#' @rdname tally
 
-tally_internal <- function(x, ...) {
-  UseMethod("tally_internal")
+tally <- function(x, ...) {
+  UseMethod("tally")
 }
 
 #' @rdname tally
@@ -114,7 +102,8 @@ tally_internal <- function(x, ...) {
 #' @param sort a logical, 
 #'   see \code{\link[dplyr]{tally}} in \pkg{dplyr}
 
-tally_internal.tbl <- function(x, wt, sort=FALSE, ..., envir=parent.frame()) {
+#' @export
+tally.tbl <- function(x, wt, sort=FALSE, ..., envir=parent.frame()) {
   if (missing(wt)) {
     return(do.call(dplyr::tally, list(x, sort=sort), envir=envir))
   } else {
@@ -124,7 +113,8 @@ tally_internal.tbl <- function(x, wt, sort=FALSE, ..., envir=parent.frame()) {
 
 #' @rdname tally
 
-tally_internal.data.frame <- function(x, wt, sort=FALSE, ..., envir=parent.frame()) {
+#' @export
+tally.data.frame <- function(x, wt, sort=FALSE, ..., envir=parent.frame()) {
   if (missing(wt)) {
     return(do.call(dplyr::tally, list(x, sort=sort), envir=envir))
   } else {
@@ -133,8 +123,8 @@ tally_internal.data.frame <- function(x, wt, sort=FALSE, ..., envir=parent.frame
 }
 
 #' @rdname tally
-
-tally_internal.formula <- function(x, data = parent.frame(2), 
+#' @export
+tally.formula <- function(x, data = parent.frame(2), 
                       format=c('count', 'proportion', 'percent', 'data.frame', 'sparse', 'default'), 
                       margins=FALSE,
                       quiet=TRUE,
@@ -142,7 +132,7 @@ tally_internal.formula <- function(x, data = parent.frame(2),
                       useNA = "ifany", ...) {
  	format <- match.arg(format)
 	formula <- x
-	evalF <- evalFormula(formula,data)
+	evalF <- evalFormula(formula, data)
 
 	if (!missing(subset)) {
 		subset <- eval(substitute(subset), data, environment(formula))
@@ -150,31 +140,16 @@ tally_internal.formula <- function(x, data = parent.frame(2),
 		if (!is.null(evalF$right))         evalF$right <- evalF$right[subset, , drop=FALSE]
 		if (!is.null(evalF$condition)) evalF$condition <- evalF$condition[subset, , drop=FALSE]
 	}
-  
-  # provide warning for 3-slot formulas
-  
-	if (!is.null (evalF$left) && ! is.null(evalF$condition)) {
-    stop( "Unsupported formula type." )
-	}
-  
-
-	# shift things around if lhs exists and condition is empty
-	if (!is.null (evalF$left) && is.null(evalF$condition)) {
-		evalF$condition <- evalF$right
-		evalF$right <- evalF$left
-		evalF$left <- NULL
-	}
 
 	if (format == 'default'){
 		if (is.null(evalF$condition) ) format <- 'count'
 		else format <- 'proportion'
 	}
 
-	res <- table( logical2factor( joinFrames(evalF$right,evalF$condition) ), useNA=useNA, ... )
+	res <- table( logical2factor( joinFrames(evalF$left, evalF$right, evalF$condition) ), useNA=useNA, ... )
 
 	res <- switch(format,
-		   'count' = 
-				res,
+		   'count' =  res,
        'data.frame' = as.data.frame(res),
        'sparse' = {res <- as.data.frame(res); res <- res[res$Freq > 0,]},
 		   'proportion' = 
@@ -183,14 +158,17 @@ tally_internal.formula <- function(x, data = parent.frame(2),
 		   		100 * prop.table( res, margin = ncol(evalF$right) + columns(evalF$condition) )
 		   )
 	if (margins & ! format %in% c("data.frame", "sparse")) {  
-    # add margins for the non-condition dimensions of the table
-    if ( !is.null(evalF$right) & ncol(evalF$right) > 0 )
-		  res <- addmargins(res, 1:ncol(evalF$right), FUN=list(Total=sum), quiet=quiet )
+	  # add margins for the non-condition dimensions of the table
+	  res <- 
+	    addmargins(res, 
+	               1:(ncol(evalF$right) + if(is.null(evalF$left)) 0 else ncol(evalF$left)), 
+	                  FUN=list(Total = sum), quiet = quiet )
 	}
 	return(res)
 }
 
-tally_internal.default <- 
+#' @export
+tally.default <- 
   function(x, format=c('count', 'proportion', 'percent', 'data.frame', 'sparse', 'default'), 
            margins=FALSE,
            quiet=TRUE,
@@ -199,7 +177,7 @@ tally_internal.default <-
            data = parent.frame(2),
            ...) {
     D <- data_frame(X = x)
-    tally_internal( 
+    tally( 
       ~ X, data = D, format = format, margins = margins, 
       quiet = quiet, subset = subset, useNA = useNA,
       ...)
@@ -208,6 +186,8 @@ tally_internal.default <-
   
 #' return a vector of row or column indices
 #'
+#' return a vector of row or column indices
+#' 
 #' @param x an object that may or may not have any rows or columns
 #' @param default what to return if there are no rows or columns
 #' @return if \code{x} has rows or columns, a vector of indices, else \code{default}
@@ -279,9 +259,10 @@ rows <- function(x, default=c()) {
 prop <- function(x, data=parent.frame(), useNA = "no", ..., 
                  level=NULL, 
                  long.names=TRUE, sep=".", 
-                 format="proportion", 
+                 format=c("proportion", "percent", "count"), 
                  quiet=TRUE,
                  pval.adjust = FALSE) {
+  format <- match.arg(format)
   T <- mosaic::tally(x, data=data, useNA = useNA, ...)
   n <- sum(T)
   if (pval.adjust) {
@@ -292,6 +273,11 @@ prop <- function(x, data=parent.frame(), useNA = "no", ...,
   if (format == "percent") {
     T <- T * 100
   }
+  
+  if (format == "count") {
+    n <- 1  # inhibits division by n below
+  }
+  
   
   if (length(dim(T)) < 1) stop("Insufficient dimensions.")
   lnames <- dimnames(T)[[1]]

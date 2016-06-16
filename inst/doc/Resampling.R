@@ -139,14 +139,14 @@ histogram(~ Sleep, groups=(Sleep >= obs),  data=Sleep.null, width=0.4,
   xlab="Distribution of difference in means\nunder the null hypothesis")
 
 ## -------------------------------------------------------------------
-cor(Price, Miles, data=Mustangs)
+cor(Price ~ Miles, data = Mustangs)
 
 ## -------------------------------------------------------------------
-Mustangs.cor.boot <- do(1000) * cor(Price, Miles, data=resample(Mustangs))
+Mustangs.cor.boot <- do(1000) * cor(~Price, ~Miles, data=resample(Mustangs))
 quantiles <- qdata(~cor, c(.025, .975), data=Mustangs.cor.boot); quantiles
 
 ## ----cor, fig.width=4, fig.height=2, tidy=FALSE---------------------
-histogram(~ cor, data=Mustangs.cor.boot,
+histogram(~ cor, data = Mustangs.cor.boot,
   groups=cut(cor, c(-Inf, quantiles$quantile, Inf)),
   n=30) 
 confint(Mustangs.cor.boot)
@@ -202,7 +202,7 @@ confint(Mustangs.lm.boot)
 
 ## -------------------------------------------------------------------
 HELPrct.null <- do(1000) * lm(homeless=="homeless" ~ shuffle(sex), data=HELPrct)
-prop(~ abs(sex.male) > 0.1146, data=HELPrct.null)
+prop(~ (abs(sexmale) > 0.1146), data=HELPrct.null)
 
 ## -------------------------------------------------------------------
 Mustangs.boot1 <- do(1000) * lm( Price ~ Age, data=resample(Mustangs))

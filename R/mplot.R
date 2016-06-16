@@ -1,9 +1,7 @@
-
-tryCatch(utils::globalVariables(c('pair','lwr','upr','fitted','.resid',
+utils::globalVariables(c('pair','lwr','upr','fitted','.resid',
                                   '.stdresid', '.cooksd', '.fitted', 
                                   'lower', 'upper',
-                                  '.hat', 'grid.arrange',  'estimate','se')), 
-         error=function(e) message('Looks like you should update R.'))
+                                  '.hat', 'grid.arrange',  'estimate','se')) 
 
 #' Generic plotting
 #' 
@@ -15,6 +13,10 @@ tryCatch(utils::globalVariables(c('pair','lwr','upr','fitted','.resid',
 #' @export
 
 mplot <- function(object, ...) {
+  if (inherits(object, "data.frame")) {
+    return(mPlot(object, ..., data_text = lazyeval::expr_text(object))) 
+  }
+  
   UseMethod("mplot")
 }
 
@@ -62,11 +64,14 @@ mplot.default <- function(object, ...) {
 #' \pkg{lattice} plotting routines; in particular,
 #' \code{nrow} and \code{ncol} can be used to control the number of rows
 #' and columns used.
+#' @details
+#' The method for models (lm and glm) is still a work in progress, but should be useable for 
+#' relatively simple models.  When the results for a logistic regression model created with
+#' \code{\link{glm}()} are satisfactory will depend on the format and structure of the data
+#' used to fit the model.
 #' @examples
-#' if (require(mosaicData)) {
 #' mplot( lm( width ~ length * sex, data=KidsFeet) )
 #' mplot( lm( width ~ length * sex, data=KidsFeet), rows=2:3, which=7 )
-#' }
 #' @export
 
 mplot.lm <- function(object, which=c(1:3, 7), 
@@ -266,10 +271,12 @@ mplot.lm <- function(object, which=c(1:3, 7),
       names(dots) 
     )
     dots <- dots[ nn ]
+    return(do.call(grid.arrange, c(plots, dots)))
     result <-  do.call(
       arrangeGrob, 
-      c(plots, c(list(main=title), dots))
+      c(plots, dots) # , c(list(main=title), dots))
     )
+    plot(result)
     return(result)
   }
 
@@ -284,10 +291,8 @@ mplot.lm <- function(object, which=c(1:3, 7),
 #' @rdname mplot
 #' @examples
 #' \dontrun{
-#' if (require(mosaicData)) {
 #' mplot( HELPrct )
 #' mplot( HELPrct, "histogram" )
-#' }
 #' }
 #' @export
 
@@ -295,40 +300,45 @@ mplot.data.frame <- function (object, format, default = format,
                               system = c("lattice", "ggplot2"),  show = FALSE, 
                               title = "", ...
                               ) {
-  plotTypes <- c('scatter', 'jitter', 'boxplot', 'violin', 'histogram', 
-                 'density', 'frequency polygon', 'xyplot')
-  if (missing(default) & missing(format)) {
-    choice <- 
-      menu(title = "Choose a plot type.",
-           choices = c(
-             "1-variable (histogram, density plot, etc.)",
-             "2-variable (scatter, boxplot, etc.)" 
-           )
-      )
-    default <- c("histogram", "scatter") [choice]
-  }
-  default <- match.arg(default, plotTypes)
-  system <- match.arg(system)
-
-  dataName <- substitute(object)
-  if (default == "xyplot") 
-    default <- "scatter"
-  if (default %in% c("scatter", "jitter", "boxplot", "violin")) {
-    return(eval(parse(text = paste("mScatter(", dataName, 
-                                   ", default=default, system=system, show=show, title=title)"))
-    ))
-  }
-#   if (default == "map") {
-#     return(eval(parse(
-#       text = paste("mMap(", dataName, 
-#                    ", default=default, system=system, show=show, title=title)"))
-#     ))
+  return(
+    mPlot(object, format = format, default = default, system = system, 
+        show = show, title = title, ...)
+  )
+}  
+#   plotTypes <- c('scatter', 'jitter', 'boxplot', 'violin', 'histogram', 
+#                  'density', 'frequency polygon', 'xyplot')
+#   if (missing(default) & missing(format)) {
+#     choice <- 
+#       menu(title = "Choose a plot type.",
+#            choices = c(
+#              "1-variable (histogram, density plot, etc.)",
+#              "2-variable (scatter, boxplot, etc.)" 
+#            )
+#       )
+#     default <- c("histogram", "scatter") [choice]
 #   }
-  return(eval(parse(
-    text = paste("mUniplot(", dataName, 
-                 ", default=default, system=system, show=show, title=title)"))
-  ))
-}
+#   default <- match.arg(default, plotTypes)
+#   system <- match.arg(system)
+# 
+#   dataName <- substitute(object)
+#   if (default == "xyplot") 
+#     default <- "scatter"
+#   if (default %in% c("scatter", "jitter", "boxplot", "violin")) {
+#     return(
+#       mScatter(lazy_data, default = default, system = system, show = show, title = title)
+#     )
+#   }
+# #   if (default == "map") {
+# #     return(eval(parse(
+# #       text = paste("mMap(", dataName, 
+# #                    ", default=default, system=system, show=show, title=title)"))
+# #     ))
+# #   }
+#   return(eval(parse(
+#     text = paste("mUniplot(", dataName, 
+#                  ", default=default, system=system, show=show, title=title)"))
+#   ))
+# }
 
 
 #' Extract data from R objects
@@ -375,9 +385,7 @@ fortify.summary.glm <- function(model, data=NULL, level=0.95, ...) {
 #' @param parm a vector of parameters
 #' @param level a confidence level
 #' @examples
-#' if (require(mosaicData)) {
 #' confint( summary(lm(width ~ length * sex, data=KidsFeet)) )
-#' }
 #' @export
 
 confint.summary.lm <- function (object, parm, level = 0.95, ...)  {
@@ -404,11 +412,9 @@ confint.summary.lm <- function (object, parm, level = 0.95, ...)  {
 #' @param rows rows to show.  This may be a numeric vector, 
 #' \code{TRUE} (for all rows), or a character vector of row names.
 #' @examples
-#' if (require(mosaicData)) {
 #' mplot(summary(lm(width ~ length * sex, data=KidsFeet)), system="ggplot")
 #' mplot(summary(lm(width ~ length * sex, data=KidsFeet)), rows=c("sex", "length"))
 #' mplot(summary(lm(width ~ length * sex, data=KidsFeet)), rows=TRUE)
-#' }
 #' @export
  
 mplot.summary.lm <- function(object, 
@@ -487,9 +493,7 @@ mplot.summary.glm <- mplot.summary.lm
 #'   order of the \code{pair} factor, which determines the order in which the differences
 #'   are displayed on the plot.
 #' @examples
-#' if (require(mosaicData)) {
-#'   fortify(TukeyHSD(lm(age ~ substance, data=HELPrct)))
-#' }
+#' fortify(TukeyHSD(lm(age ~ substance, data=HELPrct)))
 #' @export
  
 # fortify.TukeyHSD <- function(model, data, ...) {
@@ -540,15 +544,13 @@ fortify.TukeyHSD <- function(model, data, order = c("asis", "pval", "difference"
 #'   order of the \code{pair} factor, which determines the order in which the differences
 #'   are displayed on the plot.
 #' @examples
-#' if (require(mosaicData)) {
 #' mplot(TukeyHSD( lm(age ~ substance, data=HELPrct) ) )
 #' mplot(TukeyHSD( lm(age ~ substance, data=HELPrct) ), system="ggplot2" )
-#' }
 #' @export
 
 mplot.TukeyHSD <- function(object, system=c("lattice", "ggplot2"), 
                            ylab="", xlab="difference in means", 
-                           title="Tukey's Honest Significant Differences",
+                           title = paste0(attr(object, "conf.level") * 100, "% family-wise confidence level"),
                            par.settings = trellis.par.get(),
                            order = c("asis", "pval", "difference"),
                            ...) {
@@ -587,6 +589,5 @@ mplot.TukeyHSD <- function(object, system=c("lattice", "ggplot2"),
             ...
     )
   )
-  
 }
 

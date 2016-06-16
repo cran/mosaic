@@ -1,5 +1,4 @@
-tryCatch(utils::globalVariables(c('.row')), 
-         error=function(e) message('Looks like you should update R.'))
+utils::globalVariables(c('.row'))
 
 #' Set seed in parallel compatible way
 #'
@@ -143,9 +142,12 @@ Do <- function(n=1L, cull=NULL, mode='default', algorithm=1.0, parallel=TRUE) {
 nice_names <- function(x, unique=TRUE) {
 	x <- gsub('%>%', '.result.', x)
 	x <- gsub('\\(Intercept\\)','Intercept', x)
-	x <- gsub('resample\\(','', x)
+	x <- gsub('resample\\(([^\\)]*)\\)','\\1', x)
+	x <- gsub('sample\\(([^\\)]*)\\)','\\1', x)
+	x <- gsub('shuffle\\(([^\\)]*)\\)','\\1', x)
 	x <- gsub('sample\\(','', x)
 	x <- gsub('shuffle\\(','', x)
+	x <- gsub('resample\\(','', x)
 #	x <- gsub('\\(','.', x)
 #	x <- gsub('-','.', x)
 #	x <- gsub(':','.', x)
@@ -223,7 +225,7 @@ if(FALSE) {
   missing.from.a = setdiff(names(b),names(a))
   for (var in missing.from.b) b[[var]] = NA
   for (var in missing.from.a) a[[var]] = NA
-  rbind(a,b)
+  dplyr::bind_rows(a,b)
 }
 
 
@@ -271,15 +273,12 @@ print.repeater <- function(x, ...)
     return(result)
   }
   
-  # if each element is a data frame with the same variables, combine them
+  # if each element is a data frame, combine them with bind_rows
   if ( all( sapply( l, is.data.frame ) ) ) {
-    tryCatch( 
-      return ( 
-        transform( 
-          do.call( rbind, lapply ( l, function(x) { transform(x, .row= 1:nrow(x)) }) ),
-          .index = c(1, 1 + cumsum( diff(.row) != 1 )) 
-        )
-      ), error=function(e) {} 
+    return(
+      lapply(l, function(x) {mutate(x, .row= 1:n())}) %>% 
+        dplyr::bind_rows() %>% 
+        mutate(.index = c(1, 1 + cumsum( diff(.row) != 1 ))) 
     )
   }
   
@@ -299,6 +298,33 @@ print.repeater <- function(x, ...)
   return( l )
 }
 
+#' Convert a vector to a data frame
+#' 
+#' Convert a vector into a 1-raw data frame using the names of the vector as
+#' column names for the data frame
+#' 
+#' @param x a vector
+#' @param nice_names a logical indicating whether names should be nicified
+#' @return a data frame
+#' @export
+#' @examples
+#' vector2df(c(1, b = 2, `(Intercept)` = 3))
+#' vector2df(c(1, b = 2, `(Intercept)` = 3), nice_names = TRUE)
+#' 
+vector2df <- function(x, nice_names = FALSE) {
+  if (!is.vector(x)) {
+    stop("x is not a vector")
+    return(x)
+  }
+  nn <- names(x)
+  if (is.null(nn)) { nn <- list() }
+  result <- data.frame(t(matrix(x, dimnames = list(nn, list()))), check.names = FALSE)
+  if (nice_names) {
+    names(result) <- nice_names(names(result))
+  }
+  result
+}
+  
 #' Cull objects used with do()
 #' 
 #' The \code{\link{do}} function facilitates easy repliaction for
@@ -334,6 +360,15 @@ cull_for_do <- function(object, ...) {
 #' @export 
 cull_for_do.default <- function(object, ...) {
   object
+}
+
+#' @export
+cull_for_do.fitdistr <- function(object, ...) {
+  est <- object$estimate
+  names(est) <- paste0(names(est), ".est")
+  se <- object$sd
+  names(se) <- paste0(names(se), ".se")
+  c(est, se)
 }
 
 #' @export 
@@ -385,8 +420,9 @@ cull_for_do.table <- function(object, ...) {
 cull_for_do.aggregated.stat <- function(object, ...) {
   result <- object
   res <- as.vector(result[, "S"])  # ncol(result)]
-  names(res) <- paste( attr(object,'stat.name'), 
-                       .squash_names(object[,1:(ncol(object)-3),drop=FALSE]), sep=".")
+  names(res) <- 
+    paste( attr(object, 'stat.name'), 
+           .squash_names(object[,1:(ncol(object)-3),drop=FALSE]), sep=".")
   return(res)
 } 
 
@@ -415,8 +451,7 @@ cull_for_do.lm <- function(object, ...) {
                  r.squared = sobject$r.squared
     )
   }
-  names(result) <- nice_names(names(result))
-  return(result)
+  vector2df(result, nice_names = TRUE)
 }
 
 #  @export 
@@ -501,6 +536,14 @@ cull_for_do.matrix <- function(object, ...) {
     }
     return(object)
   }
+  if (nrow(object) > 1) {
+    res <- as.data.frame(object)
+    res[[".row"]] <- row.names(object)
+    return(res)
+  }
+  # if we get here, we have a 1-row or empty matrix
+  row.names(object) <- NULL
+  object
 }
 
 #' @rdname do
@@ -512,7 +555,7 @@ setMethod(
   signature(e1 = "repeater", e2="ANY"),
   function (e1, e2) 
   {
-    e2_lazy <- lazyeval::lazy(e2)
+    e2_lazy <- lazyeval::f_capture(e2)
     #		e2unevaluated = substitute(e2)
     #		if ( ! is.function(e2) ) {
     #      frame <- parent.frame()
@@ -533,9 +576,9 @@ setMethod(
                 "  * Set seed with set.rseed().\n", 
                 "  * Disable this message with options(`mosaic:parallelMessage` = FALSE)\n")
       }
-      parallel::mclapply( integer(n), function(...) { cull(lazyeval::lazy_eval(e2_lazy)) } )
+      parallel::mclapply( integer(n), function(...) { cull(lazyeval::f_eval(e2_lazy)) } )
     } else {
-      lapply( integer(n), function(...) { cull(lazyeval::lazy_eval(e2_lazy)) } )
+      lapply( integer(n), function(...) { cull(lazyeval::f_eval(e2_lazy)) } )
     }
     
     if (out.mode=='default') {  # is there any reason to be fancier?
@@ -553,7 +596,7 @@ setMethod(
       # we get mutliple parts here if expression involves, for example, ::
       # just grab last part. (paste()ing would be out of order
       alt_name <- tryCatch(
-        tail(as.character(e2_lazy$expr[[1]]), 1),
+        tail(as.character(rhs(e2_lazy)[[1]]), 1),
         error = function(e) "result"
       )
       names(result) <- nice_names(names(result))

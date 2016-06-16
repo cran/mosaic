@@ -8,8 +8,7 @@
 \alias{xhistogramBreaks}
 \title{Augmented histograms}
 \usage{
-xhistogram(x, data = NULL, panel = panel.xhistogram, type = "density",
-  center = NULL, width = NULL, ...)
+xhistogram(...)
 
 xhistogramBreaks(x, center = NULL, width = NULL, nint, ...)
 
@@ -26,12 +25,6 @@ panel.xhistogram(x, dcol = trellis.par.get("plot.line")$col, dalpha = 1,
 }
 \arguments{
 \item{x}{a formula or a numeric vector}
-
-\item{data}{a data frame in which to evaluate \code{x}}
-
-\item{panel}{a panel function}
-
-\item{type}{one of \code{'density'}, \code{'count'}, or \code{'percent'}}
 
 \item{center}{center of one of the bins}
 
@@ -75,6 +68,8 @@ over other layers of the plot.}
 
 \item{start}{numeric value passed to \code{\link[MASS]{fitdistr}}}
 
+\item{type}{one of \code{'density'}, \code{'count'}, or \code{'percent'}}
+
 \item{h, v}{a vector of values for additional horizontal and vertical lines}
 
 \item{groups}{as per \code{\link[lattice]{histogram}}}
@@ -84,8 +79,10 @@ how bins should be striped when \code{groups} is not \code{NULL}}
 
 \item{alpha}{transparency level}
 
-\item{\dots}{additional arguments passed to \code{\link[lattice]{histogram}} 
-and (by default when the \pkg{mosaic} package has been loaded) on to 
+\item{panel}{a panel function}
+
+\item{\dots}{additional arguments passed from \code{\link[lattice]{histogram}} 
+to the panel function; by default when the \pkg{mosaic} package has been loaded this will
 \code{\link{panel.xhistogram}}.}
 }
 \value{
@@ -93,16 +90,26 @@ and (by default when the \pkg{mosaic} package has been loaded) on to
 }
 \description{
 The \pkg{mosaic} package adds some additional functionality to 
-\code{\link[lattice]{histogram}}, making it simpler to obtain certain common 
+\code{\link[lattice]{histogram}()}, making it simpler to obtain certain common 
 histogram adornments.  This is done be resetting the default panel
 and prepanel functions used by histogram.
 }
+\details{
+The primary additional functionality added to \code{\link{histogram}()}
+are the arguments \code{width} and \code{center} which provide a simple
+way of describing equal-sized bins, and \code{fit} which can be used to
+overlay the density curve for one of several distributions.  The
+\code{groups} argument can be used to color the bins.  The primary use
+for this is to shade tails of histograms, but there may be other uses
+as well.
+}
 \note{
-The use of \code{xhistogram} has been deprecated.  Versions of 
-\pkg{lattice} since 0.20-21 support setting custom defaults 
+Versions of \pkg{lattice} since 0.20-21 support setting custom defaults 
 for \code{breaks}, \code{panel}, and \code{prepanel} used by 
-\code{histogram}, so \code{xhistogram} is no longer needed.  \code{xhistogram} will
-be retained temporarily to support users with older versions of \pkg{lattice}.
+\code{histogram()}, so \code{xhistogram()} is no longer needed.  
+As a result, \code{xhistogram()} 
+(which was required in earlier versions of \pkg{mosaic}
+is no longer needed and has been removed.
 }
 \examples{
 if (require(mosaicData)) {
@@ -119,6 +126,7 @@ xhistogramBreaks(0:10, center=5, nint=5)
 }
 }
 \seealso{
-\code{\link[lattice]{histogram}}
+\code{\link[lattice]{histogram}}, \code{\link{mosaicLatticeOptions}()},
+and \code{\link{restoreLatticeOptions}()}.
 }
 

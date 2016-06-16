@@ -1,4 +1,4 @@
-## ----include=FALSE----------------------------------------------------------------------
+## ---- include=FALSE---------------------------------------------------------------------
 require(lubridate)
 require(dplyr)
 require(mosaic)
@@ -19,7 +19,7 @@ options(width=90)
 require(mosaic)
 require(mosaicData)
 
-## ----eval=FALSE-------------------------------------------------------------------------
+## ---- eval = FALSE----------------------------------------------------------------------
 #  # simpler version
 #  goal( ~ x, data = mydata )
 #  # fancier version
@@ -27,28 +27,28 @@ require(mosaicData)
 #  # unified version
 #  goal( formula , data = mydata )
 
-## ----echo=FALSE, out.width="60%", out.height="35%"--------------------------------------
+## ---- echo=FALSE, out.width="60%", out.height="35%"-------------------------------------
 xyplot( births ~ date, data=Births78) 
 
-## ----echo=TRUE, out.width="60%"---------------------------------------------------------
+## ---- echo=TRUE, out.width="60%"--------------------------------------------------------
 xyplot( births ~ date, data=Births78) 
 
-## ----echo=FALSE-------------------------------------------------------------------------
+## ---- echo=FALSE------------------------------------------------------------------------
 bwplot( age ~ substance, data=HELPrct, xlab="substance" )
 
-## ----echo=TRUE--------------------------------------------------------------------------
+## ---- echo=TRUE-------------------------------------------------------------------------
 bwplot( age ~ substance, data=HELPrct)
 
-## ----echo=FALSE-------------------------------------------------------------------------
+## ---- echo=FALSE------------------------------------------------------------------------
 bwplot( substance ~ age, data=HELPrct)
 
-## ----echo=TRUE--------------------------------------------------------------------------
+## ---- echo=TRUE-------------------------------------------------------------------------
 bwplot( substance ~ age, data=HELPrct )
 
 ## ---------------------------------------------------------------------------------------
 histogram( ~ age, data=HELPrct) 
 
-## ----eval=FALSE, tidy=FALSE-------------------------------------------------------------
+## ---- eval=FALSE, tidy=FALSE------------------------------------------------------------
 #    histogram( ~age, data=HELPrct )
 #  densityplot( ~age, data=HELPrct )
 #       bwplot( ~age, data=HELPrct )
@@ -56,20 +56,20 @@ histogram( ~ age, data=HELPrct)
 #  freqpolygon( ~age, data=HELPrct )
 #     bargraph( ~sex, data=HELPrct )
 
-## ----eval=FALSE, tidy=FALSE-------------------------------------------------------------
+## ---- eval=FALSE, tidy=FALSE------------------------------------------------------------
 #  xyplot(  i1 ~ age,       data=HELPrct )
 #  bwplot( age ~ substance, data=HELPrct )
 #  bwplot( substance ~ age, data=HELPrct )
 
-## ----eval=FALSE-------------------------------------------------------------------------
+## ---- eval=FALSE------------------------------------------------------------------------
 #  names(KidsFeet)    # 4th graders' feet
 #  ?KidsFeet
 
-## ----eval=FALSE-------------------------------------------------------------------------
+## ---- eval=FALSE------------------------------------------------------------------------
 #  names(Utilities)   # utility bill data
 #  ?Utilities
 
-## ----eval=FALSE-------------------------------------------------------------------------
+## ---- eval=FALSE------------------------------------------------------------------------
 #  require(NHANES)    # load package
 #  names(NHANES)      # body shape, etc.
 #  ?NHANES
@@ -79,7 +79,7 @@ densityplot( ~ age | sex, data=HELPrct,
                groups=substance,  
                auto.key=TRUE)   
 
-## ----out.width="85%", tidy=FALSE--------------------------------------------------------
+## ---- out.width="85%", tidy=FALSE-------------------------------------------------------
 require(lubridate)
 xyplot( births ~ date, data=Births78,  
   groups=wday(date, label=TRUE, abbr=TRUE), 
@@ -88,14 +88,14 @@ xyplot( births ~ date, data=Births78,
   par.settings=list(
     superpose.line=list( lty=1 ) ))
 
-## ----eval=FALSE, include=FALSE----------------------------------------------------------
+## ---- eval = FALSE, include = FALSE-----------------------------------------------------
 #  xyplot( births ~ date, data=Births78,
 #          groups=wday(date, label=TRUE, abbr=TRUE), type='l',
 #          auto.key=list(columns=4),
 #          superpose.symbol=list(
 #              pch=16, cex=1.2, alpha=.8)))
 
-## ----fig.show='hold'--------------------------------------------------------------------
+## ---- fig.show='hold'-------------------------------------------------------------------
 histogram( ~ age, data=HELPrct )  # width=5 (or 10) might be good here
      mean( ~ age, data=HELPrct )
 
@@ -106,7 +106,7 @@ favstats( ~ age, data=HELPrct )
 tally( ~ sex, data=HELPrct)
 tally( ~ substance, data=HELPrct)
 
-## ----eval = FALSE-----------------------------------------------------------------------
+## ---- eval = FALSE----------------------------------------------------------------------
 #  sd(   age ~ substance, data=HELPrct )
 #  sd( ~ age | substance, data=HELPrct )
 #  sd( ~ age, groups=substance, data=HELPrct )
@@ -124,24 +124,24 @@ tally( substance ~ sex,   data=HELPrct, format="proportion", margins=TRUE )
 tally( ~ sex + substance, data=HELPrct, format="proportion", margins=TRUE )
 tally( sex ~ substance,   data=HELPrct, format="percent" )
 
-## ----echo=FALSE-------------------------------------------------------------------------
+## ---- echo=FALSE------------------------------------------------------------------------
 HELPrct <- transform(HELPrct, sex=factor(sex, labels=c('F','M')),
                      substance = factor(substance, labels=c('A', 'C', 'H')))
 
-## ----size='small'-----------------------------------------------------------------------
+## ---- size='small'----------------------------------------------------------------------
 mean( age ~ substance | sex, data=HELPrct )
 mean( age ~ substance | sex, data=HELPrct, .format="table" )
 
-## ----echo=FALSE-------------------------------------------------------------------------
+## ---- echo=FALSE------------------------------------------------------------------------
 rm(HELPrct)
 data(HELPrct)
 
-## ----eval=FALSE-------------------------------------------------------------------------
+## ---- eval=FALSE------------------------------------------------------------------------
 #    mean( age ~ sex, data=HELPrct )
 #  bwplot( age ~ sex, data=HELPrct )
 #      lm( age ~ sex, data=HELPrct )
 
-## ----echo=FALSE-------------------------------------------------------------------------
+## ---- echo=FALSE------------------------------------------------------------------------
   mean( age ~ sex, data=HELPrct )
     coef(lm( age ~ sex, data=HELPrct ))
 
@@ -183,7 +183,7 @@ plotFun( Width(length, sex="G") ~ length,
 ## ---- include=FALSE---------------------------------------------------------------------
 trellis.par.set(theme=col.mosaic())
 
-## ----echo=FALSE-------------------------------------------------------------------------
+## ---- echo=FALSE------------------------------------------------------------------------
 require(mosaic)
 trellis.par.set(theme=col.mosaic())
 require(knitr)

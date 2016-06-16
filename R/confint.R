@@ -78,7 +78,7 @@ utils::globalVariables(c("SE.star", "estimate.star", ".index", "SE"))
 #' }
 #' @export
 
-confint.numeric <- function(object, parm, level=0.95, ..., method="stderr", 
+confint.numeric <- function(object, parm, level = 0.95, ..., method = "percentile", 
                            margin.of.error="stderr" %in% method=="stderr") {
   method <- match.arg(method, c("stderr","percentile","quantile"), several.ok=TRUE)
   result <- list()
@@ -95,6 +95,11 @@ confint.numeric <- function(object, parm, level=0.95, ..., method="stderr",
   }  else {
     result <- as.data.frame(do.call(rbind, result))
   }
+  message(paste0(
+    "Confidence Interval from Bootstrap Distribution (",
+    length(object),
+    " replicates)")
+    )
   result  
 }
 
@@ -126,9 +131,9 @@ dont_randomize_estimate <- list(
 extract_data <- function(x) {
   x_lazy <- attr(x, "lazy")
   if (is.null(x_lazy)) return(NULL)
-  res <- eval( x_lazy$expr[["data"]], envir = dont_randomize_data, enclos = x_lazy$env )
+  res <- eval( lazyeval::f_rhs(x_lazy)[["data"]], envir = dont_randomize_data, enclos = lazyeval::f_env(x_lazy) )
   if (is.null(res)) {
-    res <- eval( x_lazy$expr, envir = dont_randomize_data, enclos = x_lazy$env )
+    res <- eval( lazyeval::f_rhs(x_lazy), envir = dont_randomize_data, enclos = lazyeval::f_env(x_lazy) )
   }
   as.data.frame(res)
 }
@@ -136,14 +141,25 @@ extract_data <- function(x) {
 extract_estimate <- function(x) {
   x_lazy <- attr(x, "lazy")
   if (is.null(x_lazy)) return(NA)
-  eval( x_lazy$expr, envir = dont_randomize_estimate, enclos = x_lazy$env )
+  eval( lazyeval::f_rhs(x_lazy), envir = dont_randomize_estimate, enclos = lazyeval::f_env(x_lazy) )
 }
 
+#' @rdname confint
+#' @export
+confint.do.tbl_df <- function(object, parm, level=0.95, ..., 
+                                 method="percentile", 
+                                 margin.of.error="stderr" %in% method,
+                                 df = NULL) {
+  
+  class(object) <- c("do.data.frame", class(object))
+  confint(object, parm, level = level, ..., method = method,
+          margin.of.error = margin.of.error, df = df) 
+}
 
 #' @rdname confint
 #' @export
 confint.do.data.frame <- function(object, parm, level=0.95, ..., 
-                                 method="stderr", 
+                                 method="percentile", 
                                  margin.of.error="stderr" %in% method,
                                  df = NULL) {
  
@@ -157,11 +173,11 @@ confint.do.data.frame <- function(object, parm, level=0.95, ...,
   method[method=='se'] <- 'stderr'
   method <- unique(method)
   
-  bootT <- ("bootstrap-t" %in% method) & (attr(object, "lazy")$expr[[1]] == "favstats")
+  bootT <- ("bootstrap-t" %in% method) & (lazyeval::f_rhs(attr(object, "lazy"))[[1]] == "favstats")
   method <- setdiff(method, "bootstrap-t")
   
   compute_t_df <-
-    grepl("^diffmean$|^mean$", as.character(attr(object, "lazy")$expr[[1]]))
+    grepl("^diffmean$|^mean$", as.character(lazyeval::f_rhs(attr(object, "lazy"))[[1]]))
   
   if ("stderr" %in% method && is.null(df) && compute_t_df) {
     tryCatch({
@@ -170,7 +186,7 @@ confint.do.data.frame <- function(object, parm, level=0.95, ...,
         orig_data %>%
         select_(
           .dots = intersect(names(orig_data), 
-                            attr(object, "lazy")$expr %>% all.vars())
+                            lazyeval::f_rhs(attr(object, "lazy")) %>% all.vars())
         )
       df <- nrow(orig_data) - 1
       if ( ! all(complete.cases(orig_data)) ) {
@@ -330,12 +346,12 @@ confint.data.frame <- function(object, parm, level=0.95, ... )  {
   for (c in 1:ncol(object)) {
     x <- object[,c]
     if (is.numeric(x)) { 
-      newCI <- interval(t.test(x, ...))
+      newCI <- confint(t.test(x, ...))
       newRow <- data.frame( method="t.test", estimate=newCI[1], lower=newCI[2], 
                             upper=newCI[3], level=newCI[4])
       
     } else if ( (is.factor(x) && nlevels(x) <= 2) || (is.character(x) && length(unique(x)) <= 2) || is.logical(x)) { 
-      newCI <- interval(binom.test(x, ...)) 
+      newCI <- confint(binom.test(x, ...)) 
       newRow <- data.frame( method="binom.test", estimate=newCI[1], lower=newCI[2], upper=newCI[3], level=newCI[4])
     } else {
       newRow <- data.frame(method="none", estimate=NA, lower=NA, upper=NA, level=NA)
@@ -354,7 +370,7 @@ boott <- function(object, ...) {
 
 boott.do.data.frame <- function( object, level = 0.95, ... ) {
   lz <- attr(object, "lazy")
-  if ( ! lz$expr[[1]] == "favstats") stop( "Invalid object." )
+  if ( ! lazyeval::f_rhs(lz)[[1]] == "favstats") stop( "Invalid object." )
   if (base::max(object$.row) > 2) stop("Too many groups.")
  
   estimate <- extract_estimate(object)$mean

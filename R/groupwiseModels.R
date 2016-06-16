@@ -1,3 +1,4 @@
+utils::globalVariables("model_value")
 #' Groupwise models
 #'  
 #' Construct a model based on groupwise means or proportions
@@ -10,7 +11,7 @@
 #' computed for every combination of the levels of the explanatory variables.
 #' 
 #' @param data A data frame in which to evaluate variables in \code{formula}.  
-#' If omitted, refer.  If not specified, variables 
+#' If not specified, variables 
 #' will be taken from the current environment.
 #' 
 #' @param drop Logical flag indicating whether to drop unoccupied groups.  
@@ -46,7 +47,6 @@
 #' summary(mod)
 #' resid(mod)
 #' fitted(mod)
-#' 
 
 gwm <- function(formula, data = parent.frame(), drop = FALSE, ...) {
   # if response categorical, a proportion, listing the response
@@ -54,7 +54,7 @@ gwm <- function(formula, data = parent.frame(), drop = FALSE, ...) {
   orig.call <- match.call()
   response_var <- formula[[2]]
   response <- eval(response_var, envir=data)
-  ResponseData <- data.frame(x = response) 
+  ResponseData <- data.frame(x = response, stringsAsFactors = FALSE) 
   names(ResponseData) <- as.character(response_var)
   group_vars <- all.vars(formula[[3]])
   if (is.numeric(response)) {
@@ -69,8 +69,13 @@ gwm <- function(formula, data = parent.frame(), drop = FALSE, ...) {
     observed <- data[[as.character(response_var)]]
     
   } else {
-    Res <- data.frame(tally(formula, data=data, format="proportion"))
-    names(Res)[ncol(Res)] <- "model_value" 
+    tmp <- tally(formula, data = data, format = "proportion")
+    # keep the coefficients table with all categorical vars as character strings
+    Res <- expand.grid(dimnames(tmp), stringsAsFactors = FALSE)
+    Res$model_value <- c(tmp[])
+#    Res <- data.frame(tally(formula, data=data, format="proportion"),
+#                      stringsAsFactors = FALSE)
+#    names(Res)[ncol(Res)] <- "model_value" 
     if (length(all.vars(formula[[3]])) == 0) {
       # the constant model
       # get rid of any pseudo variables added by tally
@@ -82,7 +87,7 @@ gwm <- function(formula, data = parent.frame(), drop = FALSE, ...) {
   
   # Compute fitted, and residuals
   if (length(group_vars) > 0L) {
-    fitted.values <- suppressMessages(left_join(data, Res))$model_value
+    fitted.values <- suppressMessages(suppressWarnings(left_join(data, Res))$model_value)
   } else {
     fitted.values <- rep(Res$model_value, nrow(data))
   }
@@ -94,6 +99,7 @@ gwm <- function(formula, data = parent.frame(), drop = FALSE, ...) {
          residuals = residuals,
          fitted.values = fitted.values,
          response = observed,
+         terms = formula, # a kluge for makeVars()
          data = data,
          call = orig.call,
          type = ifelse(is.numeric(response), "mean", "probability")
@@ -113,6 +119,12 @@ print.groupwiseModel <-
   invisible(x)
   }
 
+residuals.groupwiseModel <- function(object, ...) {
+  object$residuals
+}
+fitted.groupwiseModel <- function(object, ...) {
+  object$fitted
+}
 
 # summary() doesn't do anything exciting at the moment.  This is just a placeholder
 # for future functionality.
@@ -131,26 +143,77 @@ print.summary.groupwiseModel <- function( x, ...) {
   print(x$model)
 }
 
+#' Evaluate a groupwise model given new data
+#' 
+#' If \code{newdata} is not specified, the data originally used for fitting will be used.
+
+#' @param object a groupwise model
+#' @param type one of "class", "likelihood", or "prob"
+#' @param level an optional character string specifying the level for which probabilities are to be reported. Defaults
+#' to the first class of the potential outputs. Set to \code{".all"} to see probabilities for all levels.
+#' @param newdata new data from which to compute fitted valeus.
+#' @param ... additional arguments (currently ignored)
+#' 
+#' @details setting the \code{type} is needed only for classifiers. \code{"class"} will give just the 
+#' class as output. \code{"likelihood"} will give the probability of the observed outcome (in \code{newdata}) 
+#' given the model. \code{"prob"} will give the probability of the class named in \code{level}
+#' 
 #' @export
-predict.groupwiseModel <- function( object, newdata = NULL, ... ) {
-  if (is.null(newdata)) 
-    return(object$fitted.values)
- 
+predict.groupwiseModel <- 
+  function( object, newdata = object$data, 
+            type = c("class", "likelihood", "prob"), level = NULL, ... ) {
+  type <- match.arg(type)
+  vnames <- names(coef(object))
+  response_name <- vnames[1]
+  explan_var_names <- vnames[c(-1, -length(vnames))]
+  
   if (ncol(object$coefficients) >= 2L) {
-    fitted.values <- 
-      suppressMessages(left_join(newdata, object$coefficients))$model_value
+    if (object$type == "probability") {
+      if ( ! is.null(level)) type = "prob"
+      if (type == "prob") {
+        Wide <- tidyr::spread_(coef(object), key = response_name, value = "model_value", fill = 0)
+        fitted_values <- suppressWarnings(left_join(newdata, Wide))[,-(1:ncol(newdata))]
+        if (type == "prob" && is.null(level)) level <- names(fitted_values)[1]
+
+        if ( ! level %in% c(".all", names(Wide))) 
+          stop("level '", level, "' is not one of the output categories.")
+        if (level != ".all") fitted_values <- fitted_values[[level]]
+      } else if (type == "likelihood") { 
+        likelihood <- suppressWarnings(left_join(newdata, coef(object)))$model_value
+        return(likelihood)
+      } else { # the most likely in each group
+        tmp <- group_by_(coef(object), .dots = explan_var_names) %>% 
+          filter(rank(desc(model_value), ties.method = "first") == 1) 
+        fitted_values <- suppressWarnings(
+          left_join(newdata[,names(newdata) != response_name, drop=FALSE], tmp))
+        if( type == "class")
+          fitted_values <- fitted_values[[response_name]]
+      }
+    } else {
+      fitted_values <- 
+        suppressWarnings(left_join(newdata, coef(object)))$model_value
+    }
   } else {  # only happens for null model with quant. reponse
-    fitted.values <- rep(object$coefficients$model_value, ncol(newdata))
+    fitted_values <- rep(object$coefficients$model_value, nrow(newdata))
   } 
+  
+  fitted_values # return
 }
 
 #' Mean Squared Prediction Error
 #' 
-#' Mean Squared Prediction Error
+#' A one-step calculation of mean square prediction error
 #' 
 #' @param model a model produced by \code{lm}, \code{glm}, or \code{gwm}.
-#' @param data a data frame
-#' 
+#' @param data a data frame. 
+#' @param LL if \code{TRUE}, for categorical responses replace mean square error 
+#' with minus mean log likelihood
+#' @details
+#' For categorical responses, the mean square prediction error is not ideal.  Better
+#' to use the likelhood.  \code{LL = TRUE} (the default) turns the calculation into the mean log likelihood
+#' per case, negated so that large values mean poor predictions
+
+
 #' @export
 #' @examples
 #' HELP <- HELPrct %>% sample_frac(.3)
@@ -161,16 +224,30 @@ predict.groupwiseModel <- function( object, newdata = NULL, ... ) {
 #' MSPE( gwm( sex ~ homeless, data = HELP), HELPrct)
 #' MSPE( gwm( sex ~ homeless + substance, data = HELP), HELPrct)
 
-MSPE <- function(model, data){
+MSPE <- function(model, data, LL = TRUE){
   #  was <- options("warn")
   #  on.exit(options(warn = was))
-  options(warn = -3)
+  #options(warn = -3)
   formula <- model$call[[2]]
   actual <- eval(formula[[2]], envir = data)
-  # adjust for categorical response
-  if (!is.numeric(actual)) { actual <- 1}
-  model_vals <- predict(model, newdata = data)
-  stats::var(actual - model_vals, na.rm=TRUE)
+  if (is.numeric(actual)) {
+    model_vals <- predict(model, newdata = data)
+    res <- stats::var(actual - model_vals, na.rm = TRUE)
+  } else {
+    # categorical response
+    if (inherits(model, "groupwiseModel")) {
+      model_vals <- predict(model, newdata = data, type = "likelihood")
+      res <- 
+        if (LL) { 
+          - mean(log(model_vals))
+        } else {
+          res <- stats::var(1 - model_vals, na.rm = TRUE)
+        }
+    } else {
+      stop("For classifiers, only set up for groupwiseModels ")
+    }
+  }
+  res
 }
 
 #' @export

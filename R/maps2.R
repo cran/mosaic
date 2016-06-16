@@ -1,5 +1,4 @@
-tryCatch(utils::globalVariables(c('coordinates',"Name","Code","long","lat")),
-         error=function(e) message('Looks like you should update R.'))
+utils::globalVariables(c('coordinates',"Name","Code","long","lat"))
 
 ## Files needed for the country and state functions:
 #### US_States : a SpatialPolygonsDataFrame object for US states
@@ -144,11 +143,16 @@ makeMap <- function (data, map=NULL, key=c(key.data, key.map),
     data <- merge(data, map, by.x=key[1], by.y=key[2])
   }
   switch(plot, 
-         borders = ggplot(data, aes(x=long, y=lat, group=group, order=order)) +
+         borders = 
+           ggplot(data %>% group_by(group) %>% arrange(order) %>% ungroup(), 
+                  aes(x=long, y=lat, group=group)) +
            geom_polygon(color="darkgray", fill=NA) + theme_map() +
            labs(x="", y=""),
-         frame = ggplot(data, aes(x=long, y=lat, group=group, order=order)),
-         none = data)
+         frame = 
+           ggplot(data %>% group_by(group) %>% arrange(order) %>% ungroup(), 
+                  aes(x=long, y=lat, group=group)),
+         none = 
+           data)
 }
 
 
@@ -230,23 +234,10 @@ mWorldMap <- function(data, key, fill=NULL, plot=c("borders", "frame", "none")) 
 #' a polyconic projection with Alaska and Hawaii on the lower left corner;
 #' \code{real} gives the real size and position of all states without any
 #' projection.
-#' 
+#'  
 #' @examples
-#' 
-#' sAnscombe <- Anscombe %>% 
-#'   group_by(state = rownames(Anscombe)) %>% 
-#'   summarise(income = sum(income)) %>%
-#'   mutate(state = standardName(state, c(IO = "IA", KA = "KS"), quiet=TRUE))
-#' 
-#' mUSMap(sAnscombe, key="state", fill="income")
-#'
-#' mUSMap(sAnscombe, key="state", plot="frame") +
-#' geom_point()
-#' 
-#' mergedData <- mUSMap(sAnscombe, key="state", plot="none")
-#' 
-#' ggplot(mergedData, aes(x=long, y=lat, group=group, order=order)) +
-#' geom_polygon(aes(fill=state), color="darkgray") + guides(fill=FALSE) 
+#' USArrests2 <- USArrests %>% mutate(state = row.names(.))
+#' mUSMap(USArrests2, key="state", fill = "UrbanPop") 
 #' @export 
 mUSMap <- function(data, key, fill=NULL, 
                    plot=c("borders", "frame", "none"),
@@ -254,10 +245,10 @@ mUSMap <- function(data, key, fill=NULL,
   plot <- match.arg(plot)
   style <- match.arg(style)
   if (style == "compact") {US_States_df <- US_States_comp_df}
-  map <- makeMap(data=data, map=US_States_df, key=c(key, "STATE_ABBR"), 
-              tr.data=standardState, tr.map=toupper, plot=plot)
+  map <- makeMap(data=data, map = US_States_df, key = c(key, "STATE_ABBR"), 
+              tr.data = standardState, tr.map = toupper, plot = plot)
   if ( (!is.null(fill) && plot != "none") ) {
-    map <- map + geom_polygon(aes_string(fill=fill), color="darkgray")
+    map <- map + geom_polygon(aes_string(fill = fill), color = "darkgray")
   }
   map
 }

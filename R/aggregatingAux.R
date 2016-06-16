@@ -1,3 +1,5 @@
+utils::globalVariables(c('.'))
+
 #' Convert formulas into standard shapes
 #' 
 #' These functions convert formauls into standard shapes, including by 
@@ -164,8 +166,6 @@ safe_eval <- function(x) {
 # This could use a better name and a better desription
 
 
-tryCatch(utils::globalVariables(c('.')),
-         error=function(e) message('Looks like you should update R.'))
 
 #' Extract simple part from formula
 #'
@@ -225,7 +225,7 @@ tryCatch(utils::globalVariables(c('.')),
 #' # using groups instead
 #' maggregate( ~ cesd, groups = sex, HELPrct, FUN=sd )
 #' # the next four all do the same thing
-#' maggregate( cesd ~ sex & homeless, HELPrct, FUN=mean )
+#' maggregate( cesd ~ sex + homeless, HELPrct, FUN=mean )
 #' maggregate( cesd ~ sex | homeless, HELPrct, FUN=sd )
 #' maggregate( ~ cesd | sex , groups= homeless, HELPrct, FUN=sd )
 #' maggregate( cesd ~ sex, groups = homeless, HELPrct, FUN=sd )
@@ -258,7 +258,7 @@ maggregate <-
       stop("data must be an environment or data.frame.", call. = FALSE)
   }
       
-  formula <- mosaic_formula_q(formula, groups=groups, envir = .envir)
+  formula <- mosaic_formula_q(formula, groups = groups, envir = .envir)
   
   if (length(formula) == 2) { 
     return(FUN( eval(formula[[2]], data, .envir), ...))

@@ -9,16 +9,15 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
-\usepackage{epstopdf}
-\usepackage{color}
+%\usepackage{epstopdf}
+%\usepackage{color}
 \usepackage{url}
 \usepackage{hyperref} 
 \usepackage[margin=1in]{geometry}
-\usepackage[parfill]{parskip}
-\definecolor{green}{RGB}{0,127,0}
+%\usepackage[parfill]{parskip}
 \hypersetup{pdftitle={Resampling-based inference}, colorlinks=true, linkcolor=black, citecolor=black}
-\usepackage[bottom]{footmisc}
-\usepackage[round]{natbib}
+%\usepackage[bottom]{footmisc}
+%\usepackage[round]{natbib}
 \bibliographystyle{abbrvnat}
 
 \frenchspacing{}
@@ -471,16 +470,16 @@ create simulated bootstrap distributions does not guarantee that the resulting
 intervals will have the desired properties.  Alternative methods and diagnostics
 are important topics not covered here.}
 <<>>=
-cor(Price, Miles, data=Mustangs)
+cor(Price ~ Miles, data = Mustangs)
 @
 
 <<>>=
-Mustangs.cor.boot <- do(1000) * cor(Price, Miles, data=resample(Mustangs))
+Mustangs.cor.boot <- do(1000) * cor(~Price, ~Miles, data=resample(Mustangs))
 quantiles <- qdata(~cor, c(.025, .975), data=Mustangs.cor.boot); quantiles
 @
 
 <<cor, fig.width=4, fig.height=2, tidy=FALSE>>=
-histogram(~ cor, data=Mustangs.cor.boot,
+histogram(~ cor, data = Mustangs.cor.boot,
   groups=cut(cor, c(-Inf, quantiles$quantile, Inf)),
   n=30) 
 confint(Mustangs.cor.boot)
@@ -607,7 +606,7 @@ Or, we can calculate a permutation test on the difference between homeless rates
 
 <<>>=
 HELPrct.null <- do(1000) * lm(homeless=="homeless" ~ shuffle(sex), data=HELPrct)
-prop(~ abs(sex.male) > 0.1146, data=HELPrct.null)
+prop(~ (abs(sexmale) > 0.1146), data=HELPrct.null)
 @
 
 \subsection{Multiple explanatory variables}

@@ -22,7 +22,10 @@
 #' 
 #' @details
 #' This is a wrapper around \code{\link[stats]{t.test}} from the \pkg{stats} package
-#' to extend the functionality of the formula interface.
+#' to extend the functionality of the formula interface.  In particular, one can 
+#' now use the formula interface for a 1-sample t-test.  Before, the formula interface
+#' was only permitted for a 2-sample test.  The type of formala that can be used
+#' for the 2-sample test has also be broadened.  See the examples.
 #'
 #' @seealso \code{\link[mosaic]{prop.test}}, \code{\link[mosaic]{binom.test}}, 
 #'   \code{\link[stats]{t.test}}
@@ -36,24 +39,37 @@
 #' }
 
 #' @export 
-t_test <- function(x, y=NULL, ..., data=parent.frame()) {
-  x_lazy <- lazyeval::lazy(x)
-  y_lazy <- lazyeval::lazy(y)
-  dots_lazy <- lazyeval::lazy_dots(...)
-  x_eval <- tryCatch( lazyeval::lazy_eval(x_lazy, data=as.list(data)),
-                      error = function(e) as.name(deparse(x_lazy$expr)))
-  y_eval <- tryCatch( lazyeval::lazy_eval(y_lazy, data=as.list(data)),
-                      error = function(e) as.name(deparse(y_lazy$expr)))
+t_test <- function(x, y = NULL, ..., data=parent.frame()) {
+  orig.call <- match.call()
+  x_lazy <- lazyeval::f_capture(x)
+  y_lazy <- lazyeval::f_capture(y)
+  dots_lazy <- lazyeval::dots_capture(...)
   
-  res <- ttest(x_eval, y_eval, ..., data=data) 
- 
-  res$data.name <- sub("^x$", deparse(x_lazy$expr), res$data.name)
+  x_eval <- tryCatch( lazyeval::f_eval(x_lazy, as.list(data)),
+                      error = function(e) lazyeval::f_rhs(x_lazy) )
+  y_eval <- tryCatch( lazyeval::f_eval(y_lazy, as.list(data)),
+                      error = function(e) lazyeval::f_rhs(y_lazy) )
+  
+  res <- ttest(x_eval, y_eval, ..., data=data, data.name = orig.call[["data"]]) 
+  
+  res$data.name <- sub("^x$", first_one(deparse(f_rhs(x_lazy))), res$data.name)
   res$data.name <- sub("^x and y$", 
-                       paste(deparse(x_lazy$expr), "and", deparse(y_lazy$expr)), 
+                       paste(first_one(deparse(f_rhs(x_lazy))), "and", 
+			     first_one(deparse(f_rhs(y_lazy)))), 
                        res$data.name)
   res
 }
 
+# If x has length > 1, create a character string with
+# the first component of x followed by ...
+first_one <- function(x) {
+  if (length(x) > 1) {
+    paste(x[1], "...")
+  } else {
+    x
+  }
+}
+  
 #' @rdname ttest
 #' @export t.test
 #' @usage t.test(x, y=NULL, ..., data = parent.frame())

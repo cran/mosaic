@@ -8,16 +8,18 @@
 \title{Interactive plotting}
 \usage{
 mPlot(data, format, default = format, system = c("lattice", "ggplot2"),
-  show = FALSE, title = "", ...)
+  show = FALSE, title = "", data_text = expr_text(data), ...)
 
 mMap(data, default = "map", system = "ggplot2", show = FALSE,
-  title = title, ...)
+  title = title, data_text = expr_text(data), ...)
 
 mScatter(data, default = c("scatter", "jitter", "boxplot", "violin", "line"),
-  system = c("lattice", "ggplot2"), show = FALSE, title = "")
+  system = c("lattice", "ggplot2"), show = FALSE, title = "",
+  data_text = lazyeval::expr_text(data))
 
-mUniplot(data, default = c("histogram", "density", "frequency polygon"),
-  system = c("lattice", "ggplot2"), show = FALSE, title = "")
+mUniplot(data, default = c("histogram", "density", "frequency polygon",
+  "ASH plot"), system = c("lattice", "ggplot2"), show = FALSE, title = "",
+  data_text = expr_text(data))
 }
 \arguments{
 \item{data}{a data frame containing the variables that might be used in the plot.
@@ -49,6 +51,10 @@ or \pkg{lattice}).  A check box will allow on the fly change of plotting system.
 changed.}
 
 \item{title}{a title for the plot}
+
+\item{data_text}{A text string describing the data.  It must be possible to recover the data
+from this string using \code{\link{eval}()}.  Typically users will not need to
+modify this from the default value.}
 
 \item{\dots}{additional arguments}
 }
