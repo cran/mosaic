@@ -64,32 +64,55 @@ logical2factor.data.frame  <- function( x, ... ) {
 #' @param quiet a logical indicating whether messages about order in which 
 #'   marginal distributions are calculated should be surpressed.  
 #'   See \code{\link{addmargins}}.
+#' @param groups used to specify a condition as an alternative to using a formula
+#' with a condition.
 #' @param margins a logical indicating whether marginal distributions should be displayed.
 #' @param useNA as in \code{\link{table}}, but the default here is \code{"ifany"}.
 #' @param envir an environment in which to evaluate
+#' @param groups.first a logical indicating whether groups should be inserted 
+#' ahead of the condition (else after).
 #' @param ... additional arguments passed to \code{\link{table}}
-#' @return A object of class \code{"table"}, unless passing through to \pkg{dplyr}.
+#' @return A object of class \code{"table"}, unless passing through to \pkg{dplyr}
+#'  or converted to a data frame because \code{format} is \code{"data.frame"} or 
+#'  \code{"sparse"}.
 #' @details
-#' The \pkg{dplyr} package also exports a \code{\link[dplyr]{tally}} function.  If \code{x} inherits 
-#' from class \code{"tbl"}, then \pkg{dplyr}'s \code{tally} is called.  This makes it
-#' easier to have the two package coexist.
+#' The \pkg{dplyr} package also exports a \code{\link[dplyr]{tally}} function.  
+#' If \code{x} inherits from class \code{"tbl"} or \code{"data frame"}, 
+#' then \pkg{dplyr}'s \code{\link[dplyr]{tally}()} is called.  This makes it
+#' easier to have the two packages coexist.
+#' 
+#' Otherwise, \code{tally()} is designed as an alternative to \code{\link{table}()} and 
+#' \code{\link{xtabs}()}.  The primary use case it to describe a (possibly multi-dimensional)
+#' table using a formula.  For a table of counts, each component of the formala becomes one 
+#' of the dimensions of the cross table.  For tables of proportions or percents, conditional
+#' proportions and percents are computed, conditioned on each level of all "secondary" 
+#' (i.e., conditioning) variables, defined as everything other than the left hand side, 
+#' if there is a left hand side to the formala; and everything except the right hand side
+#' if the left hand side of the formula is empty.  Note that \code{groups} is folded into
+#' the formula prior to this determination and becomes part of the conditioning.
+#' 
+#' When marginal totals are added, they are added for all of the conditioning dimensions, and 
+#' proportions should sum to 1 for each level of the conditioning variables.  This can be 
+#' useful to make it clear which conditional proportions are beign computed.
+#' 
+#' See the examples for some typical use cases.
+#' 
 #' @note The curent implementation when \code{format = "sparse"} first creates the full data frame
 #' and then removes the unneeded rows.  So the savings is in terms of space, not time.
 #' @examples
-#' if (require(mosaicData)) {
-#' tally( ~ substance, data=HELPrct)
-#' tally( ~ substance + sex , data=HELPrct)
-#' tally( sex ~ substance, data=HELPrct)   # equivalent to tally( ~ sex | substance, ... )
-#' tally( ~ substance | sex , data=HELPrct)
-#' tally( ~ substance | sex , data=HELPrct, format='count')
-#' tally( ~ substance + sex , data=HELPrct, format='percent')
+#' tally( ~ substance, data = HELPrct)
+#' tally( ~ substance + sex , data = HELPrct)
+#' tally( sex ~ substance, data = HELPrct)   # equivalent to tally( ~ sex | substance, ... )
+#' tally( ~ substance | sex , data = HELPrct)
+#' tally( ~ substance | sex , data = HELPrct, format = 'count', margins = TRUE)
+#' tally( ~ substance + sex , data = HELPrct, format = 'percent', margins = TRUE)
+#' tally( ~ substance | sex , data = HELPrct, format = 'percent', margins = TRUE)
 #' # force NAs to show up
-#' tally( ~ sex, data=HELPrct, useNA="always")
+#' tally( ~ sex, data = HELPrct, useNA = "always")
 #' # show NAs if any are there
-#' tally( ~ link, data=HELPrct)
+#' tally( ~ link, data = HELPrct)
 #' # ignore the NAs
-#' tally( ~ link, data=HELPrct, useNA="no")
-#' }
+#' tally( ~ link, data = HELPrct, useNA = "no")
 #' @export
 
 tally <- function(x, ...) {
@@ -124,14 +147,19 @@ tally.data.frame <- function(x, wt, sort=FALSE, ..., envir=parent.frame()) {
 
 #' @rdname tally
 #' @export
-tally.formula <- function(x, data = parent.frame(2), 
-                      format=c('count', 'proportion', 'percent', 'data.frame', 'sparse', 'default'), 
-                      margins=FALSE,
-                      quiet=TRUE,
-                      subset, 
-                      useNA = "ifany", ...) {
+tally.formula <- 
+  function(x, data = parent.frame(2), 
+           format=c('count', 'proportion', 'percent', 'data.frame', 'sparse', 'default'), 
+           margins=FALSE,
+           quiet=TRUE,
+           subset, 
+           groups = NULL,
+           useNA = "ifany", 
+           groups.first = FALSE,
+           ...) {
  	format <- match.arg(format)
-	formula <- x
+ 	formula_orig <- x
+	formula <- mosaic_formula_q(x, groups = groups, max.slots = 3, groups.first = groups.first)
 	evalF <- evalFormula(formula, data)
 
 	if (!missing(subset)) {
@@ -141,28 +169,44 @@ tally.formula <- function(x, data = parent.frame(2),
 		if (!is.null(evalF$condition)) evalF$condition <- evalF$condition[subset, , drop=FALSE]
 	}
 
-	if (format == 'default'){
+	if (format == 'default'){ # exists mainly for historical reasons, not actually the default
 		if (is.null(evalF$condition) ) format <- 'count'
 		else format <- 'proportion'
 	}
 
-	res <- table( logical2factor( joinFrames(evalF$left, evalF$right, evalF$condition) ), useNA=useNA, ... )
+	res <- table(logical2factor( joinFrames(evalF$left, evalF$right, evalF$condition) ), 
+	             useNA = useNA, ...)
 
+	if (any(names(dimnames(res)) == "")) {
+	  names(dimnames(res)) <- c(names(evalF$left), names(evalF$right), names(evalF$condition))
+	}
+	
+	dims <- seq_along(dim(res))
+	if (!is.null(evalF$condition) && ncol(evalF$condition) > 0) {
+	  prop_columns <- tail(dims, ncol(evalF$condition))
+	} else {
+	  if (is.null(evalF$left)) {
+	    prop_columns <- numeric(0)
+	  } else {
+	    prop_columns <- tail(dims, ncol(evalF$right))
+	  }
+	}
+	
 	res <- switch(format,
 		   'count' =  res,
        'data.frame' = as.data.frame(res),
        'sparse' = {res <- as.data.frame(res); res <- res[res$Freq > 0,]},
 		   'proportion' = 
-		   		prop.table( res, margin = ncol(evalF$right) + columns(evalF$condition) ),
+		   		prop.table(res, margin = prop_columns),
 		   'percent' = 
-		   		100 * prop.table( res, margin = ncol(evalF$right) + columns(evalF$condition) )
+		   		100 * prop.table(res, margin = prop_columns)
 		   )
-	if (margins & ! format %in% c("data.frame", "sparse")) {  
-	  # add margins for the non-condition dimensions of the table
-	  res <- 
-	    addmargins(res, 
-	               1:(ncol(evalF$right) + if(is.null(evalF$left)) 0 else ncol(evalF$left)), 
-	                  FUN=list(Total = sum), quiet = quiet )
+	if (margins & ! format %in% c("data.frame", "sparse")) {
+	  # default: add margins for the non-condition dimensions of the table
+	  # but there are some exceptions when everything is marginal
+	  margin_columns <- head(dims, -length(prop_columns))
+	  if (length(margin_columns) == 0L)  margin_columns <- dims
+	  res <-  addmargins(res, margin_columns, FUN = list(Total = sum), quiet = quiet)
 	}
 	return(res)
 }
@@ -263,21 +307,10 @@ prop <- function(x, data=parent.frame(), useNA = "no", ...,
                  quiet=TRUE,
                  pval.adjust = FALSE) {
   format <- match.arg(format)
+  
   T <- mosaic::tally(x, data=data, useNA = useNA, ...)
-  n <- sum(T)
-  if (pval.adjust) {
-    n <- n + 1
-    T <- T + 1
-  }
   
-  if (format == "percent") {
-    T <- T * 100
-  }
-  
-  if (format == "count") {
-    n <- 1  # inhibits division by n below
-  }
-  
+  scale <- if (format == "percent") 100.0 else 1.0
   
   if (length(dim(T)) < 1) stop("Insufficient dimensions.")
   lnames <- dimnames(T)[[1]]
@@ -297,14 +330,20 @@ prop <- function(x, data=parent.frame(), useNA = "no", ...,
                     paste(setdiff(lnames,level), collapse=", "), "\n" ) )
   if ( length(dim(T)) == 2) {
     idx <- match(level, lnames)
-    result <- T[idx,] / n
+    if (format == "count")
+      result <- T[idx,] 
+    else
+      result <- ((T[idx,] + pval.adjust) / (colSums(T) + pval.adjust)) * scale
     if (long.names)
       names(result) <- paste(level, names(result), sep=sep)
     return(result)
   }
   if ( length(dim(T)) == 1) {
     idx <- match(level, names(T))
-    result <- T[idx] / n
+    result <- if (format == "count") 
+      T[idx] 
+    else
+      (T[idx] + pval.adjust) / (sum(T) + pval.adjust) * scale
     return(result)
   }
   stop(paste('Too many dimensions (', length(dim(T)), ")",sep=""))

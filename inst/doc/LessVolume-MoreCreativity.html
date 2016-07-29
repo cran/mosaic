@@ -11,7 +11,7 @@
 
 <meta name="author" content="Randall Pruim" />
 
-<meta name="date" content="2016-06-15" />
+<meta name="date" content="2016-07-29" />
 
 <title>Less Volume, More Creativity – Getting Started with the mosaic Package</title>
 
@@ -118,7 +118,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Less Volume, More Creativity – Getting Started with the mosaic Package</h1>
 <h4 class="author"><em>Randall Pruim</em></h4>
-<h4 class="date"><em>2016-06-15</em></h4>
+<h4 class="date"><em>2016-07-29</em></h4>
 
 </div>
 
@@ -515,11 +515,11 @@ xyplot( births ~ date, data=Births78,
 <div id="tallying" class="section level3">
 <h3>Tallying</h3>
 <pre class="r"><code>tally( ~ sex, data=HELPrct)</code></pre>
-<pre><code>## 
+<pre><code>## sex
 ## female   male 
 ##    107    346</code></pre>
 <pre class="r"><code>tally( ~ substance, data=HELPrct)</code></pre>
-<pre><code>## 
+<pre><code>## substance
 ## alcohol cocaine  heroin 
 ##     177     152     124</code></pre>
 </div>
@@ -549,16 +549,16 @@ sd( ~ age, groups=substance, data=HELPrct )</code></pre>
 <p>Other output formats are available</p>
 <pre class="r"><code>tally( sex ~ substance,   data=HELPrct, format=&quot;proportion&quot; )</code></pre>
 <pre><code>##         substance
-## sex         alcohol    cocaine     heroin
-##   female 0.07947020 0.09050773 0.06622517
-##   male   0.31125828 0.24503311 0.20750552</code></pre>
+## sex        alcohol   cocaine    heroin
+##   female 0.2033898 0.2697368 0.2419355
+##   male   0.7966102 0.7302632 0.7580645</code></pre>
 <pre class="r"><code>tally( substance ~ sex,   data=HELPrct, format=&quot;proportion&quot;, margins=TRUE )</code></pre>
 <pre><code>##          sex
-## substance     female       male      Total
-##   alcohol 0.07947020 0.31125828 0.39072848
-##   cocaine 0.09050773 0.24503311 0.33554084
-##   heroin  0.06622517 0.20750552 0.27373068
-##   Total   0.23620309 0.76379691 1.00000000</code></pre>
+## substance    female      male
+##   alcohol 0.3364486 0.4075145
+##   cocaine 0.3831776 0.3208092
+##   heroin  0.2803738 0.2716763
+##   Total   1.0000000 1.0000000</code></pre>
 <pre class="r"><code>tally( ~ sex + substance, data=HELPrct, format=&quot;proportion&quot;, margins=TRUE )</code></pre>
 <pre><code>##         substance
 ## sex         alcohol    cocaine     heroin      Total
@@ -567,9 +567,9 @@ sd( ~ age, groups=substance, data=HELPrct )</code></pre>
 ##   Total  0.39072848 0.33554084 0.27373068 1.00000000</code></pre>
 <pre class="r"><code>tally( sex ~ substance,   data=HELPrct, format=&quot;percent&quot; )</code></pre>
 <pre><code>##         substance
-## sex        alcohol   cocaine    heroin
-##   female  7.947020  9.050773  6.622517
-##   male   31.125828 24.503311 20.750552</code></pre>
+## sex       alcohol  cocaine   heroin
+##   female 20.33898 26.97368 24.19355
+##   male   79.66102 73.02632 75.80645</code></pre>
 <div id="more-examples" class="section level4">
 <h4>More examples</h4>
 <pre class="r"><code>mean( age ~ substance | sex, data=HELPrct )</code></pre>
