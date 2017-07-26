@@ -2,20 +2,20 @@
 % Please edit documentation in R/dpqrdist.R
 \name{pdist}
 \alias{pdist}
-\alias{xpbinom}
+\alias{xpgamma}
+\alias{xpt}
 \alias{xpchisq}
 \alias{xpf}
-\alias{xpgamma}
+\alias{xpbinom}
+\alias{xppois}
 \alias{xpgeom}
 \alias{xpnbinom}
-\alias{xppois}
-\alias{xpt}
+\alias{xpbeta}
 \title{Illustrated probability calculations from distributions}
 \usage{
 pdist(dist = "norm", q, plot = TRUE, verbose = FALSE, invisible = FALSE,
-  digits = 4L, xlim, ylim, vlwd = NULL,
-  vcol = trellis.par.get("add.line")$col, rot = 45, resolution = 5000L,
-  ...)
+  digits = 3L, xlim, ylim, resolution = 500L, return = c("values",
+  "plot"), ..., refinements = list())
 
 xpgamma(...)
 
@@ -32,6 +32,8 @@ xppois(...)
 xpgeom(...)
 
 xpnbinom(...)
+
+xpbeta(...)
 }
 \arguments{
 \item{dist}{a character discription of a distribution, for example 
@@ -51,21 +53,19 @@ xpnbinom(...)
 
 \item{ylim}{y limits}
 
-\item{vlwd}{width of vertical lines}
-
-\item{vcol}{color of vertical lines}
-
-\item{rot}{angle for rotating text indicating probability}
-
-\item{resolution}{number of points used for detecting discreteness and generating plots.
+\item{resolution}{Number of points used for detecting discreteness and generating plots.
 The defaut value of 5000 should work well except for discrete distributions
 that have many distinct values, especially if these values are not evenly spaced.}
 
-\item{...}{additional arguments, including parameters of the distribution
+\item{return}{If \code{"plot"}, return a plot.  If \code{"values"}, return a vector of numerical values.}
+
+\item{...}{Additional arguments, including parameters of the distribution
 and additional options for the plot}
+
+\item{refinements}{A list of refinements to the plot.  See \code{\link[ggformula]{gf_refine}()}.}
 }
 \value{
-a vector of probabilities; a plot is printed as a side effect
+A vector of probabilities; a plot is printed as a side effect.
 }
 \description{
 Illustrated probability calculations from distributions
@@ -77,12 +77,11 @@ provided for several common distributions.
 }
 \examples{
 pdist("norm", -2:2)
-pdist("norm", seq(80,120, by=10), mean=100, sd=10)
-pdist("chisq", 2:4, df=3)
-pdist("f", 1, df1=2, df2=10)
-pdist("gamma", 2, shape=3, rate=4)
+pdist("norm", seq(80,120, by = 10), mean = 100, sd = 10)
+pdist("chisq", 2:4, df = 3)
+pdist("f", 1, df1 = 2, df2 = 10)
+pdist("gamma", 2, shape = 3, rate = 4)
 }
 \seealso{
 \code{\link{qdist}}, \code{\link{xpnorm}}, \code{\link{xqnorm}}.
 }
-

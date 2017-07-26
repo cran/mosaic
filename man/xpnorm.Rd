@@ -8,12 +8,11 @@
 xpnorm(q, mean = 0, sd = 1, plot = TRUE, verbose = TRUE,
   invisible = FALSE, digits = 4, lower.tail = TRUE, log.p = FALSE,
   xlim = mean + c(-4, 4) * sd, ylim = c(0, 1.4 * dnorm(mean, mean, sd)),
-  vlwd = 2, vcol = trellis.par.get("add.line")$col, rot = 45,
-  manipulate = FALSE, ...)
+  manipulate = FALSE, ..., return = c("value", "plot"))
 
-xqnorm(p, mean = 0, sd = 1, plot = TRUE, verbose = TRUE, digits = 4,
-  lower.tail = TRUE, log.p = FALSE, xlim, ylim, invisible = FALSE,
-  vlwd = 2, vcol = trellis.par.get("add.line")$col, rot = 45, ...)
+xqnorm(p, mean = 0, sd = 1, plot = TRUE, verbose = TRUE,
+  digits = getOption("digits"), lower.tail = TRUE, log.p = FALSE, xlim,
+  ylim, invisible = FALSE, ..., return = c("value", "plot"))
 }
 \arguments{
 \item{q}{quantile}
@@ -34,16 +33,14 @@ xqnorm(p, mean = 0, sd = 1, plot = TRUE, verbose = TRUE, digits = 4,
 
 \item{xlim, ylim}{limits for plotting.}
 
-\item{vlwd, vcol}{line width and color for vertical lines.}
-
-\item{rot}{angle of rotation for text labels.}
-
 \item{manipulate}{logical.  If TRUE and in RStudio,
 then sliders are added for interactivity.}
 
-\item{p}{probability}
-
 \item{\dots}{additional arguments.}
+
+\item{return}{If \code{"plot"}, return a plot.  If \code{"values"}, return a vector of numerical values.}
+
+\item{p}{probability}
 }
 \description{
 These functions behave similarly to the functions with the initial \code{x}
@@ -69,4 +66,3 @@ if (rstudio_is_available() & require(manipulate)) {
 \code{\link{qqmath}}, and
 \code{\link{plot}}.
 }
-

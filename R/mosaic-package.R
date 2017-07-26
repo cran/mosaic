@@ -1,3 +1,12 @@
+#' @import mosaicCore
+#' @export 
+mosaicCore::makeFun
+
+#' @import ggformula
+#' @import ggplot2
+
+NA
+
 #' mosaic
 #'
 #' Data sets and utilities from Project MOSAIC (mosaic-web.org) used to teach mathematics, 
@@ -26,7 +35,6 @@
 #' @importFrom tidyr gather
 #' @importFrom grid grid.polyline grid.text grid.lines grid.points grid.rect grid.layout gpar unit.c 
 #' @import lattice
-#' @import ggplot2
 #' @import splines 
 #' @import mosaicData
 #' @importFrom grDevices col2rgb colorRampPalette gray heat.colors rgb topo.colors

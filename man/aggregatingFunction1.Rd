@@ -39,12 +39,12 @@ Earlier versions of this function supported a "bare name + data frame" interface
 functionality has been removed since it was (a) ambiguous in some cases, (b) unnecessary, and (c) 
 difficult to maintain.
 }
+
 \examples{
 if (require(mosaicData)) {
   foo <- aggregatingFunction1(base::mean)
-  foo( ~ length, data=KidsFeet)
+  foo( ~ length, data = KidsFeet)
   base::mean(KidsFeet$length)
-  foo(length ~ sex, data=KidsFeet)
+  foo(length ~ sex, data = KidsFeet)
 } 
 }
-

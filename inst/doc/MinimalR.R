@@ -3,6 +3,7 @@
 require(mosaic)
 require(mosaicData)
 require(parallel)
+options(digits=4)
 trellis.par.set(theme=col.mosaic())
 set.seed(123)
 #knit_hooks$set(inline = function(x) {
@@ -73,9 +74,7 @@ opts_chunk$set(
 #  xqqmath()   # mosaic
 
 ## ----eval=FALSE----------------------------------------------------------
-#  mplot(data=HELPrct, 'scatter')
-#  mplot(data=HELPrct, 'boxplot')
-#  mplot(data=HELPrct, 'histogram')
+#  mplot(HELPrct)
 
 ## ------------------------------------------------------------------------
 #  rflip()     # mosaic
@@ -117,18 +116,17 @@ opts_chunk$set(
 #  model <- glm() # logistic reg.
 
 ## ------------------------------------------------------------------------
-#  require(mosaicData)  # load package
-#  read.file()    # mosaic
 #  nrow(); ncol(); dim()
-#  summary()
-#  str()
+#  inspect()            # mosaic
 #  names()
 #  head(); tail()
-#  with()
-#  factor()
 
 ## ----highlight=FALSE-----------------------------------------------------
-#  ntiles()      # mosaic
+#  read.file()          # mosaic
+#  with()
+#  summary()
+#  glimpse()            # dplyr
+#  ntiles()             # mosaic
 #  cut()
 #  c()
 #  cbind(); rbind()
@@ -152,7 +150,6 @@ opts_chunk$set(
 #  group_by()    # dplyr
 #  left_join()   # dplyr
 #  inner_join()  # dplyr
-#  merge()
 
 ## ----more-hooks,eval=TRUE,echo=FALSE-------------------------------------
 opts_chunk$set(
@@ -186,7 +183,6 @@ histogram(~ heads, data=coins, width=1,
             groups = (heads>=5 | heads<=1))
 
 ## ----tally----------------------------
-require(mosaicData)   # this package contains data sets used below
 tally(sex ~ substance, data=HELPrct)
 mean(age ~ sex, data=HELPrct)
 diffmean(age ~ sex, data=HELPrct)
@@ -215,14 +211,15 @@ xyplot(Sepal.Length ~ Sepal.Width,
 ## ----fig.keep="last", tidy=FALSE, fig.height=2.3----
 model <- lm(length ~ width + sex, 
             data=KidsFeet)
-ln <- makeFun(model)
-ln( width=8.25, sex="B")
+lmfunc <- makeFun(model)
+lmfunc(width=8.25, sex="B")
 xyplot(length ~ width, groups=sex, 
        data=KidsFeet)
-plotFun(ln(w, sex="B") ~ w, 
+plotFun(lmfunc(w, sex="B") ~ w, 
         add=TRUE, col="skyblue")
-plotFun(ln(w,sex="G") ~ w, 
+plotFun(lmfunc(w,sex="G") ~ w, 
         add=TRUE, col="navy")
+# or plotModel(model)
 
 ## ----fig.height=1.75------------------
 plotDist("chisq", df=4)

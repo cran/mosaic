@@ -2,11 +2,11 @@
 % Please edit documentation in R/mplot.R
 \name{mplot}
 \alias{mplot}
-\alias{mplot.TukeyHSD}
-\alias{mplot.data.frame}
 \alias{mplot.default}
 \alias{mplot.lm}
+\alias{mplot.data.frame}
 \alias{mplot.summary.lm}
+\alias{mplot.TukeyHSD}
 \title{Generic plotting}
 \usage{
 mplot(object, ...)
@@ -104,10 +104,9 @@ mplot( lm( width ~ length * sex, data=KidsFeet), rows=2:3, which=7 )
 mplot( HELPrct )
 mplot( HELPrct, "histogram" )
 }
-mplot(summary(lm(width ~ length * sex, data=KidsFeet)), system="ggplot")
+mplot(summary(lm(width ~ length * sex, data=KidsFeet)), system="ggplot2")
 mplot(summary(lm(width ~ length * sex, data=KidsFeet)), rows=c("sex", "length"))
 mplot(summary(lm(width ~ length * sex, data=KidsFeet)), rows=TRUE)
 mplot(TukeyHSD( lm(age ~ substance, data=HELPrct) ) )
 mplot(TukeyHSD( lm(age ~ substance, data=HELPrct) ), system="ggplot2" )
 }
-

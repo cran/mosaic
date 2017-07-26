@@ -1,6 +1,6 @@
-
-tryCatch(utils::globalVariables(c('densy','densx','dots')), 
-         error=function(e) message('Looks like you should update R.'))
+utils::globalVariables(c('densy','densx','dots')) 
+#' @importFrom mosaicCore named named_among unnamed
+NA
 
 #' Plots of Discrete and Continuous Distributions
 #' 
@@ -16,8 +16,13 @@ tryCatch(utils::globalVariables(c('densy','densx','dots')),
 #' 	  \code{\link{pnorm}}, and 
 #' 	  \code{\link{qnorm}}).  \code{dist} should match the name of the 
 #' 	  distribution with the initial 'd', 'p', or 'q' removed.
-#' @param add a logical indicating whether the plot should be added to the previous lattice plot. 
-#' If missing, it will be set to match \code{under}.
+#' @param xlim a numeric vector of length 2 or \code{NULL}, in which case
+#'  the central 99.8\% of the distribution is used.
+#' @param ylim a numeric vector of length 2 or \code{NULL}, in which case
+#'  a heuristic is used to avoid chasing asymptotes in distributions like
+#'  the F distributions with 1 numerator degree of freedom.
+#' @param add a logical indicating whether the plot should be added to the previous lattice plot.
+#'   If missing, it will be set to match \code{under}.
 #' @param under a logical indicating whether adding should be done in a layer under or over the existing 
 #' layers when \code{add = TRUE}.
 #' @param packets,rows,columns specification of which panels will be added to when 
@@ -67,6 +72,7 @@ tryCatch(utils::globalVariables(c('densy','densx','dots')),
 #' plotDist("binom", size=100, prob=.30) +
 #'   plotDist("norm", mean=30, sd=sqrt(100 * .3 * .7))
 #' plotDist("chisq", df=4, groups = x > 6, type="h")
+#' plotDist("f", df1=1, df2 = 99)
 #' if (require(mosaicData)) {
 #' histogram( ~age|sex, data=HELPrct)
 #' m <- mean( ~age|sex, data=HELPrct)
@@ -81,6 +87,8 @@ tryCatch(utils::globalVariables(c('densy','densx','dots')),
 
 plotDist <- function( 
   dist, ...,
+  xlim = NULL,
+  ylim = NULL,
   add,
   under = FALSE,
   packets=NULL,
@@ -88,7 +96,7 @@ plotDist <- function(
   columns=NULL,
   kind = c('density','cdf','qq','histogram'), 
   xlab = "", ylab = "", breaks = NULL, type, 
-  resolution = 5000,  params = NULL ) {
+  resolution = 5000L,  params = NULL ) {
   
   kind = match.arg(kind)
   if (missing(add)) add <- under
@@ -126,14 +134,31 @@ plotDist <- function(
     pparams <- params
     qparams <- params
   }
+  # attempting to make evaluation of these arguments more intuitive 
+  env <- parent.frame()
+  dparams <- lapply(dparams, function(x) eval(x, env))
+  pparams <- lapply(pparams, function(x) eval(x, env))
+  qparams <- lapply(qparams, function(x) eval(x, env))
   
   values = do.call(qdist, c(p=list(ppoints(resolution)), qparams)) 
-  fewerValues = unique(values)
+
+  fewerValues <- unique(values)
   discrete = length(fewerValues) < length(values) 
+  
+  if (! discrete) {
+    values = seq(
+      do.call(qdist, c(p = list(0.001), qparams)),
+      do.call(qdist, c(p = list(0.999), qparams)),
+      length.out = resolution
+    ) 
+    fewerValues <- values
+  }
+  
   if ( is.null(breaks) && discrete ){
     step = min(diff(fewerValues))
     breaks = seq( min(fewerValues) -.5 * step , max(fewerValues) + .5*step, step)
   }
+  
   if (kind=='cdf') {
     if (discrete) {
       step = min(diff(fewerValues))
@@ -175,52 +200,47 @@ plotDist <- function(
           columns=columns) 
     )
   } else { # not adding
+    if (is.null(xlim)) {
+      xlim <- do.call(qdist, c(list(p=c(0.001, .999)), qparams))
+    }
+    ydata <- 
+      switch(kind,
+             density = do.call(ddist, c(list(x=fewerValues), dparams)),
+             cdf = cdfy,
+             qq = do.call( ddist, c(list(x=values), dparams)),
+             histogram = do.call(ddist, c(list(x=values), dparams))
+      )
+    if (is.null(ylim)) {
+      ymax <- 
+        min(
+          1.6 * quantile(ydata, 0.90, na.rm=TRUE),
+          1.1 * max(ydata, na.rm=TRUE),
+          na.rm = TRUE)
+      ylim = c(0, ymax)  
+    }
+    
     switch(kind, 
            density = 
              lattice::xyplot( y ~ x, 
-                              data=data.frame( 
-                                y = do.call( ddist, c(list(x=fewerValues), dparams) ), 
-                                x = fewerValues), 
+                              data=data.frame(y = ydata, x = fewerValues), 
+                              xlim = xlim, ylim = ylim,
                               type=type, xlab=xlab, ylab=ylab, ...),
            cdf = 
              lattice::xyplot( y ~ x, 
-                              data=data.frame( y = cdfy, x = cdfx ), 
-                              type=type, xlab=xlab, ylab=ylab, ...),
+                              data=data.frame(y = ydata, x = cdfx), 
+                              xlim = xlim, ylim = ylim,
+                              type=type, xlab = xlab, ylab = ylab, ...),
            qq = 
              lattice::qqmath( ~ x, 
-                              data = data.frame( 
-                                x = values, 
-                                y = do.call( ddist, c(list(x=values), dparams) ) ), 
-                              type=type, xlab=xlab, ylab=ylab, ...),
+                              data = data.frame(x = values, y = ydata),
+                              xlim = xlim, ylim = ylim,
+                              type = type, xlab = xlab, ylab = ylab, ...),
            histogram = 
              histogram( ~ x,
-                        data = data.frame( 
-                          x = values, 
-                          y = do.call( ddist, c(list(x=values), dparams) ) ), 
-                        type=type, xlab=xlab, breaks=breaks, ...)
+                        data = data.frame(x = values,  y = ydata),
+                        xlim = xlim, ylim = ylim,
+                        type = type, xlab = xlab, breaks = breaks, ...)
     )
   }
 }
-
-#' List extraction
-#' 
-#' These functions create subsets of lists based on their names
-#'
-#'  
-#' @param l a list
-#' @param n a vector of character strings (potential names)
-#' @return a sublist of \code{l} determined by \code{names(l)}
-#' @export
-
-named <-function(l)  if (is.null(names(l))) list() else l [ names(l) != "" ]
-
-#' @rdname named
-#' @export
-
-unnamed <-function(l)  if (is.null(names(l))) l else l [ names(l) == "" ]
-
-#' @rdname named
-#' @export
-
-named_among <- function(l, n)  l [ intersect( names(l), n ) ]
 

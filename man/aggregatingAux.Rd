@@ -31,17 +31,18 @@ This offers some additional flexibility in how formulas can be specified.}
 
 \item{drop}{a logical indicating whether unused levels should be dropped.}
 
+\item{\dots}{additional arguments passed to \code{FUN}}
+
 \item{.format}{format used for aggregation. \code{"default"} and \code{"flat"} are equivalent.}
 
 \item{.overall}{currently unused}
 
-\item{.multiple}{a logical indicating whether FUN returns multiple values}
+\item{.multiple}{a logical indicating whether FUN returns multiple values
+Ignored if \code{.multiple} is not \code{NULL}.}
 
 \item{.name}{a name used for the resulting object}
 
 \item{.envir}{an environment in which to evaluate expressions}
-
-\item{\dots}{additional arguments passed to \code{FUN}}
 }
 \value{
 a vector
@@ -64,4 +65,3 @@ maggregate( cesd ~ NULL , groups = sex, HELPrct, FUN=sd )
 }
 
 }
-

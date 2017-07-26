@@ -15,33 +15,38 @@
 #' @param prob probability of heads on each toss
 #' @param quiet a logical.  If \code{TRUE}, less verbose output is used.
 #' @param verbose  a logical.  If \code{TRUE}, more verbose output is used.
+#' @param summarize if \code{TRUE}, return a summary (as a data frame).
+#' @param summarise alternative spelling for \code{summarize}.
 #' 
 #' @examples
 #' rflip(10)
-#' rflip(10, prob=1/6, quiet=TRUE)
+#' rflip(10, prob = 1/6, quiet = TRUE)
+#' rflip(10, prob = 1/6, summarize = TRUE)
 #' do(5) * rflip(10)
 #' @export
 
-rflip <- function(n=1, prob=.5, quiet=FALSE, verbose = !quiet) {
+rflip <- function(n=1, prob=.5, quiet=FALSE, verbose = !quiet, summarize = FALSE, 
+                  summarise = summarize) {
 	if ( ( prob > 1 && is.integer(prob) ) ) {  
 		# swap n and prob
 		temp <- prob
 		prob <- n
 		n <- temp
 	}
-	r <- rbinom(n,1,prob)
-	result <- c('T','H')[ 1 + r ]
-	heads <- sum(r)
-	attr(heads,"n") <- n
-	attr(heads,"prob") <- prob 
-	attr(heads,"sequence") <- result
-	attr(heads,"verbose") <- verbose
-	class(heads) <- 'cointoss'
-	return(heads)
-
-	# return(structure(heads, heads=heads, n=n, prob=prob, sequence=result, verbose=verbose, 
-	# class='cointoss'))
-
+	if (summarise) {
+	  heads <- rbinom(1, n, prob)
+	  return(data.frame(n = n, heads = heads, tails = n - heads, prob = prob))
+	} else {
+	  r <- rbinom(n,1,prob)
+	  result <- c('T','H')[ 1 + r ]
+	  heads <- sum(r)
+	  attr(heads,"n") <- n
+	  attr(heads,"prob") <- prob 
+	  attr(heads,"sequence") <- result
+	  attr(heads,"verbose") <- verbose
+	  class(heads) <- 'cointoss'
+	  return(heads)
+	}
 }
 
 
@@ -356,7 +361,7 @@ sample.lm <-
    
      
     if (is.null(transformation)) {
-      transformation <- inferTransformation(formula(x))
+      transformation <- mosaicCore::infer_transformation(formula(x))
     }
     res[[1]] <- do.call(transformation, list(res$new_response))
     # remove "scratch columns"
@@ -365,30 +370,6 @@ sample.lm <-
     res
   }
 
-inferTransformation <- function(formula, warn = TRUE) {
-  transformation <- identity
-  left <- lhs(formula)
-  if (length(left) == 2) {       # foo ( stuff )
-    if (is.name(left[[2]])) {    # stuff is a name
-      transformation <- 
-        switch( 
-          as.character(left[[1]]),
-          "log" = exp,
-          "log10" = function(x) {10^x},
-          "log2" = function(x) {2^x},
-          "sqrt" = function(x) x^2,
-          identity
-        )
-    }   # could have identity if stuff is not a name or foo is not a known function
-    if (warn && identical(transformation, identity)) {
-      warning("You may need to specify transformation to get the desired results.", call. = FALSE)
-    } 
-  }
-  if (warn && length(left) > 2) {
-    warning("You may need to specify transformation to get the desired results.", call. = FALSE)
-  }
-  transformation
-}
 
 #' Resample a Linear Model
 #' 

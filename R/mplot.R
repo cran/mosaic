@@ -1,7 +1,11 @@
 utils::globalVariables(c('pair','lwr','upr','fitted','.resid',
-                                  '.stdresid', '.cooksd', '.fitted', 
-                                  'lower', 'upper',
-                                  '.hat', 'grid.arrange',  'estimate','se')) 
+                         '.stdresid', '.cooksd', '.fitted', 
+                         'lower', 'upper',
+                         'fcoef', 'density', 'probability',
+                         '.hat', 'grid.arrange',  'estimate','se')) 
+
+#' @importFrom ggplot2 fortify
+NA
 
 #' Generic plotting
 #' 
@@ -412,7 +416,7 @@ confint.summary.lm <- function (object, parm, level = 0.95, ...)  {
 #' @param rows rows to show.  This may be a numeric vector, 
 #' \code{TRUE} (for all rows), or a character vector of row names.
 #' @examples
-#' mplot(summary(lm(width ~ length * sex, data=KidsFeet)), system="ggplot")
+#' mplot(summary(lm(width ~ length * sex, data=KidsFeet)), system="ggplot2")
 #' mplot(summary(lm(width ~ length * sex, data=KidsFeet)), rows=c("sex", "length"))
 #' mplot(summary(lm(width ~ length * sex, data=KidsFeet)), rows=TRUE)
 #' @export
@@ -425,13 +429,15 @@ mplot.summary.lm <- function(object,
                              ...){
   system <- match.arg(system)
   fdata <- fortify(object, level=level) %>% 
-    mutate(signif = pval < (1-level))  
+    mutate(signif = pval < (1-level),
+           fcoef = factor(coef, levels = coef)
+           )
   row.names(fdata) <- fdata$coef
   fdata <- fdata[rows, ]
   fdata <- fdata[nrow(fdata):1, ]
   
   g <- ggplot(data=fdata,
-              aes(x=factor(coef, labels=coef), y=estimate, 
+              aes(x=fcoef, y=estimate, 
                   ymin=lower, ymax=upper, 
                   color=signif)) + # (pval < (1-level)/2))) + 
     geom_pointrange(size=1.2) + 
@@ -443,7 +449,7 @@ mplot.summary.lm <- function(object,
   cols <- rep( par.settings$superpose.line$col, length.out=2)
   cols <- cols[2 - fdata$signif]
   
-  l <- xyplot( factor(coef, levels=coef) ~ estimate + lower + upper,
+  l <- xyplot( fcoef ~ estimate + lower + upper,
                data=fdata,
                fdata=fdata,
                xlab="estimate",
