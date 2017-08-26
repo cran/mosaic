@@ -1,16 +1,19 @@
 utils::globalVariables(c('.row'))
+#' @importFrom mosaicCore vector2df nice_names
+ 
+NA
 
 #' Set seed in parallel compatible way
 #'
 #' When the parallel package is used, setting the RNG seed for reproducibility
-#' involves more than simply calling \code{\link{set.seed}}. \code{set.rseed} takes
+#' involves more than simply calling [set.seed()]. `set.rseed` takes
 #' care of the additional overhead.
 #'
 #' @param seed seed for the random number generator
 #' @details
-#' If the \code{parallel} package is not on the search path, then \code{\link{set.seed}} is called.
-#' If \code{parallel} is on the search path, then the RNG kind is set to \code{"L'Ecuyer-CMRG"},
-#' the seed is set and \code{mc.reset.stream} is called.
+#' If the `parallel` package is not on the search path, then [set.seed()] is called.
+#' If `parallel` is on the search path, then the RNG kind is set to `"L'Ecuyer-CMRG"`,
+#' the seed is set and `mc.reset.stream` is called.
 #' 
 #' @examples
 #' # These should give identical results, even if the `parallel' package is loaded.
@@ -30,7 +33,7 @@ set.rseed <- function(seed) {
 
 #' Do Things Repeatedly
 #' 
-#' \code{do()} provides a natural syntax for repetition tuned to assist 
+#' `do()` provides a natural syntax for repetition tuned to assist 
 #' with replication and resampling methods.
 #'
 #' @rdname do
@@ -41,12 +44,12 @@ set.rseed <- function(seed) {
 #' @param cull  function for culling output of objects being repeated.  If NULL,
 #'   a default culling function is used.  The default culling function is 
 #'   currently aware of objects of types
-#'   \code{lme},
-#'   \code{lm},
-#'   \code{htest},
-#'   \code{table},
-#'   \code{cointoss}, and 
-#'   \code{matrix}.
+#'   `lme`,
+#'   `lm`,
+#'   `htest`,
+#'   `table`,
+#'   `cointoss`, and 
+#'   `matrix`.
 #'   
 #' @param mode  target mode for value returned
 #' 
@@ -56,18 +59,18 @@ set.rseed <- function(seed) {
 #' @param parallel a logical indicating whether parallel computation should be attempted
 #'   using the \pkg{parallel} package (if it is installed and loaded).
 #' 
-#' @param e1 an object (in cases documented here, the result of running \code{do})
+#' @param e1 an object (in cases documented here, the result of running `do`)
 #' @param e2 an object (in cases documented here, an expression to be repeated)
 #' @param ... additional arguments
 #' 
-#' @note \code{do} is a thin wrapper around \code{Do} to avoid collision with
-#'   \code{\link[dplyr]{do}} from the \pkg{dplyr} package.
-#' @return \code{do} returns an object of class \code{repeater} which is only useful in
-#'   the context of the operator \code{*}.  See the examples.
+#' @note `do` is a thin wrapper around `Do` to avoid collision with
+#'   [dplyr::do()] from the \pkg{dplyr} package.
+#' @return `do` returns an object of class `repeater` which is only useful in
+#'   the context of the operator `*`.  See the examples.
 #' @author Daniel Kaplan (\email{kaplan@@macalaster.edu})
 #'   and Randall Pruim (\email{rpruim@@calvin.edu})
 #'
-#' @seealso \code{\link{replicate}}, \code{\link{set.rseed}}
+#' @seealso [replicate()], [set.rseed()]
 #' 
 #' @examples
 #' do(3) * rnorm(1)
@@ -111,7 +114,7 @@ Do <- function(n=1L, cull=NULL, mode='default', algorithm=1.0, parallel=TRUE) {
 #' @rdname mosaic-internal
 #' @keywords internal
 #' @details
-#' \code{.make.data.frame} converts things to a data frame
+#' `.make.data.frame` converts things to a data frame
 #' @param x object to be converted
 #' @return a data frame
 
@@ -126,59 +129,28 @@ Do <- function(n=1L, cull=NULL, mode='default', algorithm=1.0, parallel=TRUE) {
 	return(as.data.frame(x))
 	}
 
-#' Nice names
-#'
-#' Convert a character vector into a similar character vector that would 
-#' work better as names in a data frame by avoiding certain awkward characters
-#'
-#' @rdname nicenames
-#' @param x a character vector
-#' @param unique a logical indicating whether returned values should be uniquified.
-#' @return a character vector
-#' @examples
-#' nice_names( c("bad name", "name (crazy)", "a:b", "two-way") )
-#' @export
- 
-nice_names <- function(x, unique=TRUE) {
-	x <- gsub('%>%', '.result.', x)
-	x <- gsub('\\(Intercept\\)','Intercept', x)
-	x <- gsub('resample\\(([^\\)]*)\\)','\\1', x)
-	x <- gsub('sample\\(([^\\)]*)\\)','\\1', x)
-	x <- gsub('shuffle\\(([^\\)]*)\\)','\\1', x)
-	x <- gsub('sample\\(','', x)
-	x <- gsub('shuffle\\(','', x)
-	x <- gsub('resample\\(','', x)
-#	x <- gsub('\\(','.', x)
-#	x <- gsub('-','.', x)
-#	x <- gsub(':','.', x)
-#	x <- gsub('\\)','', x)
-#	x <- gsub(' ','.', x)
-#	x <- gsub('^([0-9])','X\\1', x)
-	return(make.names(x, unique = unique))
-}
-
 
 
 null2na <- function(x) if (is.null(x)) NA else x
 
 #' Repeater objects
 #'
-#' Repeater objects can be used with the \code{*} operator to repeat
+#' Repeater objects can be used with the `*` operator to repeat
 #' things multiple time using a different syntax and different output
-#' format from that used by, for example, \code{\link{replicate}}.
+#' format from that used by, for example, [replicate()].
 #'
 #' @rdname repeater-class
 #' @name repeater-class
-#' @seealso \code{\link{do}}
+#' @seealso [do()]
 #' @section Slots:
 #' \describe{
-#'   \item{\code{n}:}{Object of class \code{"numeric"} indicating how many times to repeat something.}
-#'   \item{\code{cull}:}{Object of class \code{"function"} that culls the ouput from each repetition.}
-#'   \item{\code{mode}:}{Object of class \code{"character"} indicating the output mode 
+#'   \item{`n`:}{Object of class `"numeric"` indicating how many times to repeat something.}
+#'   \item{`cull`:}{Object of class `"function"` that culls the ouput from each repetition.}
+#'   \item{`mode`:}{Object of class `"character"` indicating the output mode 
 #'   ('default', 'data.frame', 'matrix', 'vector', or 'list').  For most purposes 'default' (the default)
 #'   should suffice.}
-#'   \item{\code{algorithm}:}{an algorithm number.}
-#'   \item{\code{parallel}:}{a logical indicating whether to attempt parallel execution.}
+#'   \item{`algorithm`:}{an algorithm number.}
+#'   \item{`parallel`:}{a logical indicating whether to attempt parallel execution.}
 #' }
 #' @exportClass repeater
 
@@ -209,7 +181,7 @@ if(FALSE) {
 
 #' @rdname mosaic-internal
 #' @keywords internal
-#' @details \code{.merge_data_frames} is a wrapper around merge
+#' @details `.merge_data_frames` is a wrapper around merge
 #'
 #' @param a a data frame
 #' @param b a data frame
@@ -232,7 +204,7 @@ if(FALSE) {
 #' @rdname mosaic-internal
 #' @keywords internal
 #' @details 
-#' \code{.squash_names} squashes names of a data frame into a single string
+#' `.squash_names` squashes names of a data frame into a single string
 #'
 #' @param object an object
 #' @param sep a character
@@ -254,7 +226,7 @@ if(FALSE) {
 
 
 #' @rdname do
-#' @param x an object created by \code{do}.
+#' @param x an object created by `do`.
 #' @export
 print.repeater <- function(x, ...) 
     {
@@ -298,52 +270,25 @@ print.repeater <- function(x, ...)
   return( l )
 }
 
-#' Convert a vector to a data frame
-#' 
-#' Convert a vector into a 1-raw data frame using the names of the vector as
-#' column names for the data frame
-#' 
-#' @param x a vector
-#' @param nice_names a logical indicating whether names should be nicified
-#' @return a data frame
-#' @export
-#' @examples
-#' vector2df(c(1, b = 2, `(Intercept)` = 3))
-#' vector2df(c(1, b = 2, `(Intercept)` = 3), nice_names = TRUE)
-#' 
-vector2df <- function(x, nice_names = FALSE) {
-  if (!is.vector(x)) {
-    stop("x is not a vector")
-    return(x)
-  }
-  nn <- names(x)
-  if (is.null(nn)) { nn <- list() }
-  result <- data.frame(t(matrix(x, dimnames = list(nn, list()))), check.names = FALSE)
-  if (nice_names) {
-    names(result) <- nice_names(names(result))
-  }
-  result
-}
-  
 #' Cull objects used with do()
 #' 
-#' The \code{\link{do}} function facilitates easy repliaction for
+#' The [do()] function facilitates easy repliaction for
 #' randomization tests and bootstrapping (among other things).  Part of what
 #' makes this particularly useful is the ability to cull from the objects
 #' produced those elements that are useful for subsequent analysis. 
-#' \code{cull_for_do} does this culling.  It is generic, and users
+#' `cull_for_do` does this culling.  It is generic, and users
 #' can add new methods to either change behavoir or to hanlde additional
 #' classes of objects.
 #' 
 #' @param object an object to be culled
 #' @param ... additional arguments (currently ignored)
 #' 
-#' @details When \code{do(n) * expression} is evaluated, \code{expression}
-#' is evaluated \code{n} times to produce a list of \code{n} result objects.
-#' \code{cull_for_do} is then applied to each element of this list to 
+#' @details When `do(n) * expression` is evaluated, `expression`
+#' is evaluated `n` times to produce a list of `n` result objects.
+#' `cull_for_do` is then applied to each element of this list to 
 #' extract from it the information that should be stored.  For example,
-#' when applied to a object of class \code{"lm"},
-#' the default \code{cull_for_do} extracts the coefficients, coefficient
+#' when applied to a object of class `"lm"`,
+#' the default `cull_for_do` extracts the coefficients, coefficient
 #' of determinism, an the estimate for the variance, etc.
 #' 
 #' @export 
@@ -429,7 +374,7 @@ cull_for_do.aggregated.stat <- function(object, ...) {
 #' @export 
 cull_for_do.lme <- function(object, ...) {
   result <- object
-  names(result) <- nice_names(names(result))
+  names(result) <- mosaicCore::nice_names(names(result))
   return( object$coef$fixed )
 }
 
@@ -451,7 +396,7 @@ cull_for_do.lm <- function(object, ...) {
                  r.squared = sobject$r.squared
     )
   }
-  vector2df(result, nice_names = TRUE)
+  mosaicCore::vector2df(result, nice_names = TRUE)
 }
 
 #  @export 
@@ -599,9 +544,9 @@ setMethod(
         tail(as.character(rhs(e2_lazy)[[1]]), 1),
         error = function(e) "result"
       )
-      names(result) <- nice_names(names(result))
+      names(result) <- mosaicCore::nice_names(names(result))
       names(result)[names(result) == "..result.."] <- 
-        if(nice_names(alt_name) == alt_name) alt_name else "result"
+        if(mosaicCore::nice_names(alt_name) == alt_name) alt_name else "result"
     }
     attr(result, "lazy") <- e2_lazy
     if (out.mode == "data.frame") attr(result, "culler") <- cull

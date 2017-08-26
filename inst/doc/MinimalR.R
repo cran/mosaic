@@ -1,8 +1,9 @@
 ## ----setup,echo=FALSE,message=FALSE,include=FALSE------------------------
 #source('setup.R')
-require(mosaic)
-require(mosaicData)
-require(parallel)
+library(mosaic)
+library(mosaicData)
+library(parallel)
+library(knitr)
 options(digits=4)
 trellis.par.set(theme=col.mosaic())
 set.seed(123)
@@ -14,7 +15,7 @@ set.seed(123)
 #	h = gsub('(["\'])', '\\1{}', h)
 #	gsub('^\\\\begin\\{alltt\\}\\s*|\\\\end\\{alltt\\}\\s*$', '', h)
 #})
-opts_chunk$set(
+knitr::opts_chunk$set(
 	dev="pdf",
 	eval=FALSE,
 	tidy=FALSE,
@@ -152,7 +153,7 @@ opts_chunk$set(
 #  inner_join()  # dplyr
 
 ## ----more-hooks,eval=TRUE,echo=FALSE-------------------------------------
-opts_chunk$set(
+knitr::opts_chunk$set(
 	eval=TRUE, 
   size='small',
 	fig.width=4,
