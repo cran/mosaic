@@ -5,7 +5,7 @@
 #' 
 #' Utility function wrapping up the d/p/q/r distribution functions
 #' 
-#' @param dist a character discription of a distribution, for example 
+#' @param dist a character description of a distribution, for example 
 #'   `"norm"`, `"t"`, or `"chisq"`
 #' @param type one of `"x"`, `"p"`, `"q"`, or `"r"`
 #' @param ... additional arguments passed on to underlying distribution function.
@@ -33,7 +33,7 @@ dpqrdist <- function( dist, type = c("d","p","q","r"), ... ) {
 #' 
 #' Illustrated probability calculations from distributions
 #' 
-#' @param dist a character discription of a distribution, for example 
+#' @param dist a character description of a distribution, for example 
 #'   `"norm"`, `"t"`, or `"chisq"`
 #' @param q a vector of quantiles
 #' @param plot a logical indicating whether a plot should be created
@@ -46,7 +46,7 @@ dpqrdist <- function( dist, type = c("d","p","q","r"), ... ) {
 # #' @param vcol color of vertical lines
 # #' @param rot angle for rotating text indicating probability
 #' @param resolution Number of points used for detecting discreteness and generating plots.  
-#'        The defaut value of 5000 should work well except for discrete distributions
+#'        The default value of 5000 should work well except for discrete distributions
 #'        that have many distinct values, especially if these values are not evenly spaced.
 #' @param ... Additional arguments, including parameters of the distribution
 #' and additional options for the plot
@@ -120,7 +120,7 @@ pdist <- function (dist = "norm", q, plot = TRUE, verbose = FALSE, invisible = F
 #' 
 #' Illustrated quantile calculations from distributions
 #' 
-#' @param dist a character discription of a distribution, for example 
+#' @param dist a character description of a distribution, for example 
 #'   `"norm"`, `"t"`, or `"chisq"`
 #' @param p a vector of probabilities
 #' @param plot a logical indicating whether a plot should be created
@@ -134,7 +134,7 @@ pdist <- function (dist = "norm", q, plot = TRUE, verbose = FALSE, invisible = F
 # #' @param vcol color of vertical lines
 # #' @param rot angle for rotating text indicating probability
 #' @param resolution number of points used for detecting discreteness and generating plots.  
-#'   The defaut value of 5000 should work well except for discrete distributions
+#'   The default value of 5000 should work well except for discrete distributions
 #'   that have many distinct values, especially if these values are not evenly spaced.
 #' @param ... additional arguments, including parameters of the distribution
 #'   and additional options for the plot
@@ -214,6 +214,7 @@ qdist <- function (dist = "norm", p, plot = TRUE, verbose = FALSE, invisible = F
 
 plot_multi_dist <- 
   function(dist, p, q, xlim, ylim, digits = 3L, resolution = 500L,
+           lower.tail = TRUE,
            dlwd = 0, 
            # vlwd = if (discrete) 0 else 2, 
            # vcol = trellis.par.get('add.line')$col, rot = 0, 
@@ -228,13 +229,15 @@ plot_multi_dist <-
   if (missing(p)) {
     if (missing(q)) { stop( "one of p or q must be specified") }
     q <- sort(q)
-    p <- dpqrdist(dist, type = "p", q = q, ...)
+    p <- dpqrdist(dist, type = "p", q = q, lower.tail = lower.tail, ...)
+    p_less <- dpqrdist(dist, type = "p", q = q, lower.tail = TRUE, ...)
   } else {
     if (!missing(q)) {
       warning("Both p and q were specified.  I'm using p")
     }
     p <- sort(p)
-    q <- dpqrdist(dist, type = "q", p = p, ...)
+    q <- sort(dpqrdist(dist, type = "q", p = p, lower.tail = lower.tail, ...))
+    p_less <- dpqrdist(dist, type = "p", q = q, ...)
   }
   
   if (! 'lty' %in% names(latticedots)) { latticedots$lty <- 1 }
@@ -244,8 +247,8 @@ plot_multi_dist <-
     xlim_opts <- dpqrdist(dist, type = "q", p = c(0, 0.001, 0.999, 1), ...)
     dxlim_opts <- diff(xlim_opts)
     xlim <- xlim_opts[2:3]
-    if (dxlim_opts[1] < dxlim_opts[2]){xlim[1] <- xlim_opts[1]}
-    if (dxlim_opts[3] < dxlim_opts[2]){xlim[2] <- xlim_opts[4]}
+    if (dxlim_opts[1] < dxlim_opts[2] && is.finite(dxlim_opts[1])) {xlim[1] <- xlim_opts[1]}
+    if (dxlim_opts[3] < dxlim_opts[2] && is.finite(dxlim_opts[4])) {xlim[2] <- xlim_opts[4]}
   }
   
   if (discrete) {
@@ -271,8 +274,8 @@ plot_multi_dist <-
   }
   
   # this could be funny if limits don't span q
-  p <- c(0, p, 1)
-  q <- dpqrdist(dist, type = "q", p = p, ...) #  c(xlim[1], q, xlim[2])
+  p_less <- sort(unique(c(0, p_less, 1)))
+  q <- dpqrdist(dist, type = "q", p = p_less, ...) #  c(xlim[1], q, xlim[2])
   
   if (discrete) {
     if (is.null(latticedots$pch)) latticedots$pch = 16
@@ -322,9 +325,9 @@ plot_multi_dist <-
 
   if (discrete) { 
     q <- tail(q, -1)
-    labels <- paste(LETTERS[1:(length(p) - 1)], ": ", 
-                        formatC(diff(p), format = "f", digits = digits), sep = "")
-    names(labels) <- LETTERS[1:(length(p) - 1)]
+    labels <- paste(LETTERS[1:(length(p_less) - 1)], ": ", 
+                        formatC(diff(p_less), format = "f", digits = digits), sep = "")
+    names(labels) <- LETTERS[1:(length(p_less) - 1)]
     
     Ddensity <- 
       data_frame(
@@ -343,9 +346,9 @@ plot_multi_dist <-
       labs(x = "")
     
   } else {
-    labels <- paste(LETTERS[1:(length(p) - 1)], ": ", 
-                        formatC(diff(p), format = "f", digits = digits), sep = "")
-    names(labels) <- LETTERS[1:(length(p) - 1)]
+    labels <- paste(LETTERS[1:(length(p_less) - 1)], ": ", 
+                        formatC(diff(p_less), format = "f", digits = digits), sep = "")
+    names(labels) <- LETTERS[1:(length(p_less) - 1)]
     Ddensity <- 
       data_frame(
         x = xdata, density = ydata, 
