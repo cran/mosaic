@@ -10,6 +10,9 @@ MASS::fractions
 
 
 #' @importFrom mosaicCore lhs rhs condition makeFun 
+#' @importFrom mosaicCore counts props prop prop1 perc count tally 
+#' @importFrom mosaicCore dfapply ediff inspect msummary n_missing
+#' @importFrom mosaicCore logit ilogit
 #' @export
 mosaicCore::lhs
 #' @export
@@ -22,3 +25,27 @@ mosaicCore::makeFun
 mosaicCore::counts
 #' @export
 mosaicCore::props
+#' @export
+mosaicCore::prop
+#' @export
+mosaicCore::prop1
+#' @export
+mosaicCore::perc
+#' @export
+mosaicCore::count
+#' @export
+mosaicCore::tally
+#' @export
+mosaicCore::dfapply
+#' @export
+mosaicCore::ediff
+#' @export
+mosaicCore::inspect
+#' @export
+mosaicCore::msummary
+#' @export
+mosaicCore::n_missing
+#' @export
+mosaicCore::logit
+#' @export
+mosaicCore::ilogit

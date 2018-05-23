@@ -39,6 +39,16 @@ densityplot(~ age, data = HELPrct,
             groups = sex,  auto.key = TRUE)
 
 ## ---- message = FALSE----------------------------------------------------
+gf_dhistogram( ~ age, data = HELPrct, 
+               alpha = 0.5) %>%
+  gf_fitdistr(color = "red") %>% # MLE 
+  gf_dens(color = "blue")        # KDE
+
+## ---- message = FALSE----------------------------------------------------
+histogram(~ age, data = HELPrct, 
+          fit = "normal", dcol = "red")
+
+## ---- message = FALSE----------------------------------------------------
 gf_boxplot(age ~ sex, data = HELPrct)
 
 ## ---- message = FALSE----------------------------------------------------

@@ -4,22 +4,25 @@
 \name{reexports}
 \alias{reexports}
 \alias{makeFun}
-\alias{reexports}
 \alias{fitdistr}
-\alias{reexports}
 \alias{fractions}
-\alias{reexports}
 \alias{lhs}
-\alias{reexports}
 \alias{rhs}
-\alias{reexports}
 \alias{condition}
-\alias{reexports}
-\alias{makeFun}
-\alias{reexports}
 \alias{counts}
-\alias{reexports}
 \alias{props}
+\alias{prop}
+\alias{prop1}
+\alias{perc}
+\alias{count}
+\alias{tally}
+\alias{dfapply}
+\alias{ediff}
+\alias{inspect}
+\alias{msummary}
+\alias{n_missing}
+\alias{logit}
+\alias{ilogit}
 \title{Objects exported from other packages}
 \keyword{internal}
 \description{
@@ -29,6 +32,6 @@ below to see their documentation.
 \describe{
   \item{MASS}{\code{\link[MASS]{fitdistr}}, \code{\link[MASS]{fractions}}}
 
-  \item{mosaicCore}{\code{\link[mosaicCore]{makeFun}}, \code{\link[mosaicCore]{lhs}}, \code{\link[mosaicCore]{rhs}}, \code{\link[mosaicCore]{condition}}, \code{\link[mosaicCore]{makeFun}}, \code{\link[mosaicCore]{counts}}, \code{\link[mosaicCore]{props}}}
+  \item{mosaicCore}{\code{\link[mosaicCore]{makeFun}}, \code{\link[mosaicCore]{lhs}}, \code{\link[mosaicCore]{rhs}}, \code{\link[mosaicCore]{condition}}, \code{\link[mosaicCore]{makeFun}}, \code{\link[mosaicCore]{counts}}, \code{\link[mosaicCore]{props}}, \code{\link[mosaicCore]{prop}}, \code{\link[mosaicCore]{prop1}}, \code{\link[mosaicCore]{perc}}, \code{\link[mosaicCore]{count}}, \code{\link[mosaicCore]{tally}}, \code{\link[mosaicCore]{dfapply}}, \code{\link[mosaicCore]{ediff}}, \code{\link[mosaicCore]{inspect}}, \code{\link[mosaicCore]{msummary}}, \code{\link[mosaicCore]{n_missing}}, \code{\link[mosaicCore]{logit}}, \code{\link[mosaicCore]{ilogit}}}
 }}
 

@@ -524,7 +524,12 @@ SAD_ <- function(x, ..., na.rm = getOption("na.omit", FALSE)) {
 
 #' All pairs mean and sum of absolute differences
 #' 
-#' All pairs mean and sum of absolute differences
+#' The functions compute the sum or mean of all pairwise absolute 
+#' differences.  This differs from [stats::mad()], which computes
+#' the median absolute difference of each value from the median of 
+#' all the values.  See the `ISIwithR` package (and the textbook it
+#' accompanies) for examples using these functions in the context of 
+#' simulation-based inference.
 #' 
 #' @param x a numeric vector or a formula.  
 #' @param ... additional arguments passed through to `MAD_` 
@@ -542,7 +547,7 @@ SAD_ <- function(x, ..., na.rm = getOption("na.omit", FALSE)) {
 #'   -- ideally supplying a data frame that contains the variables mentioned.
 #' @return the mean or sum of the absolute differences between each pair
 #'   of values in `c(x,...)`.
-#' @seealso \code{link{mad}}, [MAD_()]
+#' @seealso [mad()], [MAD_()]
 #' @rdname MAD
 #' @export
 #' @examples
