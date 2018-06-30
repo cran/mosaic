@@ -213,12 +213,12 @@ gf_point(Sepal.Length ~ Sepal.Width,
 ## ----fig.keep="last", tidy=FALSE, fig.height=2.3----
 model <- 
   lm(length ~ width + sex, data = KidsFeet)
-l <- makeFun(model)
-l(width = 8.25, sex = "B")
+l.hat <- makeFun(model)
+l.hat(width = 8.25, sex = "B")
 gf_point(length ~ width, data = KidsFeet,
          color = ~ sex) %>%
-  gf_fun(l(w, sex = "B") ~ w, color = ~"B") %>%
-  gf_fun(l(w, sex = "G") ~ w, color = ~"G")
+  gf_fun(l.hat(w, sex = "B") ~ w, color = ~"B") %>%
+  gf_fun(l.hat(w, sex = "G") ~ w, color = ~"G")
 
 ## ----fig.height=1.75------------------
 gf_dist("chisq", df=4)

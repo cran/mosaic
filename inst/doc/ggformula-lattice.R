@@ -41,8 +41,9 @@ densityplot(~ age, data = HELPrct,
 ## ---- message = FALSE----------------------------------------------------
 gf_dhistogram( ~ age, data = HELPrct, 
                alpha = 0.5) %>%
-  gf_fitdistr(color = "red") %>% # MLE 
-  gf_dens(color = "blue")        # KDE
+  gf_fitdistr(color = "red",
+              dist = dnorm) %>% # MLE 
+  gf_dens(color = "blue")       # KDE
 
 ## ---- message = FALSE----------------------------------------------------
 histogram(~ age, data = HELPrct, 
@@ -82,14 +83,14 @@ xyplot(cesd ~ age,  data = HELPrct,
 ## ---- message = FALSE----------------------------------------------------
 gf_point(cesd ~ age | sex, 
          data = HELPrct) %>%
-  gf_smooth()
+  gf_smooth(se = FALSE)
 
 ## ------------------------------------------------------------------------
 gf_point(cesd ~ age, data = HELPrct,
          color = ~ sex) %>%
   gf_lm() %>% 
   gf_theme(legend.position = "top") %>% 
-  gf_labs(title = "This is my plot", 
+  gf_labs(title = "This is my ggformula plot", 
     x = "age (in years)", 
     y = "CES-D measure of
 depressive symptoms")
@@ -103,9 +104,16 @@ xyplot(cesd ~ age | sex,  data = HELPrct,
 xyplot(cesd ~ age, groups = sex, 
        type = c("p", "r"), 
        auto.key = TRUE, 
-       main = "This is my plot", 
+       main = "This is my lattice plot", 
        xlab = "age (in years)", 
        ylab = "CES-D measure of
 depressive symptoms",
        data = HELPrct)
+
+## ------------------------------------------------------------------------
+gf_point(cesd ~ age, data = HELPrct) %>%
+  gf_refine(scale_x_reverse())
+
+## ------------------------------------------------------------------------
+xyplot(cesd ~ -age, data = HELPrct)
 

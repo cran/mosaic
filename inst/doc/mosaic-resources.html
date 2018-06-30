@@ -9,9 +9,9 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="author" content="Randall Pruim, Daniel T. Kaplan, Nicholas J. Horton" />
+<meta name="author" content="Randall Pruim, Daniel T. Kaplan, and Nicholas J. Horton" />
 
-<meta name="date" content="2018-05-23" />
+<meta name="date" content="2018-06-26" />
 
 <title>Resources Related to the mosaic Package</title>
 
@@ -92,6 +92,9 @@ img {
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
 }
@@ -120,8 +123,8 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">Resources Related to the mosaic Package</h1>
-<h4 class="author"><em>Randall Pruim, Daniel T. Kaplan, Nicholas J. Horton</em></h4>
-<h4 class="date"><em>2018-05-23</em></h4>
+<h4 class="author"><em>Randall Pruim, Daniel T. Kaplan, and Nicholas J. Horton</em></h4>
+<h4 class="date"><em>2018-06-26</em></h4>
 
 </div>
 
@@ -167,9 +170,10 @@ $(document).ready(function () {
 <ul>
 <li><a href="http://www.mosaic-web.org/StatisticalModeling">www.mosaic-web.org/StatisticalModeling</a></li>
 </ul></li>
-<li><p><em>Foundations and Applications of Statistics: An Introduction Using R</em> (R Pruim) is an R-infused probability and mathematical statistics text that emphasizes connections between probability and statistics. The book predates the <code>mosaic</code> package, but much of the code originally in the <code>fastR</code> package has been moved into the <code>mosaic</code> package.</p>
+<li><em>Foundations and Applications of Statistics: An Introduction Using R</em> (R Pruim, second edition) is an R-infused probability and mathematical statistics text that emphasizes connections between probability and statistics. The first edition of the book predates the <code>mosaic</code> package, but much of the code originally in the <code>fastR</code> package has been moved into the <code>mosaic</code> package. The second edition is supported by the <code>fastR2</code> package and uses <code>ggformula</code> for plotting.
 <ul>
-<li><a href="http://www.ams.org/publications/authors/books/postpub/amstext-13">www.ams.org/publications/authors/books/postpub/amstext-13</a></li>
+<li><a href="https://bookstore.ams.org/amstext-28" class="uri">https://bookstore.ams.org/amstext-28</a></li>
+<li><a href="http://www.ams.org/publications/authors/books/postpub/amstext-28">www.ams.org/publications/authors/books/postpub/amstext-28</a></li>
 </ul></li>
 <li><p><em>Modern Data Science with R</em> (BS Baumer, DT Kaplan, and NJ Horton) is an R-infused data science text that emphasizes conceptual understanding and computation.</p>
 <ul>
@@ -179,9 +183,10 @@ $(document).ready(function () {
 <ul>
 <li><a href="http://nhorton.people.amherst.edu/sleuth">nhorton.people.amherst.edu/sleuth</a></li>
 </ul></li>
-<li><p><em>Introduction to the Practice of Statistics in R</em> (NJ Horton and BS Baumer) describes how to undertake analyses in R that are introduced as examples in the first chapters of the Sixth Edition of <em>Introduction to the Practice of Statistics</em> (2007), by David Moore, George McCabe, and Bruce Craig.</p>
+<li><p><em>Introduction to the Practice of Statistics in R</em> (NJ Horton and BS Baumer) describes how to undertake analyses in R that are introduced as examples in <em>Introduction to the Practice of Statistics</em>, by David Moore, George McCabe, and Bruce Craig.</p>
 <ul>
-<li><a href="http://nhorton.people.amherst.edu/ips6e">nhorton.people.amherst.edu/ips6e</a></li>
+<li><a href="http://nhorton.people.amherst.edu/ips9">9th edition: nhorton.people.amherst.edu/ips9</a></li>
+<li><a href="http://nhorton.people.amherst.edu/ips6e">6th edition: nhorton.people.amherst.edu/ips6e</a></li>
 </ul></li>
 <li><p><em>Statistics: Unlocking the Power of Data</em> (Lock, Lock, Lock, Lock, and Lock) is an introductory statistics textbook that embraces a resampling approach.</p>
 <p>An annotated companion to the examples in the book implemented using R can be found at</p>
@@ -196,9 +201,10 @@ $(document).ready(function () {
 <ul>
 <li><a href="http://nhorton.people.amherst.edu/sdm4">nhorton.people.amherst.edu/sdm4</a></li>
 </ul></li>
-<li><p><em>Intro Stats</em> (P Frenett and NJ Horton) describes how to undertake analyses in R for the examples in the Fourth Edition of the <em>Intro Stats</em> (2013), by Dick De Veaux, Paul Velleman, and Dave Bock.</p>
+<li><p><em>Intro Stats</em> (P Frenett and NJ Horton) describes how to undertake analyses in R for the examples in the Fourth and Fifth Editions of <em>Intro Stats</em> (2013), by Dick De Veaux, Paul Velleman, and Dave Bock.</p>
 <ul>
-<li><a href="http://nhorton.people.amherst.edu/is4">nhorton.people.amherst.edu/is4</a></li>
+<li><a href="http://nhorton.people.amherst.edu/is5">5th edition: nhorton.people.amherst.edu/is5</a></li>
+<li><a href="http://nhorton.people.amherst.edu/is4">4th edition: nhorton.people.amherst.edu/is4</a></li>
 </ul></li>
 <li><p><em>Introduction to Statistical Investigations</em> (Tintle <em>et al</em>) is another introductory statistics textbook that embraces a resampling approach.</p>
 <p>An annotated companion to the examples in the book implemented using R can be found at</p>
@@ -211,7 +217,7 @@ $(document).ready(function () {
 </ul></li>
 <li><p><a href="https://www.openintro.org/stat/labs.php">Open Intro Stats</a></p>
 <p>OpenIntro Stats now has versions of their labs designed for use with the <code>mosaic</code> package.<br />
-The <code>mosaic</code> labs were adapted by Ben Baumer and Galen Long of Smith College.</p></li>
+The <code>mosaic</code> labs were adapted by Ben Baumer and Galen Long of Smith College and updated to <code>ggformula</code> by Bonnie Lin and Nicholas Horton of Amherst College.</p></li>
 </ul>
 </div>
 <div id="articles" class="section level2">
