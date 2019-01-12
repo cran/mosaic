@@ -31,18 +31,18 @@ gf_dens(~ age, data = HELPrct)
 gf_dens(~ age, data = HELPrct,
         color = ~ sex)
 
+## ---- dens-hist-gg, message = FALSE--------------------------------------
+gf_dhistogram( ~ age, data = HELPrct, 
+               alpha = 0.5) %>%
+  gf_fitdistr(color = ~"MLE", dist = "dnorm") %>% 
+  gf_dens(color = ~"KDE")   
+
 ## ---- dens-lattice, message = FALSE--------------------------------------
 densityplot(~ age, data = HELPrct)
 
 ## ---- dens2-lattice------------------------------------------------------
 densityplot(~ age, data = HELPrct,
             groups = sex,  auto.key = TRUE)
-
-## ---- dens-hist-gg, message = FALSE--------------------------------------
-gf_dhistogram( ~ age, data = HELPrct, 
-               alpha = 0.5) %>%
-  gf_fitdistr(color = ~"MLE", dist = "dnorm") %>% 
-  gf_dens(color = ~"KDE")   
 
 ## ---- dens-hist-lattice, message = FALSE---------------------------------
 histogram(~ age, data = HELPrct, 
@@ -55,12 +55,18 @@ gf_boxplot(age ~ sex, data = HELPrct)
 gf_boxplot(age ~ sex | homeless, 
   data = HELPrct)
 
+## ---- boxploth-gg, message = FALSE---------------------------------------
+gf_boxploth(sex ~ age, data = HELPrct)
+
 ## ---- boxplot-lattice, message = FALSE-----------------------------------
 bwplot(age ~ sex, data = HELPrct)
 
 ## ---- boxplot-facet-lattice, message = FALSE-----------------------------
 bwplot(age ~ sex | homeless, 
        data = HELPrct)
+
+## ---- boxploth-lattice, message = FALSE----------------------------------
+bwplot(sex ~ age, data = HELPrct)
 
 ## ---- scatter-gg, message = FALSE----------------------------------------
 gf_point(cesd ~ age, data = HELPrct)
@@ -89,9 +95,11 @@ gf_point(cesd ~ age, data = HELPrct,
          color = ~ sex) %>%
   gf_lm() %>% 
   gf_theme(legend.position = "top") %>% 
-  gf_labs(title = "This is my ggformula plot", 
-    x = "age (in years)", 
-    y = "CES-D measure of \ndepressive symptoms")
+  gf_labs(
+    title = "This is my ggformula plot", 
+    x     = "age (in years)", 
+    y     = "CES-D measure of
+depressive symptoms")
 
 ## ---- scatter3-lattice, message = FALSE----------------------------------
 xyplot(cesd ~ age | sex,  data = HELPrct,
@@ -104,7 +112,8 @@ xyplot(cesd ~ age, groups = sex,
        auto.key = TRUE, 
        main = "This is my lattice plot", 
        xlab = "age (in years)", 
-       ylab = "CES-D measure of \ndepressive symptoms",
+       ylab = "CES-D measure of
+depressive symptoms",
        data = HELPrct)
 
 ## ----log-scales-gg-------------------------------------------------------
@@ -112,24 +121,31 @@ gf_point(cesd ~ age, data = HELPrct) %>%
   gf_refine(scale_y_log10()) 
 
 ## ----refine-gg-----------------------------------------------------------
-gf_dens( ~ cesd, color = ~ sex, data = HELPrct) %>%
-  gf_rug(0 ~ cesd, 
-         position = position_jitter(height = 0)) %>%
+gf_dens(
+  ~ cesd, data = HELPrct, 
+  color = ~ sex) %>%
+  gf_rug(
+    0 ~ cesd, 
+    position = position_jitter(height = 0)
+  ) %>%
   gf_refine(
-    scale_color_manual(values = c("navy", "red"))) 
+    scale_color_manual(
+      values = c("navy", "red"))) 
 
 ## ---- log-scales-lattice-------------------------------------------------
-xyplot(cesd ~ age, data = HELPrct,
-       scales = list(y = list(log = TRUE)))
+xyplot(
+  cesd ~ age, data = HELPrct,
+  scales = list(y = list(log = TRUE)))
 
 ## ---- refine-lattice-----------------------------------------------------
-densityplot( ~ cesd, groups = sex, data = HELPrct, 
-             rug = FALSE,
-             par.settings = 
-               list(
-                 superpose.line = 
-                   list(col = c("navy", "red")),
-                 superpose.symbol = 
-                   list(col = c("navy", "red"))
-               )) 
+densityplot( 
+  ~ cesd, data = HELPrct, groups = sex,
+  rug = FALSE,
+  par.settings = 
+    list(
+      superpose.line = 
+        list(col = c("navy", "red")),
+      superpose.symbol = 
+        list(col = c("navy", "red"))
+    )) 
 

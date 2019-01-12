@@ -25,7 +25,7 @@ dpqrdist <- function( dist, type = c("d","p","q","r"), ... ) {
   dots <- list(...)
   distFunName <- paste0(type, dist)
   dist_dots <- dots[names(dots) %in% names(formals(distFunName))]
-
+  
   do.call(distFunName, dist_dots)
 }
 
@@ -48,8 +48,7 @@ dpqrdist <- function( dist, type = c("d","p","q","r"), ... ) {
 #' @param resolution Number of points used for detecting discreteness and generating plots.  
 #'        The default value of 5000 should work well except for discrete distributions
 #'        that have many distinct values, especially if these values are not evenly spaced.
-#' @param ... Additional arguments, including parameters of the distribution
-#' and additional options for the plot
+#' @param ... Additional arguments, typically for fine tuning the plot.
 #' @param return If `"plot"`, return a plot.  If `"values"`, return a vector of numerical values.
 #' @param refinements A list of refinements to the plot.  See [ggformula::gf_refine()].
 #' @details The most general function is `pdist` which can work with 
@@ -63,7 +62,7 @@ dpqrdist <- function( dist, type = c("d","p","q","r"), ... ) {
 #' pdist("f", 1, df1 = 2, df2 = 10)
 #' pdist("gamma", 2, shape = 3, rate = 4)
 #' @export
- 
+
 pdist <- function (dist = "norm", q, plot = TRUE, verbose = FALSE, invisible = FALSE, 
                    digits = 3L, 
                    xlim, ylim,
@@ -72,7 +71,7 @@ pdist <- function (dist = "norm", q, plot = TRUE, verbose = FALSE, invisible = F
                    ...,
                    refinements = list())
 {
- 
+  
   return <- match.arg(return)
   
   dots <- list(...)
@@ -86,7 +85,7 @@ pdist <- function (dist = "norm", q, plot = TRUE, verbose = FALSE, invisible = F
   if (verbose) {
     cat("Verbose output not yet implemented.\n")
   }
- 
+  
   res_plot <-
     do.call(
       gf_refine,
@@ -99,7 +98,7 @@ pdist <- function (dist = "norm", q, plot = TRUE, verbose = FALSE, invisible = F
           ...)),
         refinements)
     )
-    
+  
   if (return == "plot") {
     return(res_plot)
   }
@@ -137,7 +136,7 @@ pdist <- function (dist = "norm", q, plot = TRUE, verbose = FALSE, invisible = F
 #'   and additional options for the plot.  To help with name collisions (eg `size` for binomial 
 #'   distributions and `shape` for gamma distributions), argument names beginning `plot_` will
 #'   be renamed to remove `plot_` and passed only to the plot.  The unprefixed version will 
-#'   used as a paramter for the the distribution.
+#'   used as a parameter for the the distribution.
 #' @param return If `"plot"`, return a plot.  If `"values"`, return a vector of numerical values.
 #' @details The most general function is `qdist` which can work with 
 #' any distribution for which a q-function exists.  As a convenience, wrappers are 
@@ -171,7 +170,7 @@ qdist <- function (dist = "norm", p, plot = TRUE, verbose = FALSE, invisible = F
                    return = c("values", "plot"),
                    refinements = list(),
                    ...
-                   )
+)
 {
   return = match.arg(return)
   dots <- list(...)
@@ -186,7 +185,7 @@ qdist <- function (dist = "norm", p, plot = TRUE, verbose = FALSE, invisible = F
   if (verbose) {
     cat("Verbose output not yet implemented.\n")
   }
- 
+  
   res_plot <-  
     do.call(
       ggformula::gf_refine,
@@ -199,9 +198,9 @@ qdist <- function (dist = "norm", p, plot = TRUE, verbose = FALSE, invisible = F
           ...)
       ), refinements)
     )
-      
+  
   if (return == "plot") return (res_plot)
-
+  
   if (plot) {
     print(res_plot)
   }
@@ -220,122 +219,122 @@ plot_multi_dist <-
            dlwd = 0, 
            pattern = c("stripes", "rings"),
            ...) 
-{
-  dots <- list(...)
-  pattern <- match.arg(pattern)
-  
-  plot_dots <- dots[ ! names(dots) %in% names(formals(paste0("p",dist))) ]
-  dist_dots <- dots[   names(dots) %in% names(formals(paste0("p",dist))) ]
-  
-  discrete <- do.call(is_discrete_dist, c(list(dist), dist_dots))
-  
-  if (missing(p)) {
-    if (missing(q)) { stop( "one of p or q must be specified") }
-    q <- sort(q)
-    p <- dpqrdist(dist, type = "p", q = q, lower.tail = lower.tail, ...)
-    p_less <- dpqrdist(dist, type = "p", q = q, lower.tail = TRUE, ...)
-  } else {
-    if (!missing(q)) {
-      warning("Both p and q were specified.  I'm using p")
+  {
+    dots <- list(...)
+    pattern <- match.arg(pattern)
+    
+    plot_dots <- dots[ ! names(dots) %in% names(formals(paste0("p",dist))) ]
+    dist_dots <- dots[   names(dots) %in% names(formals(paste0("p",dist))) ]
+    
+    discrete <- do.call(is_discrete_dist, c(list(dist), dist_dots))
+    
+    if (missing(p)) {
+      if (missing(q)) { stop( "one of p or q must be specified") }
+      q <- sort(q)
+      p <- dpqrdist(dist, type = "p", q = q, lower.tail = lower.tail, ...)
+      p_less <- dpqrdist(dist, type = "p", q = q, lower.tail = TRUE, ...)
+    } else {
+      if (!missing(q)) {
+        warning("Both p and q were specified.  I'm using p")
+      }
+      p <- sort(p)
+      q <- sort(dpqrdist(dist, type = "q", p = p, lower.tail = lower.tail, ...))
+      p_less <- dpqrdist(dist, type = "p", q = q, ...)
     }
-    p <- sort(p)
-    q <- sort(dpqrdist(dist, type = "q", p = p, lower.tail = lower.tail, ...))
-    p_less <- dpqrdist(dist, type = "p", q = q, ...)
-  }
- 
-  names(plot_dots) <- gsub("plot_", "", names(plot_dots)) 
-  if ('lty' %in% names(plot_dots)) { plot_dots$linetype <- plot_dots$lty; plot_dots$lty <- NULL }
-  if ('pch' %in% names(plot_dots)) { plot_dots$shape <- plot_dots$pch;    plot_dots$pch <- NULL }
-  if ('cex' %in% names(plot_dots)) { plot_dots$size <- plot_dots$cex;     plot_dots$cex <- NULL }
-  
-  if (! 'xlab' %in% names(plot_dots)) { plot_dots$xlab <- "" }
-  
-  if (missing(xlim) || is.null(xlim)) {
-    xlim_opts <- dpqrdist(dist, type = "q", p = c(0, 0.001, 0.999, 1), ...)
-    dxlim_opts <- diff(xlim_opts)
-    xlim <- xlim_opts[2:3]
-    if (dxlim_opts[1] < dxlim_opts[2] && is.finite(dxlim_opts[1])) {xlim[1] <- xlim_opts[1]}
-    if (dxlim_opts[3] < dxlim_opts[2] && is.finite(dxlim_opts[4])) {xlim[2] <- xlim_opts[4]}
-  }
-  
-  if (discrete) {
-    xdata <- unique(dpqrdist(dist, type = "q", p = ppoints(resolution), ...))
-    step = min(diff(xdata))
-    xlim = c(-step/2, step/2) + xlim  # widen by half step in each direction
-    fill <- seq( min(xdata) -1.5 * step , max(xdata) + 1.5*step, length.out = resolution)
-    xdata <- c(xdata, fill) 
-    xdata <- dpqrdist(dist, type = "q", p = dpqrdist(dist, type = "p", q = xdata, ...), ...)
-    xdata <- sort(unique(xdata))
-  } else {
-    xdata <- seq(xlim[1], xlim[2], length.out = resolution)
-    xdata <- dpqrdist(dist, type = "q", p = dpqrdist(dist, type = "p", q = xdata, ...), ...)
-    xdata <- sort(unique(xdata))
-  }
- 
-  # not a fix: xdata <- sort(xdata) 
-  ydata <- dpqrdist(dist, type = "d", x = xdata, ...)
-  ymax <- 1.1 * quantile(ydata, 0.95, na.rm = TRUE)
-  if (missing(ylim)) {
-    ylim = c(0, 1.4 * ymax)  # quantile(ydata, 0.95, na.rm = TRUE))
-    # print(ylim)
-  }
-  
-  # this could be funny if limits don't span q
-  p_less <- sort(unique(c(0, p_less, 1)))
-  q <- dpqrdist(dist, type = "q", p = p_less, ...) #  c(xlim[1], q, xlim[2])
-  
-  # if (discrete) {
-  #   if (is.null(plot_dots$pch)) plot_dots$pch = 16
-  # }
-  
- 
-  
-  # args <- c(
-  #   list(
-  #     ydata ~ xdata, 
-  #     xlim = xlim, ylim = ylim, 
-  #     xlab = "", 
-  #     ylab = if (discrete) "probability" else "density" 
-  #   ),
-  #   plot_dots
-  # )
-  # 
-  # res_plot <- do.call("xyplot", args)
-  
-  Groups <- 
-    data_frame(p = diff(p_less)) %>%
-    mutate(
-      i = 1 : n(),
-      name = if (pattern == "stripes") LETTERS[i] else LETTERS[ceiling(1 + abs(i - mean(i)))]
-    ) %>% 
-    group_by(name) %>%
-    mutate(
-      p_all = sum(p),
-      label = paste(first(name), ":", formatC(p_all, format = "f", digits = digits), sep = "")
-    )
-  
-  if (discrete) { 
-    # q <- tail(q, -1)
-    Ddensity <- 
-      data_frame(
-        x = xdata, density = ydata, 
-        group = sapply(xdata, function(x) {sum(x > q, na.rm = TRUE)})
-      ) %>%
+    
+    names(plot_dots) <- gsub("plot_", "", names(plot_dots)) 
+    if ('lty' %in% names(plot_dots)) { plot_dots$linetype <- plot_dots$lty; plot_dots$lty <- NULL }
+    if ('pch' %in% names(plot_dots)) { plot_dots$shape <- plot_dots$pch;    plot_dots$pch <- NULL }
+    if ('cex' %in% names(plot_dots)) { plot_dots$size <- plot_dots$cex;     plot_dots$cex <- NULL }
+    
+    if (! 'xlab' %in% names(plot_dots)) { plot_dots$xlab <- "" }
+    
+    if (missing(xlim) || is.null(xlim)) {
+      xlim_opts <- dpqrdist(dist, type = "q", p = c(0, 0.001, 0.999, 1), ...)
+      dxlim_opts <- diff(xlim_opts)
+      xlim <- xlim_opts[2:3]
+      if (dxlim_opts[1] < dxlim_opts[2] && is.finite(dxlim_opts[1])) {xlim[1] <- xlim_opts[1]}
+      if (dxlim_opts[3] < dxlim_opts[2] && is.finite(dxlim_opts[4])) {xlim[2] <- xlim_opts[4]}
+    }
+    
+    if (discrete) {
+      xdata <- unique(dpqrdist(dist, type = "q", p = ppoints(resolution), ...))
+      step = min(diff(xdata))
+      xlim = c(-step/2, step/2) + xlim  # widen by half step in each direction
+      fill <- seq( min(xdata) -1.5 * step , max(xdata) + 1.5*step, length.out = resolution)
+      xdata <- c(xdata, fill) 
+      xdata <- dpqrdist(dist, type = "q", p = dpqrdist(dist, type = "p", q = xdata, ...), ...)
+      xdata <- sort(unique(xdata))
+    } else {
+      xdata <- seq(xlim[1], xlim[2], length.out = resolution)
+      xdata <- dpqrdist(dist, type = "q", p = dpqrdist(dist, type = "p", q = xdata, ...), ...)
+      xdata <- sort(unique(xdata))
+    }
+    
+    # not a fix: xdata <- sort(xdata) 
+    ydata <- dpqrdist(dist, type = "d", x = xdata, ...)
+    ymax <- 1.1 * quantile(ydata, 0.95, na.rm = TRUE)
+    if (missing(ylim)) {
+      ylim = c(0, 1.4 * ymax)  # quantile(ydata, 0.95, na.rm = TRUE))
+      # print(ylim)
+    }
+    
+    # this could be funny if limits don't span q
+    p_less <- sort(unique(c(0, p_less, 1)))
+    q <- dpqrdist(dist, type = "q", p = p_less, ...) #  c(xlim[1], q, xlim[2])
+    
+    # if (discrete) {
+    #   if (is.null(plot_dots$pch)) plot_dots$pch = 16
+    # }
+    
+    
+    
+    # args <- c(
+    #   list(
+    #     ydata ~ xdata, 
+    #     xlim = xlim, ylim = ylim, 
+    #     xlab = "", 
+    #     ylab = if (discrete) "probability" else "density" 
+    #   ),
+    #   plot_dots
+    # )
+    # 
+    # res_plot <- do.call("xyplot", args)
+    
+    Groups <- 
+      data_frame(p = diff(p_less)) %>%
       mutate(
-        group = pmax(1, group),
-        probability = Groups$label[group] 
-      ) 
+        i = 1 : n(),
+        name = if (pattern == "stripes") LETTERS[i] else LETTERS[ceiling(1 + abs(i - mean(i)))]
+      ) %>% 
+      group_by(name) %>%
+      mutate(
+        p_all = sum(p),
+        label = paste(first(name), ":", formatC(p_all, format = "f", digits = digits), sep = "")
+      )
     
-    # print(Ddensity)
-    
-    plot <- 
-      do.call(
-        gf_point, 
-        c(list(density ~ x, color = ~ probability, group = ~ group, fill = ~ probability,
-               data = Ddensity), plot_dots)) %>%
-      gf_segment(density + 0 ~ x + x) %>%
-      gf_labs(x = "", y = "probability") %>%
-      gf_refine(
+    if (discrete) { 
+      # q <- tail(q, -1)
+      Ddensity <- 
+        data_frame(
+          x = xdata, density = ydata, 
+          group = sapply(xdata, function(x) {sum(x > q, na.rm = TRUE)})
+        ) %>%
+        mutate(
+          group = pmax(1, group),
+          probability = Groups$label[group] 
+        ) 
+      
+      # print(Ddensity)
+      
+      plot <- 
+        do.call(
+          gf_point, 
+          c(list(density ~ x, color = ~ probability, group = ~ group, fill = ~ probability,
+                 data = Ddensity), plot_dots)) %>%
+        gf_segment(density + 0 ~ x + x) %>%
+        gf_labs(x = "", y = "probability") %>%
+        gf_refine(
         scale_fill_viridis_d(end = 0.9),
         scale_color_viridis_d(end = 0.9)
       )
@@ -366,97 +365,220 @@ plot_multi_dist <-
 
 
 #' @rdname pdist
+#' @inheritParams stats::pgamma 
 #' @seealso [qdist()], [xpnorm()], [xqnorm()].
 #' @export
-xpgamma <- function(...)  pdist("gamma", ...)
+xpgamma <- function(q, shape, rate = 1, scale = 1/rate, 
+                    lower.tail = TRUE, log.p = FALSE, ...) {
+  if (!missing(rate) && !missing(scale)) {
+    if (abs(rate * scale - 1) < 1e-15) 
+      warning("specify 'rate' or 'scale' but not both")
+    else stop("specify 'rate' or 'scale' but not both")
+  }
+  pdist("gamma", q = q, shape = shape, scale = scale,
+        lower.tail = lower.tail, log.p = log.p, ...)
+}
 #' @rdname qdist
+#' @inheritParams stats::qgamma
 #' @export
-xqgamma <- function(...)  qdist("gamma", ...)
+xqgamma <- function(p, shape, rate = 1, scale = 1/rate, 
+                    lower.tail = TRUE, log.p = FALSE, ...) {
+  if (!missing(rate) && !missing(scale)) {
+    if (abs(rate * scale - 1) < 1e-15) 
+      warning("specify 'rate' or 'scale' but not both")
+    else stop("specify 'rate' or 'scale' but not both")
+  }
+  qdist("gamma", p = p, shape = shape, scale = scale,
+        lower.tail = lower.tail, log.p = log.p,
+        ...)
+}
 #' @rdname cdist
+#' @inheritParams stats::qgamma
 #' @export
-xcgamma <- function(...)  cdist("gamma", ...)
+xcgamma <- function(p, shape, rate = 1, scale = 1/rate, 
+                    lower.tail = TRUE, log.p = FALSE, ...) {
+  if (!missing(rate) && !missing(scale)) {
+    if (abs(rate * scale - 1) < 1e-15) 
+      warning("specify 'rate' or 'scale' but not both")
+    else stop("specify 'rate' or 'scale' but not both")
+  }
+  cdist("gamma", q = q, shape = shape, scale = scale,
+        lower.tail = lower.tail, log.p = log.p,
+        ...)
+}
+
+#' @rdname pdist
+#' @inheritParams stats::pt
+#' @export
+xpt <- function(q, df , ncp, lower.tail = TRUE, log.p = FALSE, ...)  
+  pdist("t", q = q, df = df, ncp = ncp, lower.tail = lower.tail, 
+        log.p = log.p, ...)
+#' @rdname qdist
+#' @inheritParams stats::qt
+#' @export
+xqt <- function(p, df , ncp, lower.tail = TRUE, log.p = FALSE, ...)  
+  if (missing(ncp)) {
+    qdist("t", p = p, df = df, lower.tail = lower.tail, 
+          log.p = log.p, ...)
+  } else {
+    qdist("t", p = p, df = df, ncp = ncp, lower.tail = lower.tail, 
+          log.p = log.p, ...)
+  }
+
+
+
+#' @rdname cdist
+#' @inheritParams stats::pt
+#' @export
+xct <- function(p, df , ncp, lower.tail = TRUE, log.p = FALSE, ...)  
+  cdist("t", p = p, df = df, ncp = ncp, lower.tail = lower.tail, 
+        log.p = log.p, ...)
 
 #' @rdname pdist
 #' @export
-xpt <- function(...)  pdist("t", ...)
+xpchisq <- function(q, df, ncp = 0, lower.tail = TRUE, log.p = FALSE)   
+  pdist("chisq", q = q, df = df, ncp = ncp, lower.tail = lower.tail, log.p = log.p)
 #' @rdname qdist
 #' @export
-xqt <- function(...)  qdist("t", ...)
+xqchisq <- function(p, df, ncp = 0, lower.tail = TRUE, log.p = FALSE)   
+  qdist("chisq", p = p, df = df, ncp = ncp, lower.tail = lower.tail, log.p = log.p)
 #' @rdname cdist
 #' @export
-xct <- function(...)  cdist("t", ...)
+xcchisq <- function(p, df, ncp = 0, lower.tail = TRUE, log.p = FALSE)   
+  cdist("chisq", p = p, df = df, ncp = ncp, lower.tail = lower.tail, log.p = log.p)
 
 #' @rdname pdist
+#' @inheritParams stats::pf
 #' @export
-xpchisq <- function(...)  pdist("chisq", ...)
-#' @rdname qdist
-#' @export
-xqchisq <- function(...)  qdist("chisq", ...)
-#' @rdname cdist
-#' @export
-xcchisq <- function(...)  cdist("chisq", ...)
+xpf <- function(q, df1, df2, lower.tail = TRUE, log.p = FALSE, ...)  
+  pdist("f", q = q, df1 = df1, df2 =df2, 
+        lower.tail = lower.tail, log.p = log.p, ...)
 
-#' @rdname pdist
-#' @export
-xpf <- function(...)  pdist("f", ...)
 #' @rdname qdist
+#' @inheritParams stats::qf
 #' @export
-xqf <- function(...)  qdist("f", ...)
-#' @rdname cdist
-#' @export
-xcf <- function(...)  cdist("f", ...)
+xqf <- function(p, df1, df2, lower.tail = TRUE, log.p = FALSE, ...)  
+  qdist("f", p = p, df1 = df1, df2 =df2, 
+        lower.tail = lower.tail, log.p = log.p, ...)
 
-
-#' @rdname pdist
-#' @export
-xpbinom <- function(...)  pdist("binom", ...)
-#' @rdname qdist
-#' @export
-xqbinom <- function(...)  qdist("binom", ...)
 #' @rdname cdist
+#' @inheritParams stats::qf
 #' @export
-xcbinom <- function(...)  cdist("binom", ...)
-
-#' @rdname pdist
-#' @export
-xppois <- function(...)  pdist("pois", ...)
-#' @rdname qdist
-#' @export
-xqpois <- function(...)  qdist("pois", ...)
-#' @rdname cdist
-#' @export
-xcpois <- function(...)  cdist("pois", ...)
+xcf <- function(p, df1, df2, lower.tail = TRUE, log.p = FALSE, ...)  
+  cdist("f", p = p, df1 = df1, df2 =df2, 
+        lower.tail = lower.tail, log.p = log.p, ...)
 
 
 #' @rdname pdist
+#' @inheritParams stats::pbinom
 #' @export
-xpgeom <- function(...)  pdist("geom", ...)
+xpbinom <- function(q, size, prob, lower.tail = TRUE, log.p = FALSE, ...)  
+  pdist("binom", q = q, size = size, prob = prob, 
+        lower.tail = lower.tail, log.p = log.p, ...)
+
 #' @rdname qdist
+#' @inheritParams stats::qbinom
 #' @export
-xqgeom <- function(...)  qdist("geom", ...)
+xqbinom <- function(p, size, prob, lower.tail = TRUE, log.p = FALSE, ...)  
+  qdist("binom", p = p, size = size, prob = prob, 
+        lower.tail = lower.tail, log.p = log.p, ...)
+
 #' @rdname cdist
+#' @inheritParams stats::qbinom
 #' @export
-xcgeom <- function(...)  cdist("geom", ...)
+xcbinom <- function(p, size, prob, lower.tail = TRUE, log.p = FALSE, ...)  
+  cdist("binom", p = p, size = size, prob = prob, 
+        lower.tail = lower.tail, log.p = log.p, ...)
 
 #' @rdname pdist
+#' @inheritParams stats::ppois
 #' @export
-xpnbinom <- function(...)  pdist("nbinom", ...)
+xppois <- function(q, lambda, lower.tail = TRUE, log.p = FALSE, ...)  
+  pdist("pois", q = q, lambda = lambda, 
+        lower.tail = lower.tail, log.p = log.p, ...)
+
 #' @rdname qdist
+#' @inheritParams stats::qpois
 #' @export
-xqnbinom <- function(...)  qdist("nbinom", ...)
+xqpois <- function(p, lambda, lower.tail = TRUE, log.p = FALSE, ...)  
+  qdist("pois", p = p, lambda = lambda, 
+        lower.tail = lower.tail, log.p = log.p, ...)
+
+
 #' @rdname cdist
+#' @inheritParams stats::qpois
 #' @export
-xcnbinom <- function(...)  qdist("cbinom", ...)
+xcpois <- function(p, lambda, lower.tail = TRUE, log.p = FALSE, ...)  
+  cdist("pois", p = p, lambda = lambda, 
+        lower.tail = lower.tail, log.p = log.p, ...)
+
 
 #' @rdname pdist
+#' @inheritParams stats::pgeom
 #' @export
-xpbeta <- function(...)  pdist("beta", ...)
+xpgeom <- function(q, prob, lower.tail = TRUE, log.p = FALSE, ...)  
+  pdist("geom", q = q, prob = prob, 
+        lower.tail = lower.tail, log.p = log.p, ...)
+
 #' @rdname qdist
+#' @inheritParams stats::qgeom
 #' @export
-xqbeta <- function(...)  qdist("beta", ...)
+xqgeom <- function(p, prob, lower.tail = TRUE, log.p = FALSE, ...)  
+  qdist("geom", p = p, prob = prob, 
+        lower.tail = lower.tail, log.p = log.p, ...)
+
+
 #' @rdname cdist
+#' @inheritParams stats::qgeom
 #' @export
-xcbeta <- function(...)  cdist("beta", ...)
+xcgeom <- function(p, prob, lower.tail = TRUE, log.p = FALSE, ...)  
+  cdist("geom", p = p, prob = prob, 
+        lower.tail = lower.tail, log.p = log.p, ...)
+
+#' @rdname pdist
+#' @inheritParams stats::pnbinom
+#' @export
+xpnbinom <- function(q, size, prob, mu, lower.tail = TRUE, log.p = FALSE, ...)  
+  pdist("nbinom", q = q, size = size, prob =prob, mu = mu, 
+        lower.tail = lower.tail, log.p = log.p, ...)
+
+#' @rdname qdist
+#' @inheritParams stats::qnbinom
+#' @export
+xqnbinom <- function(p, size, prob, mu, lower.tail = TRUE, log.p = FALSE, ...)  
+  qdist("nbinom", p = p, size = size, prob =prob, mu = mu, 
+        lower.tail = lower.tail, log.p = log.p, ...)
+
+#' @rdname cdist
+#' @inheritParams stats::qnbinom
+#' @export
+xcnbinom <- function(p, size, prob, mu, lower.tail = TRUE, log.p = FALSE, ...)  
+  cdist("nbinom", p = p, size = size, prob =prob, mu = mu, 
+        lower.tail = lower.tail, log.p = log.p, ...)
+
+#' @rdname pdist
+#' @inheritParams stats::pbeta
+#' @export
+xpbeta <- function(q, shape1, shape2, ncp = 0, 
+                   lower.tail = TRUE, log.p = FALSE, ...)  
+  pdist("beta", q = q, shape1 = shape1, shape2 = shape2, ncp = 0, 
+        lower.tail = lower.tail, log.p = log.p, ...)
+
+#' @rdname qdist
+#' @inheritParams stats::qbeta
+#' @export
+xqbeta <- function(p, shape1, shape2, ncp = 0, 
+                   lower.tail = TRUE, log.p = FALSE, ...)  
+  qdist("beta", p = p, shape1 = shape1, shape2 = shape2, ncp = 0, 
+        lower.tail = lower.tail, log.p = log.p, ...)
+
+#' @rdname cdist
+#' @inheritParams stats::qbeta
+#' @export
+xcbeta <- function(p, shape1, shape2, ncp = 0, 
+                   lower.tail = TRUE, log.p = FALSE, ...)  
+  cdist("beta", p = p, shape1 = shape1, shape2 = shape2, ncp = 0, 
+        lower.tail = lower.tail, log.p = log.p, ...)
 
 
 is_discrete_dist <- function(dist, n = 100L, ... ) {

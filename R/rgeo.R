@@ -106,7 +106,7 @@ rlonlat <- function(...){
 #' @examples
 #' rgeo(4)
 #' # sample from a region that contains the continental US
-#' rgeo( 4, latlim=c(25,50), lonlim=c(-65,-125) )
+#' rgeo(4, latlim = c(25,50), lonlim = c(-65, -125))
 #' @details
 #' `rgeo` and `rgeo2` differ in the algorithms used to generate random positions.  
 #' Each assumes a spherical globe.  `rgeo` uses that fact that each of the x, y and z
@@ -188,7 +188,8 @@ rgeo2 <- function( n=1, latlim=c(-90,90), lonlim=c(-180,180), verbose=FALSE ) {
 #' Display a point on earth on a Google Map
 #' 
 #' Creates a URL for Google Maps for a particular latitude and
-#' longitude position.
+#' longitude position.  This function has been deprecated due to changes in
+#' Google's access policies.  Give [leaflet_map()] a try as an alternative.
 
 #' @rdname googleMap
 #' @param latitude,longitude vectors of latitude and longitude values
@@ -205,7 +206,7 @@ rgeo2 <- function( n=1, latlim=c(-90,90), lonlim=c(-180,180), verbose=FALSE ) {
 #' googleMap(40.7566, -73.9863, radius=1)   # Times Square
 #' googleMap(position=rgeo(2), radius=1)    # 2 random locations
 #' }
-#' @seealso [deg2rad()], [latlon2xyz()] and [rgeo()].
+#' @seealso [leaflet_map()], [deg2rad()], [latlon2xyz()] and [rgeo()].
 #' @export
 
 googleMap <- function(latitude, longitude, position=NULL,
@@ -217,6 +218,8 @@ googleMap <- function(latitude, longitude, position=NULL,
 	...
 	)
 {
+  .Deprecated(new = "leaflet_map")
+  
 	urls <- .googleMapURL( 
 				latitude=latitude, longitude=longitude,
 				position=position, zoom=zoom, 
@@ -229,6 +232,97 @@ googleMap <- function(latitude, longitude, position=NULL,
 		return(invisible(urls))
 	}
 }
+#' Simple Leaflet Maps
+#' 
+#' Primarily designed to work with [rgeo()] to display randomly sampled
+#' points on the globe.
+#' 
+#' @param latitude,longitude vectors of latitude and longitude values.
+#'   If `latitude` is a data frame, then it is treated as `position`.
+#'   This facilitates "piping" from [rgeo()].  See examples.
+#' @param position a data frame containing latitude and longitude positions
+#' @param zoom zoom level for initial map (1-20)
+# #' @param maptype one of `'roadmap'`, `'satellite'`, `'terrain'`, and `'hybrid'`
+#' @param mark a logical indicating whether the location should be marked with a pin
+#' @param radius a vector of radii of circles (in miles) centered at position that are displayed on the map
+#' @param units units for radii of circles (km, miles, meters, or feet).
+#' @param \dots additional arguments passed to [leaflet::addCircles()]
+#' @return a leaflet map
+#' @examples
+#'   # Times Square
+#'   leaflet_map(40.7566, -73.9863, radius = 1, units = "miles")  
+#'   # 3 random locations; 5 km circles
+#'   leaflet_map(position = rgeo(3), radius = 5, mark = TRUE, color = "red") 
+#'   # using pipes
+#'   rgeo(4, latlim = c(25,50), lonlim = c(-65, -125)) %>%
+#'     leaflet_map(radius = 5, mark = TRUE, color = "purple")
+#' @seealso [deg2rad()], [latlon2xyz()] and [rgeo()].
+#' @importFrom leaflet leaflet addTiles addCircles addMarkers
+#' @export
+ 
+leaflet_map <- 
+  function(latitude = NULL, longitude = NULL, position = NULL,
+           zoom = 12,  
+           mark = FALSE, radius = 0, 
+           units = c("km", "miles", "meters", "feet"),
+           ...
+  ) {
+    units <- match.arg(units)
+    # how many meters per unit?
+    if (inherits(latitude, "data.frame")) {
+      position <- latitude
+      latitude <- NULL
+      longitude <- NULL
+    }
+    
+    conversion <- switch(
+      units,
+      miles = 1609.34,
+      km = 1000,
+      meters = 1,
+      feet = 1609.34 / 5280
+    )
+    if (! is.null(position)) {
+      if (!is.null(latitude) || !is.null(longitude)) {
+        stop("Specify either position or lat/lon, but not both.")
+      }
+      if ("latitude" %in% names(position)) {
+        latitude  <- position[, "latitude"]
+      } else {
+        latitude  <- position[, 1]
+      }
+      if ("longitude" %in% names(position)) {
+        longitude  <- position[, "longitude"]
+      } else {
+        longitude  <- position[, 2]
+      }
+    }
+    
+    m <-
+      leaflet::leaflet() %>%
+      leaflet::addTiles() # Add default OpenStreetMap map tiles
+    if (mark) {
+      m <- m %>% leaflet::addMarkers(
+        lng = longitude, lat = latitude, 
+        popup = paste("lat/lon: ", format(latitude, digits = 5), 
+                      "/", format(longitude, digits = 5), sep = "")
+      )
+    }
+    m <- m %>% 
+      addCircles(
+        lng = longitude,
+        lat = latitude,
+        radius = radius * conversion,  # convert from unit to meters
+        popup = paste(
+          "radius: ", radius, " ", units, "; 
+          lat/lon: ",  format(latitude, digits = 5),  "/", format(longitude, digits = 5), 
+          sep = ""),
+        ...
+      )
+    
+    return(m) 
+    
+  }
 
 
 #' rgeo internal functions
@@ -280,34 +374,72 @@ googleMap <- function(latitude, longitude, position=NULL,
 		sep="")))
 }
 
-#' @rdname rgeo-internals
-#' @param width,height width and height of window containing google map
-#' @keywords internal
-#'
-.googleMapURL2 <- function(latitude, longitude, position=NULL,
-	zoom=12, 
-	width=600, 
-	height=400, 
-	maptype=c('roadmap','satellite','terrain','hybrid'),
-	mark=FALSE
-	) 
-{
-	latitude  <- position[,1]
-	longitude <- position[,2]
-	url <- "http://maps.google.com/maps/api/staticmap?"
-	maptype <- match.arg(maptype)
-	center <- paste(latitude,",",longitude,sep="")
-	size <- paste(width,'x',height,sep="")
-	markString <- ""
-	if (mark == TRUE) { markString <- paste('&markers=size:tiny|', center,sep="") } 
-
-	return(invisible(paste(
-		url,
-		'center=', center,
-		markString,
-		'&zoom=', zoom,
-		'&size=', size,
-		'&sensor=false', 
-		'&maptype=', maptype,
-		sep="")))
-}
+#' .openStreetMapURL <- function(latitude, longitude, position=NULL,
+#' 	zoom=11, 
+#' 	maptype=c('roadmap','satellite','terrain','hybrid'),
+#' 	mark=FALSE,
+#' 	radius=0
+#' 	) 
+#' {
+#' 	filename <- "openstreet.html"
+#' 
+#' 	if (FALSE) { # can't get browseURL to accept a file with parameters added on
+#' 		package <- "mosaic"
+#' 		paths <- .find.package(package, verbose = TRUE)
+#' 		paths <- paths[file_test("-d", file.path(paths, "google"))]
+#' 		paths <- file.path(paths, "google")
+#' 		paths <- paths[file_test("-f", file.path(paths, filename))]
+#' 		url <- file.path(paths, filename)
+#' 		url <- paste("file://",url,sep="")
+#' 	}
+#' 	url <- paste('http://mosaic-web.org/go/',filename,sep="")
+#' 	if (is.null(position)) {
+#' 		position <- data.frame(lat=latitude,lon=longitude)
+#' 	}
+#' 	latitude  <- position[,1]
+#' 	longitude <- position[,2]
+#' 	maptype <- match.arg(maptype)
+#' 	center <- paste(latitude,",",longitude,sep="")
+#' 	markString <- ""
+#' 	if (mark == TRUE) { markString <- paste('&mlat=',round(latitude,6),'&mlon=',round(longitude,6) ,sep="") } 
+#' 
+#' 	return(invisible(paste(
+#' 		url,
+#' 		'?lat=', round(latitude,6),
+#' 		'&lon=', round(longitude,6),
+#' 		markString,
+#' 		'&zoom=', zoom,
+#' 		'&radius=', paste(as.character(radius),collapse=","),
+#' 		sep="")))
+#' }
+#' #' @rdname rgeo-internals
+#' #' @param width,height width and height of window containing google map
+#' #' @keywords internal
+#' #'
+#' .googleMapURL2 <- function(latitude, longitude, position=NULL,
+#' 	zoom=12, 
+#' 	width=600, 
+#' 	height=400, 
+#' 	maptype=c('roadmap','satellite','terrain','hybrid'),
+#' 	mark=FALSE
+#' 	) 
+#' {
+#' 	latitude  <- position[,1]
+#' 	longitude <- position[,2]
+#' 	url <- "http://maps.google.com/maps/api/staticmap?"
+#' 	maptype <- match.arg(maptype)
+#' 	center <- paste(latitude,",",longitude,sep="")
+#' 	size <- paste(width,'x',height,sep="")
+#' 	markString <- ""
+#' 	if (mark == TRUE) { markString <- paste('&markers=size:tiny|', center,sep="") } 
+#' 
+#' 	return(invisible(paste(
+#' 		url,
+#' 		'center=', center,
+#' 		markString,
+#' 		'&zoom=', zoom,
+#' 		'&size=', size,
+#' 		'&sensor=false', 
+#' 		'&maptype=', maptype,
+#' 		sep="")))
+#' }

@@ -16,13 +16,12 @@ complicated for beginners.
 You install from CRAN using 
 
 ```r
-install.packages("ggplot2")  # Get the newest version of ggplot2 FIRST
 install.packages("mosaic")
 ```
 or from github with
 
 ```r
-devtools::install_github("ProjectMOSAIC/mosaic")
+devtools::install_github("ProjectMOSAIC/mosaic", build_vignettes = TRUE)
 ```
 If you want to try out our developmental code (the beta branch), use
 
@@ -39,7 +38,7 @@ If you discover a problem with any version of the package, be sure to let us kno
 
 The package includes several vignettes to help you get started.  One of these 
 vignettes 
-([*Resources Related to the mosaic package*](vignettes/mosaic-resources.Rmd)) includes a list of many resources, both within the
+([*Resources Related to the mosaic package*](https://projectmosaic.github.io/mosaic/articles/mosaic-resources.html)) includes a list of many resources, both within the
 package and external to it.  That's a good place to start.
 
 ## Getting Help

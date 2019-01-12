@@ -231,11 +231,13 @@ do(1) * lm(Price ~ Miles + Age, data = Mustangs)
 
 ## -------------------------------------------------------------------
 Mustangs.Age.boot <- do(1000) * lm(Price ~ Miles + shuffle(Age), data = Mustangs )
-confint(Mustangs.Age.boot)
+favstats(~ r.squared, data = Mustangs.Age.boot)
+cdata(~ r.squared, .95, data = Mustangs.Age.boot)
 
 ## -------------------------------------------------------------------
 Mustangs.Miles.boot <- do(1000) * lm(Price ~ shuffle(Miles) + Age, data = Mustangs)
-confint(Mustangs.Miles.boot)
+favstats(~ r.squared, data = Mustangs.Miles.boot)
+cdata(~ r.squared, .95, data = Mustangs.Miles.boot)
 
 ## -------------------------------------------------------------------
 chisq.test(tally(~ homeless + sex, 

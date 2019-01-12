@@ -1,8 +1,20 @@
 
-# mosaic 1.4
+# mosaic 1.5.0
+
+ * `googleMap()` has be deprecated due to change in policy at google. Try `leaflet_map()` as an alternative.
+ * Improved documentation about naming when using `do()`.
+ * Functions like `xpt()`, `xqt()`, etc. now have more explicit arguments.  This provides additional help and prompts for the user.
+ * `percs()` and `counts()` are re-exported from `mosaicCore`
+ * When using `confint()`, attempting to set the confidence level using `conf.level` instead of `level` throws and error and provides a reminder to use `level` for that purpose. 
+ * `confint()` methods for `binom.test()` have been modified a bit.  See documentation for how names map to methods.
+ * Several supporting documents have been update/improved. `ggformula` is used
+ for plotting in more places (replacing older `lattice` code).
+ * Bug fix: `CIdata()` now handles negative numbers correctly.
+ 
+# mosaic 1.4.0
 
  * Bug fix: `mplot.lm()` now removed points with leverage 1 to avoid errors and warnings; a 
-   warning messaes notifies which points have been removed.
+   warning messages notifies which points have been removed.
  * Bug fix: `TukeyHSD()` now correctly follows `system = "gg"`
  * `mplot.lm()` now uses `ggrapel` to place labels and offers additional controls for 
    the smooth curve that is overlaid. [gg version of plots only]
@@ -12,7 +24,7 @@
  * Support added for `cor(~y, ~x)`
  * New website: http://projectmosaic.github.io/mosaic/
    
-# mosaic 1.3
+# mosaic 1.3.0
 
  * Bug fix in `prop.test()` so it handles `success` argument properly for 2-way tables.
  * Updated template documents now use `ggformula`.
@@ -20,7 +32,7 @@
  * Updated vignettes to reflect new or updated resources and to use `ggformula`.
  * Some changes implemented to make `mosaic` compatible with `ggplot2` version 3.0.
  
-# mosaic 1.2
+# mosaic 1.2.0
 
  * A few more plots now default to using `ggplot2` rather than `lattice` by default.
  * Some long deprecated functions are now defunct.
@@ -28,7 +40,7 @@
  * several functions have been moved to `mosaicCore`
  * A number of bug fixes and behavior enhancements.
 
-# mosaic 1.1
+# mosaic 1.1.0
 
  * A few more things have moved to `mosaicCore`.
  * Two of the vignettes have been moved out of the package to reduce CRAN size.
@@ -36,12 +48,12 @@
  * Improvements to `mplot()` on linear models when system = `"gg"`.
  * Work-around added to avoid the old work-around no longer needed due to the updated `formals()`.
  
-# mosaic 1.0
+# mosaic 1.0.0
 
  * `xpnorm()` and friends now use `ggplot2` and can return the plot object, if requested.
  * `t.test()` has been completely reimplemented.  It no longer supports "bare variable mode",
  but it is more similar to `stats::t.test()` in some cases.
- * `gwm()` has beeen removed since it no longer works with the current version of `dplyr`.  
+ * `gwm()` has been removed since it no longer works with the current version of `dplyr`.  
  We anticipate a better collection of modeling utilities in the forthcoming `mosaicModel` package.
  * `props()` and `counts()` have been added.  They are a bit like `tally()` but designed to
  play well with `df_stats()`. Currently the formula versions drop missing data, but that will
@@ -60,12 +72,12 @@
 
  * Tweaks to `tally()` now provide names to dimnames in cases where they were previously missing.
  This was needed for the refactoring of `bargaph()`.
- * Refactored `bargraph()` to use `tally()` for tabulation.  This means the behavior of `bargraph()` should match expections of users of `tally()` better than it did before. In particular, proportions now sum to 1 in each panel of a multi-panel plot.
+ * Refactored `bargraph()` to use `tally()` for tabulation.  This means the behavior of `bargraph()` should match expectations of users of `tally()` better than it did before. In particular, proportions now sum to 1 in each panel of a multi-panel plot.
  * Bug/Feature fix: Definition of "conditional" is now tighter in `tally()` so the proportions
  computed when `format = "proportion"` are easier to predict.
  * Bug Fix: `prop(x ~ y)` was reporting overall proportions rather than marginal proportions.
  * Made CIsim() more flexible.  It is now easier to run multiple simulations
- at once and compare the results.  Also, non-covering interals are now classified
+ at once and compare the results.  Also, non-covering intervals are now classified
  as missing high or missing low, so one can investigate non-symmetric failure to cover.
  * Added option to plotFun() for creating non-interactive 
  surface plots 
@@ -80,7 +92,7 @@
  * Bug fix that caused `prop(a ~ b)` to compute joint rather than conditional proportions.
  * add stat and geom for spline smoothing
  
-# mosaic 0.14
+# mosaic 0.14.0
 
  * Aggregating functions (`favstats()`, `mean()`, `sd()`, etc.) now require that the 
  first argument be a formula.  This
@@ -108,7 +120,7 @@ favstats( ~ age, data = HELPrct)
  * `makeMap()` updated to work with new version of `ggplot2`.
  
  
-# mosaic 0.13
+# mosaic 0.13.0
 
  * Arguments to `cdata()`, `ddata()`, `pdata()`, `qdata()` and `rdata()` have been reordered 
  so that the formula comes first.
@@ -116,7 +128,7 @@ favstats( ~ age, data = HELPrct)
  * Bug fix in `dfapply()`, also default value for `select` changed to `TRUE`.
  * Introduce `inspect()`, which is primarily intended to give an over view of the variables in a data frame, but handles some additional objects as well.
   
-# mosaic 0.12
+# mosaic 0.12.0
 
  * Aggregating functions now generate user friendly errors when the `data` argument is not an environment or data frame.
  * We have fixed some bugs that arose in the "emergency" release of 0.11
@@ -127,7 +139,7 @@ favstats( ~ age, data = HELPrct)
  * Dots in `dotPlot()` are now the same size in all panels of multi-panel plots.
  * `cdist()` has been rewritten.
  * 
-# mosaic 0.11
+# mosaic 0.11.0
 
  * `mplot()` on a data frame now (a) prompts the user for the type of plot to create and (b) has an added option to make line plots for time series and the like.
  * `resample()` can now do residual resampling from a linear model.
@@ -141,7 +153,7 @@ favstats( ~ age, data = HELPrct)
  
  
 
-# mosaic 0.10
+# mosaic 0.10.0
 
  * At the request of several users, and with CRAN's approval, we have made 
  `mosaicData` a dependency of `mosaic`.  This avoids the problem of users 
@@ -149,7 +161,7 @@ favstats( ~ age, data = HELPrct)
  * We are planning to remove `fetchGoogle()` (and perhaps `read.file()`) from future versions 
  of the package.  More and more packages are providing utilities for bringing data into R and it
  doesn't make sense for us to duplicate those efforts in this package.  For google sheets, you
- might take a look at the `googlesheets` package which is avialable via github now and will be 
+ might take a look at the `googlesheets` package which is available via github now and will be 
  on CRAN soon.
  * Improved output to `binom.test()`, `prop.test()`, and `t.test()`, which have
  also undergone some internal restructuring.  The objects returned now do a 
@@ -161,7 +173,7 @@ favstats( ~ age, data = HELPrct)
  * Bug fixes in several functions that use non-standard evaluation improve their robustness and scope.  This affects `t.test()` and all the "aggregating" functions like `mean()` and `favstats()`.  In particular, it is now possible to reference variables both in the `data` argument and in the calling environment.  (#435)
  * `CIAdata()` now provides a message indicating the source URL for the data retrieved (#444)
  * Bug fixes to `CIAdata()` that seem to be related to a changed in file format at
- the CIA World Factobook website.  The "inflation" data set is still broken (on the CIA website).  (#441)
+ the CIA World Factbook website.  The "inflation" data set is still broken (on the CIA website).  (#441)
  * `read.file()` now uses functions from `readr` in some cases.  A message is produced indicating which reader is being used.  There are also some API changes.  In particular, character data will be returned as character rather than factor.  See `factorize()` for an easy way to convert things with few unique values into factors. (#442)
  * A major vignette housecleaning has happened.  Some vignettes have been removed from the package and vignettes inside the package are now compiled as part of package building to allow for more consistent checking of vignette contents.  "Less Volume, More Creativity" has been reformatted from slides into a more typical vignette format. (#438)
  * `mutate()` is used in place of `transform()` in the examples. (#452)
@@ -190,7 +202,7 @@ few unique values into factors.  Can be applied to an entire data frame.
 
 # mosaic 0.9.1
 
- * The data sets formerly in this pacakge have been separated out into two
+ * The data sets formerly in this package have been separated out into two
 additional packages:  `NHANES` contains the `NHANES` data set
 and `mosaicData` contains the other data sets.  
  * `MAD()` and `SAD()` were added to compute mean and sum
@@ -211,7 +223,7 @@ Use their `summary()` methods or `verbose=TRUE` to see more information
 (including confidence intervals).
  * Added `Birthdays` data set.
 
-# mosaic 0.9
+# mosaic 0.9.0
 
  * A generic `mplot()` and several instances have been
   added to make a number of plots easy to generate.  There are methods 
@@ -248,18 +260,18 @@ by extension.
  * introduction of `derivedFactor()` for creating factors
   from logical "cases".
 
-# mosaic 0.8
+# mosaic 0.8.0
 
  * The `HELP` data set has been removed from the package.  
 It was deprecated in version 0.5.  Use `HELPrct` instead.
  * `plotDist()` now accepts `add=TRUE` and `under=TRUE`, making it easy to add
 plots of distributions over (or under) plots of data (e.g., histograms, densityplots, etc.)
 or other distributions.
- * Plotting funcitons with with the option `add=TRUE` have been reimplemented using
-`layer` from `latticeExtra`.  See documentaiton of these functions for details.
+ * Plotting functions with with the option `add=TRUE` have been reimplemented using
+`layer` from `latticeExtra`.  See documentation of these functions for details.
  * `ladd()` has been completely reimplemented using `layer()` from `latticeExtra`.  See 
 documentation of `ladd()` for details, including some behavior changes.
- * aggregating functions (`mean()`, `sd()`, `var()`, et al) now use `getOptions("na.rm")` to determine the default value of `na.rm`.  Use `options(na.rm=TRUE)` to
+ * aggregating functions (`mean()`, `sd()`, `var()`, *et al*) now use `getOptions("na.rm")` to determine the default value of `na.rm`.  Use `options(na.rm=TRUE)` to
 change the default behavior to remove `NA`s and options(na.rm=NULL) to restore 
 defaults.
  * `do()` has been largely rewritten with an eye toward improved 
@@ -273,18 +285,18 @@ of a distribution.
  * Some changes to the API for `qdata()`.  For interactive use, this should
 not cause any problems, but old programmatic uses of `qdata()` should be 
 checked as the object returned is now different.
- * Fixed a bug that caused aggregating functions (`sum()`, `mean()`, `sd()`, etc.) to produce counter-intuititve results (but with a warning).  The results are now what one would expect (and the warning is removed).
+ * Fixed a bug that caused aggregating functions (`sum()`, `mean()`, `sd()`, etc.) to produce counter-intuitive results (but with a warning).  The results are now what one would expect (and the warning is removed).
  * Added `rsquared()` for extracting r-squared from models and model-like objects (`r.squared()` has been deprecated).
  * `do()` now handles ANOVA-like objects better
  * `maggregate()` is now built on some improved behind the scenes functions.  Among
 other features, the `groups` argument is now incorporated as an alternative method
-of specifying the goups to aggregate over and the `method` argument can be set to 
+of specifying the groups to aggregate over and the `method` argument can be set to 
 `"ddply"` to use `ddply()` from the `plyr` package for aggregation.  This results
 in a different output format that may be desired in some applications.
 \item
 The `cdata()`, `pdata()` and `qdata()` functions have been largely rewritten.  In addition,
 `cdata_f()`, `pdata_f()` and `qdata_f()` are provided which produce similar results
-but have a formula in the first arguemnt slot.
+but have a formula in the first argument slot.
  * Fixed bug in vignette generation.  Static PDFs are now installed in `doc/` and so
 are available from within the package as well as via links to external files.
  * Added `fetchGapminder()` for fetching data sets originally from
@@ -305,7 +317,7 @@ as counts of heads and tails.
  * removed the deprecated HELP dataset (now called HELPrct)
  * Various minor bug fixes and internal improvements. 
 
-# mosaic 0.7
+# mosaic 0.7.0
 
  * Various improvements and bug fixes to `D()` and `antiD()`.
  * In RStudio, `mPlot()` provides an interactive environment for
@@ -326,7 +338,7 @@ as counts of heads and tails.
  * Plan to deprecate datasets from the Carnegie Melon University Online Learning Initiative Statistics Modules in next release.
  * `xhistogram()` is now deprecated.  Use `histogram()` instead.
 
-# mosaic 0.6
+# mosaic 0.6.0
 
  * Added vignette: Minimal R for Intro Stats.
  * Implemented symbolic integration for simple functions.
@@ -343,7 +355,7 @@ as counts of heads and tails.
  * Modified names of data frame produced by `do()` so that hyphens ('-') are turned into dots ('.')
  * Improvements to `fetchData()`.
 
-# mosaic 0.5
+# mosaic 0.5.0
 
 We are still in beta, but we hope things are beginning to stabilize as we settle on 
 syntax and coding idioms for the package.  Here are some of the key updates since 0.4:
@@ -366,7 +378,7 @@ syntax and coding idioms for the package.  Here are some of the key updates sinc
 						Each of these returns the model fit as a function.
  * improvements to the vignettes.
 
-# mosaic 0.4
+# mosaic 0.4.0
 
  * renamed mtable() to tally(), added new functionality
  * reimplemented D() and antiD()
