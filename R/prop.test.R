@@ -37,7 +37,9 @@
 #' 
 #' @param ... additional arguments (often ignored).  
 #'   When `x` is a formula, `groups` can be used to compare groups:  
-#'   `x = ~ var, groups=g` is equivalent to ` x = var ~ g `.
+#'   `x = ~ var, groups=g` is equivalent to ` x = var ~ g `. `na.rm` can be a logical
+#'   or an integer vector of length 1 or 2 to indicate dimension along which NA's are 
+#'   removed before coputing the test.
 #'   See the examples. 
 #' 
 #' @note When `x` is a 0-1 vector, 0 is treated as failure and 1 as success. Similarly,
@@ -63,6 +65,9 @@
 #' prop.test( homeless ~ sex, data = HELPrct )
 #' prop.test( ~ homeless | sex, data = HELPrct )
 #' prop.test( ~ homeless, groups = sex, data = HELPrct )
+#' prop.test(anysub ~ link, data = HELPrct, na.rm = TRUE)
+#' prop.test(link ~ anysub, data = HELPrct, na.rm = 1)
+#' prop.test(link ~ anysub, data = HELPrct, na.rm = TRUE)
 #' 
 #' @keywords stats
 
@@ -75,25 +80,24 @@ prop.test <- function( x, n, p = NULL,
                        conf.level = 0.95, data = NULL, success=NULL, ...) 
 {
   missing_n <- missing(n)
-  x_lazy <- lazyeval::f_capture(x)
-  
+  x_lazy <- rlang::enquo(x)
   x_eval <- 
     tryCatch(
-      lazyeval::f_eval(x_lazy, as.list(data)),
+      rlang::eval_tidy(x_lazy, data),
       error = function(e) {
         if (is.null(data) && ! missing_n) {
           stop("prop.test(): Improper `n'; did you forget `data =' perhaps?", call. = FALSE) 
         }
-        lazyeval::f_rhs(x_lazy)
+        rlang::f_rhs(x_lazy)
       }
     )
   
   # this list will later be converted to a string using the appropriate information
   # dependent upon which of the prop_test methods is called.  
   
-  data.name <- list(x = lazyeval::expr_text(x), 
-                    n = lazyeval::expr_text(n), 
-                    data = lazyeval::expr_text(data)) 
+  data.name <- list(x = rlang::enexpr(x), 
+                    n = rlang::enexpr(n), 
+                    data = substitute(data)) 
   
   if (missing_n) {
     prop_test(x_eval, p = p, alternative = alternative, 
@@ -153,18 +157,18 @@ prop_test.formula <-
   function(
     x, n, p=NULL, 
     alternative = c("two.sided", "less", "greater"), 
-    conf.level = 0.95, success = NULL, data.name, data = NULL, groups = NULL, ...) 
+    conf.level = 0.95, success = NULL, data.name, data = NULL, groups = NULL, na.rm = FALSE, ...) 
   {
     missing_n <- missing(n)
     if (is.null(data)) {
       if (! missing_n) stop("Improper `n'; did you forget `data = ' perhaps?", call. = FALSE)
-      data <- lazyeval::f_env(x)
+      data <- environment(x)
     }
     
     formula <- mosaic_formula_q(x, groups=groups, max.slots=2)
     missing_data.name <- missing(data.name)
     if (is.null(data)) {
-      data <- lazyeval::f_env(x)
+      data <- environment(x)
     }
     
     dots <- list(...)
@@ -175,7 +179,7 @@ prop_test.formula <-
                                            subscripts = TRUE, drop = TRUE)
       if (missing_data.name) {
         data.name <- 
-          paste(lazyeval::expr_text(data), "$", form$right.name, sep="")
+          paste(rlang::enexpr(data), "$", form$right.name, sep="")
       } 
       if (is.list(data.name)) {
         data.name <- 
@@ -186,7 +190,7 @@ prop_test.formula <-
                                            subscripts = TRUE, drop = TRUE)
       if (missing_data.name) {
         data.name <- 
-          paste(lazyeval::expr_text(n), "$", form$right.name, sep="")
+          paste(rlang::enexpr(n), "$", form$right.name, sep="")
       }
       if (is.list(data.name)) {
         data.name <- 
@@ -216,6 +220,35 @@ prop_test.formula <-
         # }
         data[, key] <- factor(data[, key] == success, levels = c("TRUE", "FALSE"))
         table_from_formula <-  tally( formula, data=data, margin=FALSE, format="count" )
+      }
+      
+      dims <- length(dim(table_from_formula))
+      if (isTRUE(na.rm)) {
+        na.rm <- 1:dims
+      }
+      if (1 %in% na.rm) {
+        table_from_formula <-
+          table_from_formula[ which(!is.na(dimnames(table_from_formula)[[1]])), ]
+      }
+      if (2 %in% na.rm) {
+        table_from_formula <-
+          table_from_formula[,  which(!is.na(dimnames(table_from_formula)[[2]]))]
+      }
+      
+      if (dim(table_from_formula)[1] > 2) {
+        if (any(is.na(dimnames(table_from_formula)[[1]]))) {
+          stop(paste0(names(dimnames(table_from_formula))[1], ' has ', dim(table_from_formula)[1],
+                      ' levels (including NA).  Only 2 are allowed.'), call. = FALSE)
+        }
+          stop(paste0(dimnames(table_from_formula)[1], ' has ', dim(table_from_formula)[1],
+                      ' levels.  Only 2 are allowed.'))
+      }
+      for (i in 1:dims) {
+        if (any(is.na(dimnames(table_from_formula)[[i]]))) {
+          warning(
+            call. = FALSE,
+            paste0("NA is being treated as a category for ", names(dimnames(table_from_formula))[i]))
+        }
       }
       res <- stats::prop.test( t(table_from_formula), 
                                p=p,
@@ -247,7 +280,7 @@ prop_test.numeric <-
     # first handle case when n is provided
     if ( !missing(n) ) {  
       if (missing(data.name)) {
-        data.name <- paste(lazyeval::expr_text(x), "out of", lazyeval::expr_text(n))
+        data.name <- paste(rlang::enexpr(x), "out of", rlang::enexpr(n))
       }
       if (is.list(data.name)) {
         data.name <- paste(data.name$x, "out of", data.name$n)
@@ -264,7 +297,7 @@ prop_test.numeric <-
     # when n is missing, treat the numbers as raw data rather than counts
     
     if (missing(data.name)) { 
-      data.name <- lazyeval::expr_text(x)
+      data.name <- rlang::enexpr(x)
     }
     if (is.list(data.name)) {
       data.name <- data.name$x 
@@ -294,7 +327,7 @@ prop_test.character <-
       stop( "binom.test: If data is not NULL, first argument should be a formula.")
     
     if (missing(data.name)) { 
-      data.name <- lazyeval::expr_text(x)
+      data.name <- rlang::enexpr(x)
     }
     if (is.list(data.name)) { 
       data.name <- data.name$x 
@@ -316,7 +349,7 @@ prop_test.logical <-
       stop( "binom.test: If data is not NULL, first argument should be a formula.")
     
     if (missing(data.name)) { 
-      data.name <- lazyeval::expr_text(x)
+      data.name <- rlang::enexpr(x)
     }
     if (is.list(data.name)) { 
       data.name <- data.name$x 
@@ -338,7 +371,7 @@ prop_test.factor <-
       stop( "binom.test: If data is not NULL, first argument should be a formula.")
     
     if (missing(data.name)) { 
-      data.name <- lazyeval::expr_text(x)
+      data.name <- rlang::enexpr(x)
     }
     if (is.list(data.name)) { 
       data.name <- data.name$x 

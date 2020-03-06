@@ -1,4 +1,4 @@
-utils::globalVariables(c("..density..", "xleft", "xright"))
+utils::globalVariables(c("xleft", "xright"))
 
 #' Tally test statistics
 #' 
@@ -23,6 +23,7 @@ utils::globalVariables(c("..density..", "xleft", "xright"))
 #' 
 #' @param alpha opacity of shading.
 #' 
+#' @param bins number of bins for histogram.
 #' @param binwidth bin width for histogram.
 #' 
 #' @param fill fill color for histogram.
@@ -44,9 +45,11 @@ utils::globalVariables(c("..density..", "xleft", "xright"))
 #' 
 #' @param sig.level  significance threshold for `wilcox.test` used to detect lack of symmetry
 #' 
-#' @param \dots additional arguments passed to [histogram()]
+#' @param quiet a logicial indicating whether the text output should be suppressed
 #' 
-#' @return A lattice plot showing the sampling distribution. 
+#' @param \dots additional arguments passed to [lattice::histogram()] or [ggplot2::geom_histogram()]
+#' 
+#' @return A lattice or ggplot showing the sampling distribution. 
 #' 
 #' As side effects, information
 #' about the empirical sampling distribution and (optionally) a stem plot are
@@ -71,17 +74,25 @@ utils::globalVariables(c("..density..", "xleft", "xright"))
  
 statTally <-
 function (sample, rdata, FUN, direction = NULL, 
-          alternative=c('default','two.sided','less','greater'), 
+          alternative=c('default', 'two.sided', 'less', 'greater'), 
           sig.level = 0.1, 
           system = c("gg", "lattice"),
           shade = "navy",
           alpha = 0.10,
-          binwidth = NULL, fill = "gray80", color = "black",
+          binwidth = NULL, bins = NULL, fill = "gray80", color = "black",
           center = NULL, stemplot = dim(rdata)[direction] < 201, 
           q = c(0.5, 0.9, 0.95, 0.99), fun = function(x) x, xlim, 
+          quiet = FALSE,
           ...) 
 {
 
+  mymessage <- 
+    if (quiet) {
+      function(...) {}
+    } else {
+      function(...) {cat(..., "\n")}
+    }
+  
   system <- match.arg(system)
 	alternative <- match.arg(alternative) 
 	
@@ -98,7 +109,8 @@ function (sample, rdata, FUN, direction = NULL,
 		} else if ( NCOL(rdata) == size ) {
 			direction <- 1
 		} else {
-			stop( paste( "sample and rdata have incompatible dimensions:", c(size, NROW(rdata), NCOL(rdata))) )
+			stop(paste("sample and rdata have incompatible dimensions:", 
+			           c(size, NROW(rdata), NCOL(rdata))))
 		}
 	}
 
@@ -109,20 +121,21 @@ function (sample, rdata, FUN, direction = NULL,
 		pv <- pval(wilcox.test(stats, mu=center, exact=FALSE)) 
 		if (is.na(pv) || pv > sig.level) {
            alternative <- "two.sided"
-		   message(paste('Null distribution appears to be symmetric. (p = ', signif(pv,3),')'))
+		   mymessage(paste('\nNull distribution appears to be symmetric. (p = ', signif(pv,3),')'))
 		} else {
            alternative <- if (dstat < center) 'less' else 'greater'
-		   message(paste('Null distribution appears to be asymmetric. (p = ', signif(pv,3),')', sep=""))
+		   mymessage(paste('\nNull distribution appears to be asymmetric. (p = ', signif(pv,3),')', sep=""))
 		}
 	}
 	if (is.null(center)) center <- 0
 
-    message(paste("\nTest statistic applied to sample data = ", signif(dstat, 4)))
-    message("\nQuantiles of test statistic applied to random data:")
-    print(quantile(stats, q, na.rm = TRUE))
-    message("\n")
+    mymessage(paste("\nTest statistic applied to sample data = ", signif(dstat, 4)))
+    mymessage("\nQuantiles of test statistic applied to random data:")
+    capture.output(quantile(stats, q, na.rm = TRUE)) %>%
+      paste(collapse = "\n") %>% 
+      mymessage()
     if (any( ! is.finite(stats))) {
-      message("** Note:  ", table(is.finite(stats))["FALSE"], " non-finite or missing values excluded.")
+      mymessage("** Note:  ", table(is.finite(stats))["FALSE"], " non-finite or missing values excluded.")
       stats <- stats[is.finite(stats)]
     }
     if (stemplot) {
@@ -131,10 +144,19 @@ function (sample, rdata, FUN, direction = NULL,
 	results <- data.frame(stat=stats)
 	if (missing(xlim)) xlim <- range(pretty(c(stats,dstat)))
 
-	hi <- center + abs(dstat - center)
-	lo <- center - abs(dstat - center)
-	if (alternative == 'greater') lo <- -Inf
-	if (alternative == 'less')    hi <-  Inf
+	if (alternative == 'two.sided') {
+	  hi <- center + abs(dstat - center)
+	  lo <- center - abs(dstat - center)
+	}
+	if (alternative == 'greater') {
+	  hi <- dstat
+	  lo <- -Inf
+	}
+	if (alternative == 'less') {
+	  hi <-  Inf
+	  lo <- dstat
+	}
+
 	Rect_Data <- data.frame(
 	  xleft = c(-Inf, hi),
 	  xright = c(lo, Inf)
@@ -146,10 +168,11 @@ function (sample, rdata, FUN, direction = NULL,
 	    gg = 
 	      tryCatch( 
 	        ggplot() +
-	          geom_histogram(
-	            aes(y = ..density.., x = stat),
+	          geom_histogram(na.rm = TRUE,
+	            aes(y = stat(density), x = stat),
 	            data = results,
-	            fill = fill, color = color, binwidth = binwidth) +
+	            fill = fill, color = color, binwidth = binwidth, bins = bins,
+	            ...) +
 	          geom_rect(
 	            aes(ymin = 0, ymax = Inf, xmin = xleft, xmax = xright),
 	            data = Rect_Data,
@@ -190,17 +213,17 @@ function (sample, rdata, FUN, direction = NULL,
 	
 	# add in observed statistic for the remaining summaries.
 	stats <- c(dstat, stats)
-	message("\nOf the ", length(stats), " samples (1 original + ", length(stats) -1, " random),")
-    message("\n\t", paste(sum(stats == dstat), "(", round(100 * 
+	mymessage("\nOf the ", length(stats), " samples (1 original + ", length(stats) -1, " random),")
+    mymessage("\t", paste(sum(stats == dstat), "(", round(100 * 
         sum(stats == dstat)/length(stats), 2), "% )", "had test stats =", 
         signif(dstat, 4)))
 	if (alternative != 'greater') {
-    	message("\n\t", paste(sum(stats <= lo), "(", round(100 * sum(stats <= lo)/length(stats), 2), 
+    	mymessage("\t", paste(sum(stats <= lo), "(", round(100 * sum(stats <= lo)/length(stats), 2), 
 							  "% )", "had test stats <=", 
    	     signif(lo, 4)))
 	}
 	if (alternative != 'less') {
-    message("\n\t", paste(sum(stats >= hi), "(", round(100 * sum(stats >= hi)/length(stats), 2), 
+    mymessage("\t", paste(sum(stats >= hi), "(", round(100 * sum(stats >= hi)/length(stats), 2), 
 						  "% )", "had test stats >=", signif(hi, 4)))
 	}
 	

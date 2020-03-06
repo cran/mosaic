@@ -1,4 +1,4 @@
-## ---- setup, include = FALSE---------------------------------------------
+## ---- setup, include = FALSE------------------------------------------------------------
 require(mosaic)   # Load additional packages here 
 require(ggformula)
 
@@ -9,88 +9,88 @@ knitr::opts_chunk$set(
   tidy = FALSE,     # display code as typed
   size = "small")   # slightly smaller font for code
 
-## ---- hist-gg------------------------------------------------------------
+## ---- hist-gg---------------------------------------------------------------------------
 library(mosaic)   # also loads ggformula 
 gf_histogram(~ age, data = HELPrct)
 
-## ---- hist-opt-gg--------------------------------------------------------
+## ---- hist-opt-gg-----------------------------------------------------------------------
 gf_histogram(~ age, data = HELPrct,
              binwidth = 5) 
 
-## ---- hist-lattice-------------------------------------------------------
+## ---- hist-lattice----------------------------------------------------------------------
 library(mosaic)     # also loads lattice
 histogram(~ age, data = HELPrct)
 
-## ---- hist-opt-lattice---------------------------------------------------
+## ---- hist-opt-lattice------------------------------------------------------------------
 histogram(~ age, width = 5, data = HELPrct)
 
-## ---- dens-gg, message = FALSE-------------------------------------------
+## ---- dens-gg, message = FALSE----------------------------------------------------------
 gf_dens(~ age, data = HELPrct)
 
-## ---- dens2-gg, message = FALSE------------------------------------------
+## ---- dens2-gg, message = FALSE---------------------------------------------------------
 gf_dens(~ age, data = HELPrct,
         color = ~ sex)
 
-## ---- dens-hist-gg, message = FALSE--------------------------------------
+## ---- dens-hist-gg, message = FALSE-----------------------------------------------------
 gf_dhistogram( ~ age, data = HELPrct, 
                alpha = 0.5) %>%
   gf_fitdistr(color = ~"MLE", dist = "dnorm") %>% 
   gf_dens(color = ~"KDE")   
 
-## ---- dens-lattice, message = FALSE--------------------------------------
+## ---- dens-lattice, message = FALSE-----------------------------------------------------
 densityplot(~ age, data = HELPrct)
 
-## ---- dens2-lattice------------------------------------------------------
+## ---- dens2-lattice---------------------------------------------------------------------
 densityplot(~ age, data = HELPrct,
             groups = sex,  auto.key = TRUE)
 
-## ---- dens-hist-lattice, message = FALSE---------------------------------
+## ---- dens-hist-lattice, message = FALSE------------------------------------------------
 histogram(~ age, data = HELPrct, 
           fit = "normal", dcol = "red")
 
-## ---- boxplot-gg, message = FALSE----------------------------------------
+## ---- boxplot-gg, message = FALSE-------------------------------------------------------
 gf_boxplot(age ~ sex, data = HELPrct)
 
-## ---- boxplot-facets-gg, message = FALSE---------------------------------
+## ---- boxplot-facets-gg, message = FALSE------------------------------------------------
 gf_boxplot(age ~ sex | homeless, 
   data = HELPrct)
 
-## ---- boxploth-gg, message = FALSE---------------------------------------
+## ---- boxploth-gg, message = FALSE------------------------------------------------------
 gf_boxploth(sex ~ age, data = HELPrct)
 
-## ---- boxplot-lattice, message = FALSE-----------------------------------
+## ---- boxplot-lattice, message = FALSE--------------------------------------------------
 bwplot(age ~ sex, data = HELPrct)
 
-## ---- boxplot-facet-lattice, message = FALSE-----------------------------
+## ---- boxplot-facet-lattice, message = FALSE--------------------------------------------
 bwplot(age ~ sex | homeless, 
        data = HELPrct)
 
-## ---- boxploth-lattice, message = FALSE----------------------------------
+## ---- boxploth-lattice, message = FALSE-------------------------------------------------
 bwplot(sex ~ age, data = HELPrct)
 
-## ---- scatter-gg, message = FALSE----------------------------------------
+## ---- scatter-gg, message = FALSE-------------------------------------------------------
 gf_point(cesd ~ age, data = HELPrct)
 
-## ---- scatter2-gg, message = FALSE---------------------------------------
+## ---- scatter2-gg, message = FALSE------------------------------------------------------
 gf_point(cesd ~ age, data = HELPrct,
          color = ~ sex) %>%
   gf_lm()
 
-## ---- scatter-lattice, message = FALSE-----------------------------------
+## ---- scatter-lattice, message = FALSE--------------------------------------------------
 xyplot(cesd ~ age, data = HELPrct)
 
-## ---- scatter2-lattice, message = FALSE----------------------------------
+## ---- scatter2-lattice, message = FALSE-------------------------------------------------
 xyplot(cesd ~ age,  data = HELPrct,
        groups = sex, 
        type = c("p", "r"), 
        auto.key = TRUE) 
 
-## ---- scatter3-gg, message = FALSE---------------------------------------
+## ---- scatter3-gg, message = FALSE------------------------------------------------------
 gf_point(cesd ~ age | sex, 
          data = HELPrct) %>%
   gf_smooth(se = FALSE)
 
-## ---- scatter4-gg--------------------------------------------------------
+## ---- scatter4-gg-----------------------------------------------------------------------
 gf_point(cesd ~ age, data = HELPrct,
          color = ~ sex) %>%
   gf_lm() %>% 
@@ -101,12 +101,12 @@ gf_point(cesd ~ age, data = HELPrct,
     y     = "CES-D measure of
 depressive symptoms")
 
-## ---- scatter3-lattice, message = FALSE----------------------------------
+## ---- scatter3-lattice, message = FALSE-------------------------------------------------
 xyplot(cesd ~ age | sex,  data = HELPrct,
        type = c("p", "smooth"), 
        auto.key = TRUE) 
 
-## ---- scatter4-lattice, message = FALSE----------------------------------
+## ---- scatter4-lattice, message = FALSE-------------------------------------------------
 xyplot(cesd ~ age, groups = sex, 
        type = c("p", "r"), 
        auto.key = TRUE, 
@@ -116,11 +116,11 @@ xyplot(cesd ~ age, groups = sex,
 depressive symptoms",
        data = HELPrct)
 
-## ----log-scales-gg-------------------------------------------------------
+## ----log-scales-gg----------------------------------------------------------------------
 gf_point(cesd ~ age, data = HELPrct) %>%
   gf_refine(scale_y_log10()) 
 
-## ----refine-gg-----------------------------------------------------------
+## ----refine-gg--------------------------------------------------------------------------
 gf_dens(
   ~ cesd, data = HELPrct, 
   color = ~ sex) %>%
@@ -132,12 +132,12 @@ gf_dens(
     scale_color_manual(
       values = c("navy", "red"))) 
 
-## ---- log-scales-lattice-------------------------------------------------
+## ---- log-scales-lattice----------------------------------------------------------------
 xyplot(
   cesd ~ age, data = HELPrct,
   scales = list(y = list(log = TRUE)))
 
-## ---- refine-lattice-----------------------------------------------------
+## ---- refine-lattice--------------------------------------------------------------------
 densityplot( 
   ~ cesd, data = HELPrct, groups = sex,
   rug = FALSE,

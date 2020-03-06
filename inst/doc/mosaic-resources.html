@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 <meta name="author" content="Randall Pruim, Daniel T. Kaplan, and Nicholas J. Horton" />
 
-<meta name="date" content="2019-01-12" />
+<meta name="date" content="2020-03-05" />
 
 <title>Resources Related to the mosaic Package</title>
 
@@ -256,9 +256,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type="text/css">
 .main-container {
@@ -272,7 +270,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -289,8 +286,6 @@ summary {
 </style>
 
 
-
-<div class="container-fluid main-container">
 
 <!-- tabsets -->
 
@@ -336,6 +331,7 @@ summary {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -348,20 +344,17 @@ summary {
 }
 </style>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
 <!-- code folding -->
 
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
 
 
 
@@ -371,8 +364,8 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">Resources Related to the mosaic Package</h1>
-<h4 class="author"><em>Randall Pruim, Daniel T. Kaplan, and Nicholas J. Horton</em></h4>
-<h4 class="date"><em>2019-01-12</em></h4>
+<h4 class="author">Randall Pruim, Daniel T. Kaplan, and Nicholas J. Horton</h4>
+<h4 class="date">2020-03-05</h4>
 
 </div>
 
@@ -380,19 +373,13 @@ $(document).ready(function () {
 <p>This vignette describes related resources and materials useful for teaching statistics with a focus on modeling and computation.</p>
 <div id="package-vignettes" class="section level2">
 <h2>Package Vignettes</h2>
-<p>The <code>mosaic</code> package includes a number of vignettes. These are available from within R or from <a href="https://cran.r-project.org/package=mosaic">cran.r-project.org/package=mosaic</a>.</p>
+<p>The <code>mosaic</code> package includes a number of vignettes. These are available from within R, from <a href="https://cran.r-project.org/package=mosaic">cran.r-project.org/package=mosaic</a>, or from <a href="https://projectmosaic.github.io/mosaic/">projectmosaic.github.io/mosaic/</a>.</p>
 <ul>
 <li><p><em>Minimal R</em> describes a minimal set of R commands for use in Introductory Statistics and discusses why it is important to keep the set of commands small;</p></li>
 <li><p><em>Resampling methods in R</em> demonstrates how to use the <code>mosaic</code> package to compute p-values for randomization tests and bootstrap confidence intervals in a number of common situations. The examples are based on the ``resampling bake off’’ at USCOTS 2013.</p></li>
 <li><p><em>ggformula/lattice conversion examples</em> compares the lattice and ggformula formula interfaces for creating graphics.</p></li>
-</ul>
-</div>
-<div id="web-vignettes" class="section level2">
-<h2>Web vignettes</h2>
-<p>The following vignette-like documents are available via github</p>
-<ul>
-<li><p><a href="https://cdn.rawgit.com/ProjectMOSAIC/mosaic/27c09830/ExtraDocs/LessVolume-MoreCreativity.html"><em>Less Volume, More Creativity</em></a>, based on slides from an ICOTS 2014 workshop, introduces the <code>mosaic</code> package and related tools and describes some of the philosophy behind the design choices made in the <code>mosaic</code> package.</p></li>
-<li><p><a href="https://cdn.rawgit.com/ProjectMOSAIC/mosaic/27c09830/ExtraDocs/GraphicsWithMosaic.html"><em>Graphics with the mosaic package</em></a> is gallery of plots made using tools from the <code>mosaic</code> package.</p></li>
+<li><p><em>Less Volume, More Creativity</em>, based on slides from an ICOTS 2014 workshop, introduces the <code>mosaic</code> package and related tools and describes some of the philosophy behind the design choices made in the <code>mosaic</code> package.</p></li>
+<li><p><em>Graphics with the mosaic package</em> is gallery of plots made using tools from the <code>mosaic</code> package.</p></li>
 </ul>
 </div>
 <div id="auxiliary-packages" class="section level2">
@@ -406,7 +393,7 @@ $(document).ready(function () {
 </div>
 <div id="mosaic-paper" class="section level2">
 <h2>Mosaic paper</h2>
-<p>Pruim R, Kaplan DT and Horton NJ (2017). The mosaic Package: Helping Students to ‘Think with Data’ Using R. <em>The R Journal</em>, 9(1), pp. 77-102. <a href="https://journal.r-project.org/archive/2017/RJ-2017-024/index.html" class="uri">https://journal.r-project.org/archive/2017/RJ-2017-024/index.html</a>.</p>
+<p>Pruim R, Kaplan DT and Horton NJ (2017). The mosaic Package: Helping Students to ‘Think with Data’ Using R. <em>The R Journal</em>, 9(1), pp. 77-102. <a href="https://journal.r-project.org/archive/2017/RJ-2017-024/index.html" class="uri">https://journal.r-project.org/archive/2017/RJ-2017-024/index.html</a>.</p>
 <p>Abstract: The mosaic package provides a simplified and systematic introduction to the core functionality related to descriptive statistics, visualization, modeling, and simulation-based inference required in first and second courses in statistics. This introduction to the package describes some of the guiding principles behind the design of the package and provides illustrative examples of several of the most important functions it implements. These can be combined to help students ‘think with data’ using R in their early course work, starting with simple, yet powerful, declarative commands.</p>
 </div>
 <div id="project-mosaic-little-books" class="section level2">
@@ -414,7 +401,7 @@ $(document).ready(function () {
 <p>The following longer documents are available at <a href="https://github.com/ProjectMOSAIC/LittleBooks/blob/master/README.md">github.com/ProjectMOSAIC/LittleBooks</a>.</p>
 <ul>
 <li><p><em>Start Teaching Statistics Using R</em> includes some strategies for teaching beginners, and introduction to the <code>mosaic</code> package, and some additional things that instructors should know about using R. (A spanish language translation can be found at <a href="https://github.com/jarochoeltrocho/MOSAIC-LittleBooks-Spanish" class="uri">https://github.com/jarochoeltrocho/MOSAIC-LittleBooks-Spanish</a>.)</p></li>
-<li><p><em><a href="http://project-mosaic-books.com/?page_id=24">A Student’s Guide to R</a></em> provides a brief introduction to the R commands needed for all the basic statistical procedures in an Intro Stats course.<br />
+<li><p><em><a href="https://github.com/ProjectMOSAIC/LittleBooks/raw/master/StudentGuide/MOSAIC-StudentGuide.pdf">A Student’s Guide to R</a></em> provides a brief introduction to the R commands needed for all the basic statistical procedures in an Intro Stats course.<br />
 (A spanish language translation can be found at <a href="https://github.com/jarochoeltrocho/MOSAIC-LittleBooks-Spanish" class="uri">https://github.com/jarochoeltrocho/MOSAIC-LittleBooks-Spanish</a>.)</p></li>
 <li><p><em><a href="http://project-mosaic-books.com/?page_id=22">Start R in Calculus</a></em> highlights features of R and the <code>mosaic</code> package that can be used to teach calculus with R.</p></li>
 </ul>
@@ -426,7 +413,7 @@ $(document).ready(function () {
 <ul>
 <li><a href="http://www.mosaic-web.org/StatisticalModeling">www.mosaic-web.org/StatisticalModeling</a></li>
 </ul></li>
-<li><em>Foundations and Applications of Statistics: An Introduction Using R</em> (R Pruim, second edition) is an R-infused probability and mathematical statistics text that emphasizes connections between probability and statistics. The first edition of the book predates the <code>mosaic</code> package, but much of the code originally in the <code>fastR</code> package has been moved into the <code>mosaic</code> package. The second edition is supported by the <code>fastR2</code> package and uses <code>ggformula</code> for plotting.
+<li><p><em>Foundations and Applications of Statistics: An Introduction Using R</em> (R Pruim, second edition) is an R-infused probability and mathematical statistics text that emphasizes connections between probability and statistics. The first edition of the book predates the <code>mosaic</code> package, but much of the code originally in the <code>fastR</code> package has been moved into the <code>mosaic</code> package. The second edition is supported by the <code>fastR2</code> package and uses <code>ggformula</code> for plotting.</p>
 <ul>
 <li><a href="https://bookstore.ams.org/amstext-28">https://bookstore.ams.org/amstext-28</a></li>
 <li><a href="http://www.ams.org/publications/authors/books/postpub/amstext-28">www.ams.org/publications/authors/books/postpub/amstext-28</a></li>
@@ -503,6 +490,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

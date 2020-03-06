@@ -101,7 +101,7 @@ prop(~ rbinom(1000, prob = 0.5, size = 428) >= 240)
 xpbinom(239, prob = 0.5, size = 428)
 
 ## -------------------------------------------------------------------
-binom.test(x = 240, n = 248)
+binom.test(x = 240, n = 428)
 
 ## ----coinflip-------------------------------------------------------
 do(1) * rflip(428)
@@ -149,7 +149,7 @@ quantiles
 
 ## ----cor, fig.width=4, fig.height=2, tidy=FALSE---------------------
 Mustangs.hist <- mutate(Mustangs.cor.boot, 
-  colorval = cut(cor, c(-Inf, quantiles$quantile, Inf),
+  colorval = cut(cor, c(-Inf, quantiles, Inf),
     labels = c("Lower", "Middle", "Upper")))
 gf_histogram(~ cor, data = Mustangs.hist, fill = ~ colorval, n = 50) 
 confint(Mustangs.cor.boot)
