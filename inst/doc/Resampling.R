@@ -1,7 +1,5 @@
-## ----setupRnw, include=FALSE----------------------------------------
-# source('../setup.R')
-## @knitr setup
-#setCacheDir("cache")
+## ----setup, include = FALSE-----------------------------------------
+library(mosaic)
 require(grDevices) 
 require(datasets) 
 require(stats) 
@@ -16,7 +14,9 @@ options(width=70)
 require(vcd)
 require(knitr)
 
-opts_chunk$set( 
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
   fig.align="center",
   fig.show="hold"
 )
@@ -137,7 +137,7 @@ set.seed(134) # make sure the result below is "typical"
 Sleep.null <- do(1000) * diff(mean(Words ~ shuffle(Group), data = Sleep))
 gf_histogram(~ Sleep, fill = ~ (Sleep >= obs), data = Sleep.null, 
   binwidth = 0.4,
-  xlab = "Distribution of difference in means\nunder the null hypothesis")
+  xlab = "Distribution of difference in meansTEX COMMAND NOT FOUND nunder  the null hypothesis")
 
 ## -------------------------------------------------------------------
 cor(Price ~ Miles, data = Mustangs)
