@@ -17,11 +17,12 @@ NA
 #' 
 #' @rdname mplot
 #' @param object an R object from which a plot will be constructed.
+#' @param data_text text representation of the data set.  In typical use cases, the default value should suffice.
 #' @export
 
 mplot <- function(object, ...) {
   if (inherits(object, "data.frame")) {
-    return(mPlot(object, ..., data_text = rlang::expr_text(object))) 
+    return(mPlot(object, ..., data_text = substitute(object))) 
   }
   
   UseMethod("mplot")
@@ -89,6 +90,16 @@ mplot.default <- function(object, ...) {
 #' relatively simple models.  When the results for a logistic regression model created with
 #' [glm()] are satisfactory will depend on the format and structure of the data
 #' used to fit the model.
+#' 
+#' Due to a bug in RStudio 1.3, the method for data frames may not display the controls
+#' consistently.  We have found that executing this code usually fixes the problem:
+#' 
+#' ```
+#' library(manipulate) 
+#' manipulate(plot(A), A = slider(1, 10))
+#' ```
+#' 
+#' 
 #' @examples
 #' lm( width ~ length * sex, data = KidsFeet) %>%
 #'   mplot(which = 1:3, id.n = 5)
@@ -177,7 +188,7 @@ mplot.lm <-
   
   
   # residuals vs fitted
-  g1 <- ggplot(fdata, aes(.fitted, .resid)) +
+  g1 <- ggplot(fdata, aes(.fitted, .std.resid)) +
     geom_point()  +
     geom_smooth_or_not +
     geom_hline(linetype = 2, size = .2, yintercept = 0) +
@@ -192,7 +203,7 @@ mplot.lm <-
     labs(title = "Residuals vs Fitted")
   
   l1 <- do.call(xyplot, 
-                c(list( .resid ~ .fitted, data = fdata,
+                c(list( .std.resid ~ .fitted, data = fdata,
                         type = c("p","smooth"),
                         panel = function(x,y,...) {
                           panel.abline(h = 0, linetype = 2, lwd = .5) 
@@ -404,13 +415,18 @@ if (length(plots) == 1) {
 #' }
 #' @export
 
-mplot.data.frame <- function (object, format, default = format, 
-                              system = c("ggformula", "ggplot2", "lattice"),  show = FALSE, 
-                              title = "", ...
-                              ) {
+mplot.data.frame <- 
+  function(
+    object, format, default = format, 
+    system = c("ggformula", "ggplot2", "lattice"),  
+    show = FALSE, 
+    data_text = substitute(object),
+    title = "", ...
+  ) {
+  print(data_text)
   return(
     mPlot(object, format = format, default = default, system = system, 
-        show = show, title = title, ...)
+        show = show, title = title, data_text = data_text, ...)
   )
 }  
 #   plotTypes <- c('scatter', 'jitter', 'boxplot', 'violin', 'histogram', 

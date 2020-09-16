@@ -13,7 +13,6 @@ options(keep.blank.line=FALSE)
 options(width=70)
 require(vcd)
 require(knitr)
-
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -27,22 +26,22 @@ options('mosaic:parallelMessage'=FALSE)
 
 ## ----moreSetup------------------------------------------------------
 require(mosaic)
-options(digits=3)
+options(digits = 3)
 
 ## -------------------------------------------------------------------
 Mustangs <- read.csv("http://www.mosaic-web.org/go/datasets/MustangPrice.csv")
 
 ## ----dot, fig.width=4, fig.height=2---------------------------------
-gf_histogram(~ Price, data = Mustangs)
+gf_histogram( ~ Price, data = Mustangs)
 
 ## ----meanmust-------------------------------------------------------
-mean(~ Price, data = Mustangs)
+mean( ~ Price, data = Mustangs)
 
 ## ----eval=FALSE-----------------------------------------------------
 #  mean(Mustangs$Price)
 
 ## ----eval=FALSE-----------------------------------------------------
-#  mean(~ Price, data = Mustangs)
+#  mean( ~ Price, data = Mustangs)
 
 ## -------------------------------------------------------------------
 simple = c(1, 2, 3, 4, 5)
@@ -59,43 +58,43 @@ head(resample(Mustangs))
 cat("... and so on")
 
 ## -------------------------------------------------------------------
-mean(~ Price, data = resample(Mustangs))
+mean( ~ Price, data = resample(Mustangs))
 
 ## -------------------------------------------------------------------
-mean(~ Price, data = resample(Mustangs))
+mean( ~ Price, data = resample(Mustangs))
 
 ## -------------------------------------------------------------------
-do(5) * mean(~ Price, data = resample(Mustangs))
+do(5) * mean( ~ Price, data = resample(Mustangs))
 
 ## -------------------------------------------------------------------
-Mustangs.Price.boot <- do(1000) * mean(~ Price, data = resample(Mustangs))
+mustangs_price_boot <- do(2000) * mean( ~ Price, data = resample(Mustangs))
 
 ## ----hist, fig.width=4, fig.height=2--------------------------------
-gf_histogram(~ mean, data = Mustangs.Price.boot, 
+gf_histogram( ~ mean, data = mustangs_price_boot, 
   xlab="Mean Mustang Price (in thousand dollars)")
 
 ## ----confint--------------------------------------------------------
-confint(Mustangs.Price.boot, level = 0.90, method = "quantile")
-confint(Mustangs.Price.boot, level = 0.90, method = "stderr")
+confint(mustangs_price_boot, level = 0.90, method = "quantile")
+confint(mustangs_price_boot, level = 0.90, method = "stderr")
 
 ## ----qdata----------------------------------------------------------
-qdata(~ mean, c(.05, .95), data = Mustangs.Price.boot)
+qdata( ~ mean, c(.05, .95), data = mustangs_price_boot)
 # alternative
-cdata(~ mean, 0.90, data = Mustangs.Price.boot)
+cdata(~ mean, 0.90, data = mustangs_price_boot)
 
 ## ----tstar----------------------------------------------------------
 tstar <- qt(.95, df = 24)
 zstar <- qnorm(.95)
 
 ## ----margin---------------------------------------------------------
-tstar * sd(~ mean, data = Mustangs.Price.boot)
-zstar * sd(~ mean, data = Mustangs.Price.boot)
+tstar * sd( ~ mean, data = mustangs_price_boot)
+zstar * sd( ~ mean, data = mustangs_price_boot)
 
 ## ----proptable------------------------------------------------------
-prop(~ rbinom(1000, prob = 0.5, size = 428) >= 240)
+prop( ~ rbinom(1000, prob = 0.5, size = 428) >= 240)
 
 ## ----proptable2-----------------------------------------------------
-prop(~ rbinom(1000, prob = 0.5, size = 428) >= 240)
+prop( ~ rbinom(1000, prob = 0.5, size = 428) >= 240)
 
 ## ----pbinom---------------------------------------------------------
 xpbinom(239, prob = 0.5, size = 428)
@@ -107,11 +106,11 @@ binom.test(x = 240, n = 428)
 do(1) * rflip(428)
 
 ## ----flips1, fig.width=4, fig.height=3------------------------------
-NFL.null <- do(1000) * rflip(428)
-prop(~ heads >= 240, data = NFL.null)
+nfl_null <- do(2000) * rflip(428)
+prop( ~ heads >= 240, data = nfl_null)
 
 ## ----flips, fig.width=4, fig.height=2-------------------------------
-gf_histogram(~ heads, fill = ~ (heads >= 240), data = NFL.null)
+gf_histogram( ~ heads, fill = ~ (heads >= 240), data = nfl_null)
 
 ## ----fetchsleep-----------------------------------------------------
 Sleep <- read.csv("http://www.mosaic-web.org/go/datasets/SleepCaffeine.csv")
@@ -134,25 +133,25 @@ diff(mean(Words ~ shuffle(Group), data = Sleep))
 set.seed(134) # make sure the result below is "typical"
 
 ## ----sleep, tidy=FALSE, fig.width=4, fig.height=2-------------------
-Sleep.null <- do(1000) * diff(mean(Words ~ shuffle(Group), data = Sleep))
-gf_histogram(~ Sleep, fill = ~ (Sleep >= obs), data = Sleep.null, 
+sleep_null <- do(2000) * diff(mean(Words ~ shuffle(Group), data = Sleep))
+gf_histogram( ~ Sleep, fill = ~ (Sleep >= obs), data = sleep_null, 
   binwidth = 0.4,
-  xlab = "Distribution of difference in meansTEX COMMAND NOT FOUND nunder  the null hypothesis")
+  xlab = "Distribution of difference in means under the null hypothesis")
 
 ## -------------------------------------------------------------------
 cor(Price ~ Miles, data = Mustangs)
 
 ## -------------------------------------------------------------------
-Mustangs.cor.boot <- do(1000) * cor(Price ~ Miles, data = resample(Mustangs))
-quantiles <- qdata(~ cor, c(.025, .975), data = Mustangs.cor.boot)
+mustangs_cor_boot <- do(2000) * cor(Price ~ Miles, data = resample(Mustangs))
+quantiles <- qdata( ~ cor, c(.025, .975), data = mustangs_cor_boot)
 quantiles
 
 ## ----cor, fig.width=4, fig.height=2, tidy=FALSE---------------------
-Mustangs.hist <- mutate(Mustangs.cor.boot, 
+mustangs_hist <- mutate(mustangs_cor_boot, 
   colorval = cut(cor, c(-Inf, quantiles, Inf),
     labels = c("Lower", "Middle", "Upper")))
-gf_histogram(~ cor, data = Mustangs.hist, fill = ~ colorval, n = 50) 
-confint(Mustangs.cor.boot)
+gf_histogram( ~ cor, data = mustangs_hist, fill = ~ colorval, n = 50) 
+confint(mustangs_cor_boot)
 
 ## ----price-mileage-graph, fig.width=4, fig.height=3-----------------
 gf_point(Price ~ Miles, data = Mustangs) %>%
@@ -162,7 +161,7 @@ gf_point(Price ~ Miles, data = Mustangs) %>%
 lm(Price ~ Miles, data = Mustangs)
 
 ## -------------------------------------------------------------------
-mean(~ Price, data = Mustangs)
+mean( ~ Price, data = Mustangs)
 
 ## -------------------------------------------------------------------
 lm(Price ~ 1, data = Mustangs)
@@ -198,26 +197,58 @@ lm(homeless=="homeless" ~ 1, data = HELPrct)
 lm(homeless=="homeless" ~ sex, data = HELPrct)
 
 ## -------------------------------------------------------------------
-Mustangs.lm.boot <- do(1000) * lm(Price ~ Miles, data = resample(Mustangs))
-confint(Mustangs.lm.boot)
+mustangs_lm_boot <- do(2000) * lm(Price ~ Miles, data = resample(Mustangs))
+confint(mustangs_lm_boot)
+# compare to large sample estimate
+confint(lm(Price ~ Miles, data = Mustangs))
 
 ## -------------------------------------------------------------------
-HELPrct.null <- do(1000) * lm(homeless=="homeless" ~ shuffle(sex), data = HELPrct)
-prop(~ (abs(sexmale) > 0.1146), data = HELPrct.null)
+# large sample estimate
+msummary(lm(age ~ sex, data = HELPrct))
+# compare to permutation test
+HELPrct_null <- do(2000) * lm(age ~ shuffle(sex), data = HELPrct)
+prop(~ (abs(sexmale) > 0.7841), data = HELPrct_null) 
 
 ## -------------------------------------------------------------------
-Mustangs.boot1 <- do(1000) * lm(Price ~ Age, data = resample(Mustangs))
-Mustangs.boot2 <- do(1000) * lm(Price ~ Miles, data = resample(Mustangs))
-Mustangs.boot3 <- do(1000) * lm(Price ~ Miles + Age, data = resample(Mustangs))
+mustangs_boot1 <- do(2000) * lm(Price ~ Age, data = resample(Mustangs))
+mustangs_boot2 <- do(2000) * lm(Price ~ Miles, data = resample(Mustangs))
+mustangs_boot3 <- do(2000) * lm(Price ~ Miles + Age, data = resample(Mustangs))
+
 
 ## -------------------------------------------------------------------
-confint(Mustangs.boot1)
+confint(mustangs_boot1)
 
 ## -------------------------------------------------------------------
-confint(Mustangs.boot2)
+confint(mustangs_boot2)
 
 ## -------------------------------------------------------------------
-confint(Mustangs.boot3)
+confint(mustangs_boot3)
+
+## -------------------------------------------------------------------
+confint(lm(Price ~ Miles + Age, data = Mustangs))
+
+## ----results = "asis", echo = FALSE---------------------------------
+ds <- data.frame(
+  y = c(234,324,231), residual = c(25,-23,-22))
+set.seed(104)
+
+ds <- ds %>%
+  mutate(
+    predicted = y - residual,
+    resamp_residual = resample(residual),
+    resamp_observed = predicted + resamp_residual) %>%
+  select(y, predicted, residual, resamp_residual, resamp_observed)
+knitr::kable(ds)
+
+## -------------------------------------------------------------------
+set.seed(104)
+
+mustang_mod <- lm(Price ~ Miles + Age, data = Mustangs)
+mustang_relm_boot <- do(2000) * relm(mustang_mod)
+
+## -------------------------------------------------------------------
+confint(mustang_relm_boot)
+gf_histogram( ~ Miles, data = mustang_relm_boot)
 
 ## -------------------------------------------------------------------
 anova(lm(Price ~ Miles + Age, data = Mustangs))
@@ -230,41 +261,41 @@ do(1) * lm(Price ~ Miles, data = Mustangs)
 do(1) * lm(Price ~ Miles + Age, data = Mustangs)
 
 ## -------------------------------------------------------------------
-Mustangs.Age.boot <- do(1000) * lm(Price ~ Miles + shuffle(Age), data = Mustangs )
-favstats(~ r.squared, data = Mustangs.Age.boot)
-cdata(~ r.squared, .95, data = Mustangs.Age.boot)
+mustangs_age_boot <- do(2000) * lm(Price ~ Miles + shuffle(Age), data = Mustangs )
+favstats(~ r.squared, data = mustangs_age_boot)
+cdata(~ r.squared, .95, data = mustangs_age_boot)
 
 ## -------------------------------------------------------------------
-Mustangs.Miles.boot <- do(1000) * lm(Price ~ shuffle(Miles) + Age, data = Mustangs)
-favstats(~ r.squared, data = Mustangs.Miles.boot)
-cdata(~ r.squared, .95, data = Mustangs.Miles.boot)
+mustangs_miles_boot <- do(2000) * lm(Price ~ shuffle(Miles) + Age, data = Mustangs)
+favstats(~ r.squared, data = mustangs_miles_boot)
+cdata(~ r.squared, .95, data = mustangs_miles_boot)
 
 ## -------------------------------------------------------------------
-chisq.test(tally(~ homeless + sex, 
+chisq.test(tally( ~ homeless + sex, 
                    data = HELPrct, margins = FALSE))
 
 ## -------------------------------------------------------------------
-pval(chisq.test(tally(~ homeless + sex, 
+pval(chisq.test(tally( ~ homeless + sex, 
                    data = HELPrct, margins = FALSE)) )
 
 ## -------------------------------------------------------------------
-pval(chisq.test(tally(~ shuffle(homeless) + sex, 
+pval(chisq.test(tally( ~ shuffle(homeless) + sex, 
                          data = HELPrct, margins = FALSE)))
 
 ## -------------------------------------------------------------------
-Chisq.null <- do(1000)* pval(chisq.test(tally(~ shuffle(homeless) + sex, 
+chisq_null <- do(2000)* pval(chisq.test(tally( ~ shuffle(homeless) + sex, 
                          data = HELPrct, margins = FALSE)))
 
 ## ----fig.width=4, fig.height=2--------------------------------------
-prop(~ (p.value < 0.05), data = Chisq.null)
-gf_histogram(~ p.value, data = Chisq.null, binwidth = 0.1, center = 0.05)
+prop( ~ (p.value < 0.05), data = chisq_null)
+gf_histogram( ~ p.value, data = chisq_null, binwidth = 0.1, center = 0.05)
 
 ## ----fig.width=4, fig.height=2--------------------------------------
-qqmath(~ p.value, data = Chisq.null, dist = qunif)
+qqmath( ~ p.value, data = chisq_null, dist = qunif)
 
 ## -------------------------------------------------------------------
-HELP.logistic.boot <- do(1000) * 
+HELP_logistic_boot <- do(2000) * 
    glm(homeless=="homeless" ~ age + sex, 
      data = resample(HELPrct), family = "binomial")
-confint(HELP.logistic.boot)
+confint(HELP_logistic_boot)
 

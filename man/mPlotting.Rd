@@ -14,7 +14,7 @@ mPlot(
   system = system_choices()[1],
   show = FALSE,
   title = "",
-  data_text = rlang::expr_text(data),
+  data_text = substitute(data),
   ...
 )
 
@@ -30,7 +30,8 @@ mMap(
 
 mScatter(
   data,
-  default = c("scatter", "jitter", "boxplot", "violin", "line"),
+  default = c("scatter", "jitter", "boxplot", "violin", "line", "sina",
+    "density (contours)", "density (filled)"),
   system = "ggformula",
   show = FALSE,
   title = "",
@@ -62,8 +63,11 @@ this is not necessary if all one wants is a map.}
 \code{"jitter"},
 \code{"boxplot"},
 \code{"violin"},
+\code{"sina"},
 \code{"histogram"},
 \code{"density"},
+\code{"density (contours)"},
+\code{"density (filled)"},
 \code{"frequency polygon"},
 \code{"xyplot"},
 or

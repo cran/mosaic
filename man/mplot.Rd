@@ -41,6 +41,7 @@ mplot(object, ...)
   default = format,
   system = c("ggformula", "ggplot2", "lattice"),
   show = FALSE,
+  data_text = substitute(object),
   title = "",
   ...
 )
@@ -129,6 +130,8 @@ Unique prefixes suffice.}
 \item{show}{a logical, if \code{TRUE}, the code will be displayed each time the plot is
 changed.}
 
+\item{data_text}{text representation of the data set.  In typical use cases, the default value should suffice.}
+
 \item{ylab}{label for y-axis}
 
 \item{xlab}{label for x-axis}
@@ -151,6 +154,11 @@ The method for models (lm and glm) is still a work in progress, but should be us
 relatively simple models.  When the results for a logistic regression model created with
 \code{\link[=glm]{glm()}} are satisfactory will depend on the format and structure of the data
 used to fit the model.
+
+Due to a bug in RStudio 1.3, the method for data frames may not display the controls
+consistently.  We have found that executing this code usually fixes the problem:\preformatted{library(manipulate) 
+manipulate(plot(A), A = slider(1, 10))
+}
 }
 \examples{
 lm( width ~ length * sex, data = KidsFeet) \%>\%
