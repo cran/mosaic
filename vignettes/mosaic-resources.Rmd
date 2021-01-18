@@ -20,7 +20,7 @@ statistics with a focus on modeling and computation.
 The `mosaic` package includes a number of vignettes. These are available 
 from within R, from 
 [cran.r-project.org/package=mosaic](https://cran.r-project.org/package=mosaic),
-or from [projectmosaic.github.io/mosaic/](https://projectmosaic.github.io/mosaic/).
+or from [www.mosaic-web.org/mosaic/](https://www.mosaic-web.org/mosaic/).
 
  * *Minimal R* describes a minimal set of R commands for use in 
 	Introductory Statistics and discusses why it is important
@@ -46,7 +46,9 @@ made in the `mosaic` package.
 Some features of the mosaic package are provided through auxiliary packages. These include:
 
 * mosaicModel -- implements high-level systems for working with statistical models: effect-size calculation, bootstrapped confidence intervals, prediction error, graphics for models with multiple inputs. The package contains an introductory vignette.
-* mosaicCalc -- provides the calculus components of mosaic, including integration, differentiation, and differential equation solving. See *[Modeling-based calculus with R/mosaic](http://mosaic-web.org/wp-content/uploads/2019/01/UMAP-mosaic-calculus.pdf)* for an instructor-oriented introduction and *[Start R in Calculus](http://project-mosaic-books.com/?page_id=22)* for a student-facing guide.
+* mosaicCalc -- provides the calculus components of mosaic, including integration, differentiation, and differential equation solving. 
+
+<!-- See *[Modeling-based calculus with R/mosaic](http://www.mosaic-web.org/wp-content/uploads/2019/01/UMAP-mosaic-calculus.pdf)* for an instructor-oriented introduction and *[Start R in Calculus](http://project-mosaic-books.com/?page_id=22)* for a student-facing guide. -->
 
 Install these packages using `install.packages(c("mosaicCalc", "mosaicModel"))`.
 
@@ -76,9 +78,9 @@ an Intro Stats course.
 https://github.com/fjaraavilaa/MOSAIC-LittleBooks-Spanish.)
 
 
- * *[Start R in Calculus](http://project-mosaic-books.com/?page_id=22)* highlights features 
-of R and the `mosaic` package that can be used to teach 
-calculus with R.
+<!--  * *[Start R in Calculus](http://project-mosaic-books.com/?page_id=22)* highlights features  -->
+<!-- of R and the `mosaic` package that can be used to teach  -->
+<!-- calculus with R. -->
 
  
 ## Textbook Related
@@ -162,7 +164,7 @@ plotting.
     The `ISIwithR` R package provides all the data sets used in the text.
     Additional information about the book and the approach used there can be found at
 		
-    * [www.isi-sats.com/isi/](https://www.isi-stats.com/isi/)
+    * [www.isi-sats.com/isi/](http://www.isi-stats.com/isi/)
 		
   * [Open Intro Stats](https://www.openintro.org/stat/labs.php)
   

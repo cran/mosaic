@@ -45,6 +45,15 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
@@ -133,6 +142,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   }
 })();
 </script>
+
 
 
 
@@ -383,7 +393,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h2>Background and setup</h2>
 <div id="r-and-rstudio" class="section level3">
 <h3>R and RStudio</h3>
-<p>R is an open-source statistical environment that has been used at a number of institutions to teach introductory statistics. Among other advantages, R makes it easy to demonstrate the concepts of statistical inference through randomization while providing a sensible path for beginners to progress to advanced and professional statistics. RStudio (<a href="https://www.rstudio.com/" class="uri">https://www.rstudio.com/</a>) is an open-source integrated development environment for R which facilitates use of the system.</p>
+<p>R is an open-source statistical environment that has been used at a number of institutions to teach introductory statistics. Among other advantages, R makes it easy to demonstrate the concepts of statistical inference through randomization while providing a sensible path for beginners to progress to advanced and professional statistics. RStudio (<a href="https://rstudio.com/" class="uri">https://rstudio.com/</a>) is an open-source integrated development environment for R which facilitates use of the system.</p>
 </div>
 <div id="setup" class="section level3">
 <h3>Setup</h3>
@@ -394,8 +404,9 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb2-2"><a href="#cb2-2"></a><span class="kw">options</span>(<span class="dt">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
 <p>Commands such as the above can be provided for students in a set-up file to be executed automatically each time an R session is started.</p>
 <p>The mosaic package works within R, so any of the data facilities within R can be used to provide data sets to students. In particular, R functions such as <code>read.csv()</code> and <code>read.table()</code> support accessing data files via a website URL, avoiding the need to download data files to individual student machines.</p>
-<p>Here, one of the Lock data sets are read into R via the Internet:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>Mustangs &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;http://www.mosaic-web.org/go/datasets/MustangPrice.csv&quot;</span>)</span></code></pre></div>
+<p>Here, we load one of the Lock data sets: <!-- Mustangs <- read.csv("http://www.mosaic-web.org/go/datasets/MustangPrice.csv") --></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">library</span>(mosaic)</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="kw">data</span>(Mustangs)</span></code></pre></div>
 </div>
 </div>
 <div id="the-lock-problems" class="section level2">
@@ -425,11 +436,11 @@ Use these data to construct a 90% confidence interval for the mean price (in $1,
 <p>Resampling, also known as random selection with replacement, is an important operation in randomization. The <code>resample()</code> function performs this. It can be illustrated in a very basic way on a small set of numbers:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>simple =<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>)</span>
 <span id="cb8-2"><a href="#cb8-2"></a><span class="kw">resample</span>(simple)</span>
-<span id="cb8-3"><a href="#cb8-3"></a><span class="co">#&gt; [1] 1 2 2 5 2</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="co">#&gt; [1] 1 4 3 4 3</span></span>
 <span id="cb8-4"><a href="#cb8-4"></a><span class="kw">resample</span>(simple)</span>
-<span id="cb8-5"><a href="#cb8-5"></a><span class="co">#&gt; [1] 2 1 2 2 4</span></span>
+<span id="cb8-5"><a href="#cb8-5"></a><span class="co">#&gt; [1] 3 5 2 1 3</span></span>
 <span id="cb8-6"><a href="#cb8-6"></a><span class="kw">resample</span>(simple)</span>
-<span id="cb8-7"><a href="#cb8-7"></a><span class="co">#&gt; [1] 4 3 2 1 5</span></span></code></pre></div>
+<span id="cb8-7"><a href="#cb8-7"></a><span class="co">#&gt; [1] 3 3 1 2 1</span></span></code></pre></div>
 <p>When applied to a dataframe, <code>resample()</code> selects random rows. It’s easy to demonstrate this with a statement such as:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">resample</span>(Mustangs)</span></code></pre></div>
 <pre><code>#&gt;      Age Miles Price orig.id
@@ -544,8 +555,8 @@ Use these data to construct a 90% confidence interval for the mean price (in $1,
 <div id="lock-problem-3-permutation-test-of-means-from-two-groups-sleep-and-memory" class="section level3 unnumbered">
 <h3 class="unnumbered">Lock problem 3: Permutation test of means from two groups (sleep and memory)</h3>
 <!-- begin quotation -->
-<p><em>In an experiment on memory (Mednicj et al, 2008), students were given lists of 24 words to memorize. After hearing the words they were assigned at random to different groups. One group of 12 students took a nap for 1.5 hours while a second group of 12 students stayed awake and was given a caffeine pill. The results below display the number of words each participant was able to recall after the break. Test whether the data indicate a difference in mean number of words recalled between the two treatments.</em> <!-- end quotation --></p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a>Sleep &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;http://www.mosaic-web.org/go/datasets/SleepCaffeine.csv&quot;</span>)</span></code></pre></div>
+<p><em>In an experiment on memory (Mednicj et al, 2008), students were given lists of 24 words to memorize. After hearing the words they were assigned at random to different groups. One group of 12 students took a nap for 1.5 hours while a second group of 12 students stayed awake and was given a caffeine pill. The results below display the number of words each participant was able to recall after the break. Test whether the data indicate a difference in mean number of words recalled between the two treatments.</em> <!-- end quotation --> <!-- <- read.csv("http://www.mosaic-web.org/go/datasets/SleepCaffeine.csv") --></p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="kw">data</span>(Sleep) </span></code></pre></div>
 <p>The Sleep group tends to have remembered somewhat more words on average:</p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="kw">mean</span>(Words <span class="op">~</span><span class="st"> </span>Group, <span class="dt">data =</span> Sleep)</span>
 <span id="cb28-2"><a href="#cb28-2"></a><span class="co">#&gt; Caffeine    Sleep </span></span>
@@ -929,7 +940,7 @@ In this case, the p-value:</li>
 </div>
 <div id="technical-information" class="section level2">
 <h2>Technical information</h2>
-<p>This document was produced using R version 4.0.2 (2020-06-22) and version 1.8.2 of the mosaic package.</p>
+<p>This document was produced using R version 4.0.3 (2020-10-10) and version 1.8.3 of the mosaic package.</p>
 </div>
 <div id="references" class="section level2">
 <h2>References</h2>

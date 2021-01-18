@@ -1,10 +1,20 @@
+# mosaic (development version)
+
+
+# mosaic 1.8.3
+
+* Addressing CRAN issues with use of vdiffr and order().
+* A couple small bug fixes.
+* Introduction of a new functions: `compare()`, and `design_plot()`.
+* `mplot(model, which = 1)` now uses raw residuals rather than standardized/studentized. This mathes
+behavior in `plot()`.
 
 # mosaic 1.8.0
 
 * Fixed dplyr 1.0.0 failure by stabilizing types
 * Fixed a few bugs leftover from migration from tidyeval to rlang
 * Moved several vignettes out of the package to reduce size of package.  These are 
-  still available at <https://projectmosaic.github.io/mosaic/>
+  still available at <https://www.mosaic-web.org/mosaic/>
 
 # mosaic 1.6.0
 
@@ -40,7 +50,7 @@
  * `orrr()`, `oddsRatio()`, and `relrisk()` now accept a 2x2 data frame to match claims in
    documentation.
  * Support added for `cor(~y, ~x)`
- * New website: http://projectmosaic.github.io/mosaic/
+ * New website: http://www.mosaic-web.org/mosaic/
    
 # mosaic 1.3.0
 

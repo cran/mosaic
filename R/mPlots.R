@@ -4,7 +4,7 @@
 utils::globalVariables( 
   c('picker', 'button', 'slider', 'checkbox', 'x', 'y', 'color', 'size', 
     'logScales', 'key', 'nbins',  'plotType',  
-    'flipCoords', 'group', 'projection', 'facet'))
+    'flipCoords', 'group', 'projection', 'facet', 'N'))
 NA
 
 system_choices <- function() {
@@ -98,8 +98,10 @@ getVarFormula <- function(formula, data = parent.frame(), intercept = FALSE){
 #' are dispatched based on the value of `default`.  Furthermore, [mplot()] 
 #' will dispatch `mPlot` when provided a data frame.
 #' 
-#' @details
 #' Currently maps are only supported in \pkg{ggplot2} and not in \pkg{lattice}.
+#' 
+#' Due to an unresolved issue with RStudio, the first time this function is called, and additional
+#' plot is created to correctily initialize the mainipulate frameowrk.
 #' 
 #' @rdname mPlotting
 #' @aliases mPlot
@@ -134,6 +136,10 @@ getVarFormula <- function(formula, data = parent.frame(), intercept = FALSE){
 #' @param data_text A text string describing the data.  It must be possible to recover the data
 #' from this string using [eval()].  Typically users will not need to
 #' modify this from the default value.
+#' @section Note:
+#' 
+#' Due to an unresolved issue with RStudio, the first time this function is called, and additional
+#' plot is created to correctily initialize the mainipulate frameowrk.
 #' @return Nothing.  Just for side effects.  
 #' @examples
 #' \dontrun{
@@ -151,7 +157,7 @@ mPlot <- function(data,
                   data_text = substitute(data), # rlang::expr_text(data),
                   ...)
 {
-      
+
   plotTypes <- 
     c('scatter', 'jitter', 'boxplot', 'violin', 'sina', 'density (contours)', 'density (filled)',
       'histogram', 'density', 'frequency polygon', 'ASH plot', 'xyplot', 'map')
@@ -190,9 +196,37 @@ mPlot <- function(data,
   )
 }
 
+#' Interactively design plots
+#' 
+#' Proves a simple interface to let users interactively design plots in \pkg{ggformula}, \pkg{lattice}, or \pkg{ggplot2}.
+#' An option is available to show the code used to create the plot. 
+#' This can be copied and pasted elsewhere to (into an RMarkdown document, for example) to recreate the plot.
+#' Only works in RStudio. Requires the \pkg{manipulate} package.
+#' 
+#' Currently maps are only supported in \pkg{ggplot2} and not in \pkg{lattice}.
+#' 
+#' Due to an unresolved issue with RStudio, the first time this function is called, and additional
+#' plot is created to correctily initialize the mainipulate frameowrk.
+#' 
+#' @inheritParams mPlot
+#' @return Nothing.  Used for side effects.
+#' @examples 
+#' \dontrun{
+#'   mtcars2 <- 
+#'     mtcars %>% 
+#'       mutate(
+#'         cyl2 = factor(cyl), 
+#'         carb2 = factor(carb),
+#'         shape = c("V-shaped", "straight")[1 + vs], 
+#'         gear2 = factor(gear), 
+#'         transmission = c("automatic", "manual")[1 + am])
+#'   design_plot(mtcars2)
+#' }
+#' @export
+design_plot <- mPlot
+
 #' @rdname mPlotting
 #' @export
-
 mMap <- function(data, default = 'map',
                  system = "ggplot2",
                  show = FALSE, title = title, data_text = rlang::expr_text(data), ...) {
@@ -442,41 +476,41 @@ mScatter <-
     s$logx <- s$logScales %in% c("both","x")
     s$logy <- s$logScales %in% c("both","y")
     if (s$plotType %in% c("boxplot", "violin", "sina") &&  (s$x %in% variables$q) ) {
-      s$x <- glue::glue("ntiles({s$x})")
+      s$x <- glue::glue(.trim = FALSE, "ntiles({s$x})")
     }
     
     if (system == "ggformula") {
       if (!is.null(s$color) && !is.na(s$color)) {
-        color_chunk <- glue::glue(", color = ~ {s$color}")
+        color_chunk <- glue::glue(.trim = FALSE, ", color = ~ {s$color}")
       } else {
         color_chunk <- ""
       }
       
       if (!is.null(s$size) && !is.na(s$size)) {
-        size_chunk <-  glue::glue(", size = ~ {s$size}") 
+        size_chunk <-  glue::glue(.trim = FALSE, ", size = ~ {s$size}") 
       } else {
         size_chunk <- ""
       }
       
-      res <- glue::glue(
+      res <- glue::glue(.trim = FALSE, 
         "{gf_fun[s$plotType]}({s$y} ~ {s$x}, data = {s$dataName}{color_chunk}{size_chunk})")
       
-      if (s$model == "spline") res <- glue::glue("{res} %>%\n  gf_spline()")
-      if (s$model == "linear") res <- glue::glue("{res} %>%\n  gf_lm()")
-      if (s$model == "smooth") res <- glue::glue("{res} %>%\n  gf_smooth()")
+      if (s$model == "spline") res <- glue::glue(.trim = FALSE, "{res} %>%\n  gf_spline()")
+      if (s$model == "linear") res <- glue::glue(.trim = FALSE, "{res} %>%\n  gf_lm()")
+      if (s$model == "smooth") res <- glue::glue(.trim = FALSE, "{res} %>%\n  gf_smooth()")
       
-      if (s$logx) res <- glue::glue("{res} %>%\n   gf_refine(scale_x_log10())")
-      if (s$logy) res <- glue::glue("{res} %>%\n   gf_refine(scale_y_log10())")
+      if (s$logx) res <- glue::glue(.trim = FALSE, "{res} %>%\n   gf_refine(scale_x_log10())")
+      if (s$logy) res <- glue::glue(.trim = FALSE, "{res} %>%\n   gf_refine(scale_y_log10())")
       if (!is.null(s$facet) && !is.na(s$facet)) # why do I need both?
-        res <- glue::glue("{res} %>%\n  gf_facet_wrap(~ {s$facet}, ncol = 4)")
+        res <- glue::glue(.trim = FALSE, "{res} %>%\n  gf_facet_wrap(~ {s$facet}, ncol = 4)")
       
       if ((!is.null(s$color) && !is.na(s$color)) || 
           (!is.null(s$size)  && !is.na(s$size))) {
-        res <- glue::glue('{res} %>% \n  gf_theme(legend.position = {ggdir2pos(s$key)})')
+        res <- glue::glue(.trim = FALSE, '{res} %>% \n  gf_theme(legend.position = {ggdir2pos(s$key)})')
       } 
-      res <- glue::glue('{res} %>% \n  gf_labs(title = "{s$title}", caption = "")')
+      res <- glue::glue(.trim = FALSE, '{res} %>% \n  gf_labs(title = "{s$title}", caption = "")')
       if ( s$flipCoords) {
-        res <- glue::glue("{res} %>% \n  gf_refine(coord_flip())")
+        res <- glue::glue(.trim = FALSE, "{res} %>% \n  gf_refine(coord_flip())")
       }
     } else if (system == "ggplot2") {
       res <- paste("ggplot(data = ", s$dataName, ", aes(x = ", s$x, ", y = ", s$y, "))", sep = "")
@@ -663,7 +697,7 @@ mUniplot <- function(data, default = c("histogram","density", "frequency polygon
                 `ASH plot` = 'gf_ash')
     
     if (!is.null(s$color) && !is.na(s$color)) {
-      color_chunk <- glue::glue(", color = ~ {s$color}")
+      color_chunk <- glue::glue(.trim = FALSE, ", color = ~ {s$color}")
     } else {
       color_chunk <- ""
     }
@@ -674,14 +708,14 @@ mUniplot <- function(data, default = c("histogram","density", "frequency polygon
       paste(", adjust = ", signif(adjust,2), sep = "")
     }
     
-    res <- glue::glue('{gf_fun[s$plotType]}(~ {s$x}, data = {s$dataName}{color_chunk}{params})')
+    res <- glue::glue(.trim = FALSE, '{gf_fun[s$plotType]}(~ {s$x}, data = {s$dataName}{color_chunk}{params})')
     
     if (!is.null(s$facet) && !is.na(s$facet)) # why do I need both?
-      res <- glue::glue("{res} %>%\n   gf_facet_wrap(~ {s$facet})")
-    res <- glue::glue('{res} %>%\n   gf_labs(title = "{s$title}")')
+      res <- glue::glue(.trim = FALSE, "{res} %>%\n   gf_facet_wrap(~ {s$facet})")
+    res <- glue::glue(.trim = FALSE, '{res} %>%\n   gf_labs(title = "{s$title}")')
     
     if (!is.null(s$color) && !is.na(s$color)){
-      res <- glue::glue('{res} %>% \n  gf_theme(legend.position = {ggdir2pos(s$key)})')
+      res <- glue::glue(.trim = FALSE, '{res} %>% \n  gf_theme(legend.position = {ggdir2pos(s$key)})')
     }  
   } else if (system == "ggplot2") {
     res <- paste0("ggplot( data = ", s$dataName, ", aes(x = ", s$x, "))", sep = "")

@@ -46,7 +46,7 @@ options(width = 90)
 NSF-funded project to develop a new way to introduce mathematics, statistics, computation 
 and modeling to students in colleges and universities.
 
- * more information at [mosaic-web.org](http://mosaic-web.org)
+ * more information at [mosaic-web.org](http://www.mosaic-web.org)
  
  * the `mosaic` package is available via 
      * [CRAN](https://cran.r-project.org/package=mosaic)
@@ -762,6 +762,6 @@ prop(~ (sexG <= -0.2325), data = Null)
 
 
 More mosaic resources can be found at
-https://projectmosaic.github.io/mosaic/articles/mosaic-resources.html.
+https://www.mosaic-web.org/mosaic/articles/mosaic-resources.html.
 
 The *RJournal* paper entitled "mosaic Package: Helping Students to `Think with Data' Using R (https://journal.r-project.org/archive/2017/RJ-2017-024/index.html) provides further discussion of the mosaic modeling language and approach to teaching.

@@ -1,4 +1,5 @@
 ---
+title: The mosaic package
 ---
 
 <!-- [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/mosaic)](http://cran.r-project.org/package=mosaic) -->
@@ -32,7 +33,13 @@ devtools::install_github("ProjectMOSAIC/mosaic", ref="beta")
 Some features of the mosaic package have been split off into auxiliary packages. These include:
 
 * mosaicModel -- implements high-level systems for working with statistical models: effect-size calculation, bootstrapped confidence intervals, prediction error, graphics for models with multiple inputs. The package contains an introductory vignette.
-* mosaicCalc -- provides the calculus components of mosaic, including integration, differentiation, and differential equation solving. See *[Modeling-based calculus with R/mosaic](http://mosaic-web.org/wp-content/uploads/2019/01/UMAP-mosaic-calculus.pdf)* for an instructor-oriented introduction and *[Start R in Calculus](http://project-mosaic-books.com/?page_id=22)* for a student-facing guide.
+* mosaicCalc -- provides the calculus components of mosaic, including integration, differentiation, and differential equation solving. 
+
+<!-- See *[Modeling-based calculus with -->
+<!-- R/mosaic](http://www.mosaic-web.org/wp-content/uploads/2019/01/UMAP-mosaic-calculus.pdf)* -->
+<!-- for an instructor-oriented introduction and *[Start R in -->
+<!-- Calculus](http://project-mosaic-books.com/?page_id=22)* for a student-facing -->
+<!-- guide. -->
 
 Install these packages using `install.packages(c("mosaicCalc", "mosaicModel"))` or from GitHub as described above. 
 
@@ -47,7 +54,7 @@ If you discover a problem with any version of the package, be sure to let us kno
 
 The package includes several vignettes to help you get started.  One of these 
 vignettes 
-([*Resources Related to the mosaic package*](https://projectmosaic.github.io/mosaic/articles/mosaic-resources.html)) includes a list of many resources, both within the
+([*Resources Related to the mosaic package*](https://www.mosaic-web.org/mosaic/articles/mosaic-resources.html)) includes a list of many resources, both within the
 package and external to it.  That's a good place to start.
 
 ## Getting Help
@@ -68,5 +75,5 @@ Our goal: Provide a broader approach to quantitative studies that provides bette
 
 The name MOSAIC reflects the first letters --- M, S, C, C --- of these important components of a quantitative education. Project MOSAIC is motivated by a vision of quantitative education as a mosaic where the basic materials come together to form a complete and compelling picture.
 
-Find out more about Project MOSAIC at [http://mosaic-web.org].
+Find out more about Project MOSAIC at [http://www.mosaic-web.org].
 

@@ -29,7 +29,8 @@ require(mosaic)
 options(digits = 3)
 
 ## -------------------------------------------------------------------
-Mustangs <- read.csv("http://www.mosaic-web.org/go/datasets/MustangPrice.csv")
+library(mosaic)
+data(Mustangs)
 
 ## ----dot, fig.width=4, fig.height=2---------------------------------
 gf_histogram( ~ Price, data = Mustangs)
@@ -113,7 +114,7 @@ prop( ~ heads >= 240, data = nfl_null)
 gf_histogram( ~ heads, fill = ~ (heads >= 240), data = nfl_null)
 
 ## ----fetchsleep-----------------------------------------------------
-Sleep <- read.csv("http://www.mosaic-web.org/go/datasets/SleepCaffeine.csv")
+data(Sleep) 
 
 ## ----obsmean--------------------------------------------------------
 mean(Words ~ Group, data = Sleep)
