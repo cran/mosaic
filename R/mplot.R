@@ -6,7 +6,7 @@ utils::globalVariables(c('pair','lwr','upr','fitted','.resid',
 
 #' @importFrom ggplot2 fortify
 #' @importFrom stats qqnorm
-#' @importFrom broom augment
+# #' @importFrom broom augment
 #' 
 NA
 
@@ -22,7 +22,7 @@ NA
 
 mplot <- function(object, ...) {
   if (inherits(object, "data.frame")) {
-    return(mPlot(object, ..., data_text = substitute(object))) 
+    return(mPlot(object, ..., data_text = rlang::expr_deparse(substitute(object)))) # substitute(object))) 
   }
   
   UseMethod("mplot")
@@ -68,7 +68,7 @@ mplot.default <- function(object, ...) {
 #' displayed together.
 #' @param title title for plot
 #' @param ... additional arguments.  If `object` is an `lm`, subsets
-#' of these arguments are passed to `grid.arrange` and to the 
+#' of these arguments are passed to `gridExtra::grid.arrange` and to the 
 #' \pkg{lattice} plotting routines; in particular,
 #' `nrow` and `ncol` can be used to control the number of rows
 #' and columns used.
@@ -107,7 +107,7 @@ mplot.default <- function(object, ...) {
 #'   mplot(smooth.color = "blue", smooth.size = 1.2, smooth.alpha = 0.3, id.size = 3)
 #' lm(width ~ length * sex, data = KidsFeet) %>%
 #'   mplot(rows = 2:3, which = 7)
-#' @importFrom ggrepel geom_text_repel
+# #' @importFrom ggrepel geom_text_repel
 #' @export
 
 mplot.lm <- 
@@ -133,6 +133,7 @@ mplot.lm <-
     ...) {
   
   system <- match.arg(system)
+  check_installed('ggrepel')
   
   geom_smooth_or_not <-  
     if (add.smooth)
@@ -155,13 +156,20 @@ mplot.lm <-
   if (system == "base") {
     return(plot( object, which = intersect(which, 1:6)))
   }
-  
+ 
+  rlang::check_installed('broom') 
   fdata <- broom::augment(object) 
   fdata <- 
     fdata %>% 
     mutate(
       .row = 1L:nrow(fdata)
     )
+ 
+  # broom::augment() does always supply .resid :-/
+  
+  if (is.null(fdata[[".resid"]])) {
+    fdata <- fdata %>% mutate(.resid = resid(object))
+  }
   
   fdata_clean <- fdata %>% filter(!is.na(.std.resid))
   
@@ -384,15 +392,16 @@ mplot.lm <-
     }
   } 
   if (multiplot) {
+    rlang::check_installed('gridExtra')
     dots <- list(...)
     nn <- intersect( 
-      union(names(formals(arrangeGrob)), names(formals(grid.layout))),
+      union(names(formals(gridExtra::arrangeGrob)), names(formals(grid.layout))),
       names(dots) 
     )
     dots <- dots[ nn ]
-    return(do.call(grid.arrange, c(plots, dots)))
+    return(do.call(gridExtra::grid.arrange, c(plots, dots)))
     result <-  do.call(
-      arrangeGrob, 
+      gridExtra::arrangeGrob, 
       c(plots, dots) # , c(list(main = title), dots))
     )
     plot(result)
@@ -420,7 +429,8 @@ mplot.data.frame <-
     object, format, default = format, 
     system = c("ggformula", "ggplot2", "lattice"),  
     show = FALSE, 
-    data_text = substitute(object),
+    data_text = rlang::expr_deparse(substitute(object)),
+    # data_text = substitute(object),
     title = "", ...
   ) {
   print(data_text)

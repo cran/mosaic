@@ -1,9 +1,9 @@
 
-#' @importFrom glue glue
+# #' @importFrom glue glue
 
 utils::globalVariables( 
   c('picker', 'button', 'slider', 'checkbox', 'x', 'y', 'color', 'size', 
-    'logScales', 'key', 'nbins',  'plotType',  
+    'logScales', 'key', 'nbins',  'plotType', '.scatterString',
     'flipCoords', 'group', 'projection', 'facet', 'N'))
 NA
 
@@ -154,7 +154,8 @@ mPlot <- function(data,
                   system = system_choices()[1],
                   show = FALSE, 
                   title = "",
-                  data_text = substitute(data), # rlang::expr_text(data),
+                  data_text = rlang::expr_deparse(substitute(data)),
+                  # data_text = substitute(data), 
                   ...)
 {
 
@@ -229,7 +230,7 @@ design_plot <- mPlot
 #' @export
 mMap <- function(data, default = 'map',
                  system = "ggplot2",
-                 show = FALSE, title = title, data_text = rlang::expr_text(data), ...) {
+                 show = FALSE, title = title, data_text = rlang::expr_deparse(substitute(data)), ...) {
   
   .require_manipulate_namespace()
   # system <- "ggplot2" # only handling ggplot2 for now.
@@ -319,7 +320,7 @@ mMap <- function(data, default = 'map',
                   facet = NA,
                   key = "right",
                   title = "",
-                  data_text = rlang::expr_text(data))
+                  data_text = rlang::expr_deparse(substitute(data)))
 {
   system <- match.arg(system, "ggplot2")
   if (regexpr(",", projection) > 0) {
@@ -328,7 +329,7 @@ mMap <- function(data, default = 'map',
     projection <- paste(projection, '"', sep = "")
   }
   projection <- paste('"',projection, sep = "")
-  vals <- list(dataName = rlang::expr_text(data), 
+  vals <- list(dataName = rlang::expr_deparse(substitute(data)), 
                x = x, y = y, 
                color = color, 
                group = group,
@@ -347,6 +348,7 @@ mMap <- function(data, default = 'map',
 # maps 
 .mapString <- function(s, system = system_choices()[1], variables)
 {
+  # s$dataName <- name2string(s$dataName)
   #  res <- paste("ggplot(data = ", s$data, ")", sep = "")
   #    res<-paste(res, "+geom_point(aes(x = ", s$x, ", y = ", s$y, "))", sep = "")
   geom <- "geom_polygon()"
@@ -388,7 +390,7 @@ mScatter <-
     default = c('scatter','jitter','boxplot','violin','line', 'sina', 
                 'density (contours)', 'density (filled)'),
     system = "ggformula", show = FALSE, title = "",
-    data_text = rlang::expr_text(data)) {
+    data_text = rlang::expr_deparse(substitute(data))) {
   
   .require_manipulate_namespace()
   system <- match.arg(system, system_choices())
@@ -439,7 +441,7 @@ mScatter <-
                          c("scatter", "jitter", "boxplot", "violin", "line", "sina", "density (contours)", "density (filled)"),
                        x = NA, y = NA, color = NA, 
                        size = NA, facet = NA, logScales = "none", flipCoords = FALSE,
-                       model = "", key = "right", title = title, data_text  =  rlang::expr_text(data))
+                       model = "", key = "right", title = title, data_text  =  rlang::expr_deparse(substitute(data)))
 {
   system <- match.arg(system, system_choices())
   plotType <- match.arg(plotType)
@@ -461,8 +463,24 @@ mScatter <-
   return(invisible(p))
 }
 
+# This is not currently in use -- was used as POC for a brief period
+
+name2string <- function(x) {
+  if (is.call(x)) {
+    x <- deparse(x)
+  }
+  if (is.character(x)) {
+    return(x)
+  }
+  message('returning `x` as is (', class(x), ')')
+}
+
 .scatterString <- 
+  check_installed('glue')
   function(s, system = system_choices()[1], variables) {
+    
+    # s$dataName <- name2string(s$dataName)
+    
     gf_fun <- c(scatter = "gf_point", jitter = "gf_jitter", boxplot = "gf_boxplot", 
                 violin = "gf_violin", line = "gf_line", sina = "gf_sina", 
                 'density (contours)' = "gf_density_2d", 
@@ -607,7 +625,7 @@ mScatter <-
 
 mUniplot <- function(data, default = c("histogram","density", "frequency polygon", "ASH plot"),
                      system = system_choices()[1], show = FALSE, title = "", 
-                     data_text = rlang::expr_text(data)) {
+                     data_text = rlang::expr_deparse(substitute(data))) {
   .require_manipulate_namespace()
   system <- match.arg(system, system_choices())
   default <- match.arg(default)
@@ -654,7 +672,7 @@ mUniplot <- function(data, default = c("histogram","density", "frequency polygon
                        facet = NA, 
                        # logx = FALSE, logy = FALSE, 
                        model = "", key = "right",
-                       title = "", data_text = rlang::expr_text(data))
+                       title = "", data_text = rlang::expr_deparse(substitute(data)))
 {
   system <- match.arg(system, system_choices())
   plotType <- match.arg(plotType)
@@ -676,6 +694,9 @@ mUniplot <- function(data, default = c("histogram","density", "frequency polygon
 # 1-variable plots
 .uniplotString <- function(s, system = system_choices()[1], variables)
 {
+  
+  check_installed('glue')
+  # s$dataName <- name2string(s$dataName)
   geom <- c(`histogram` = '', `densityplot` = ', geom = "line"',    
             `frequency polygon` = ', geom = "line"', `ASH plot` = ', geom = "blank"')
   stat <- c(`histogram` = '', `densityplot` = ', stat = "density"', 

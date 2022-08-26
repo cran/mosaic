@@ -1,7 +1,7 @@
 Package: mosaic
 Type: Package
 Title: Project MOSAIC Statistics and Mathematics Teaching Utilities
-Version: 1.8.3
+Version: 1.8.4
 Description: Data sets and utilities from Project MOSAIC (<http://www.mosaic-web.org>) used
     to teach mathematics, statistics, computation and modeling.  Funded by the
     NSF, Project MOSAIC is a community of educators working to tie together
@@ -15,13 +15,13 @@ Authors@R: c(
     )
 Depends: R (>= 3.0.0),
 Imports: dplyr, lattice (>= 0.20-21), ggformula, mosaicData, Matrix,
-        mosaicCore (>= 0.7.0), ggplot2, ggstance, ggridges, ggrepel,
-        rlang (>= 0.4.7), MASS, grid, tidyr, readr, methods, utils,
-        splines, latticeExtra, ggdendro, gridExtra, glue, broom,
-        leaflet
-Suggests: vdiffr, lubridate, magrittr, NHANES, RCurl, sp, maptools,
-        vcd, testthat, knitr, tools, parallel, mapproj, rgl, rmarkdown,
-        covr, formatR, palmerpenguins
+        mosaicCore (>= 0.7.0), ggplot2, rlang (>= 0.4.7), purrr, MASS,
+        grid, tidyr, methods, utils
+Suggests: ggstance, ggridges, vdiffr, lubridate, magrittr, NHANES,
+        RCurl, sp, maptools, vcd, testthat, knitr, tools, parallel,
+        mapproj, rgl, rmarkdown, covr, formatR, palmerpenguins,
+        ggrepel, readr, ggdendro, gridExtra, splines, latticeExtra,
+        glue, broom, leaflet
 Enhances: manipulate
 VignetteBuilder: knitr
 License: GPL (>= 2)
@@ -30,13 +30,13 @@ LazyData: yes
 URL: https://github.com/ProjectMOSAIC/mosaic,
         https://www.mosaic-web.org/mosaic/
 BugReports: https://github.com/ProjectMOSAIC/mosaic/issues
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.1
 Encoding: UTF-8
 NeedsCompilation: no
-Packaged: 2021-01-17 02:04:02 UTC; rpruim
+Packaged: 2022-08-26 18:26:53 UTC; rpruim
 Author: Randall Pruim [aut, cre],
   Daniel T. Kaplan [aut],
   Nicholas J. Horton [aut]
 Maintainer: Randall Pruim <rpruim@calvin.edu>
 Repository: CRAN
-Date/Publication: 2021-01-18 16:50:02 UTC
+Date/Publication: 2022-08-26 19:10:02 UTC

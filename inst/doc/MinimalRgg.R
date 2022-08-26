@@ -69,7 +69,7 @@ knitr::opts_chunk$set(
 #  makeFun()         # mosaic
 
 ## ----highlight=FALSE------------------------------------------------
-#  gf_dot()          # ggformula
+#  gf_dotplot()      # ggformula
 #  gf_bar()          # ggformula
 #  gf_col()          # ggformula
 

@@ -110,7 +110,7 @@ R is an open-source statistical environment that has been used at a number
 of institutions to teach introductory statistics.  Among other advantages, R
 makes it easy to demonstrate the concepts of statistical inference through
 randomization while providing a sensible path for beginners to progress to
-advanced and professional statistics. RStudio (https://rstudio.com/)
+advanced and professional statistics. RStudio (https://www.rstudio.com/)
 is an open-source integrated development environment for R which facilitates
 use of the system.
 
@@ -873,7 +873,8 @@ This document was produced using `r sessionInfo()$R.version$version.string` and 
    _Technology Innovations in Statistics Education_, 2007, 1(1).
 #. B. Efron \& R. J. Tibshirani, *An Introduction to the Bootstrap*, 1993, Chapman \& Hall, New York.
 #. T. Hesterberg, D. S. Moore, S. Monaghan, A. Clipson \& R. Epstein.  *Bootstrap Methods and Permutation Tests (2nd edition)*, (2005), W.H. Freeman, New York.
-#. D.T. Kaplan, *Statistical Modeling: A Fresh Approach*, 2nd edition, http://www.mosaic-web.org/go/StatisticalModeling/.
+#. D.T. Kaplan, *Statistical Modeling: A Fresh Approach*, 2nd edition, 
+https://dtkaplan.github.io/SM2-bookdown/.
 #. S.C. Mednicj, D. J. Cai, J. Kanady, S. P. Drummond.  "Comparing the benefits of caffeine, naps and placebo on verbal, motor and perceptual memory", *Behavioural Brain Research*, 2008, 193(1):79-86.
 #. T. Speed, "Simulation", _IMS Bulletin_, 2011, 40(3):18.
 <!-- end itemize -->
