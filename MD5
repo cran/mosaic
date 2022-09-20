@@ -1,4 +1,4 @@
-dd36cf28d4acd27b244aa0c913d90ccc *DESCRIPTION
+f7721a76c03445b1216799897d5bea70 *DESCRIPTION
 eedcbde47dcc525355f7a768bca491b4 *NAMESPACE
 ed346b87a5c7a689ce0ece225d389f24 *NEWS.md
 08bfde6f262012089220867d78e898e3 *R/CIsim.R
@@ -44,7 +44,7 @@ dda3cc9bfab31f9a80b94baad483b462 *R/interval.R
 dfd5fd6e9f23e110c08b16dc35a20504 *R/is.wholenumber.R
 132fe69bda635642504e8f60a352adb8 *R/ladd.R
 18944c86cee1edc30b13f5623853f331 *R/linear-algebra.R
-e08559d3221955887bf899ceb529e529 *R/mPlots.R
+11d3499d8ac4084efe688abb6239213c *R/mPlots.R
 2cbae457d1e8191248364074893a0a88 *R/maps2.R
 de3e115f8541b1f43c53cc0ef61aad92 *R/mm.R
 dce2c3f5c2150b31a97c9c8c670c69e1 *R/mosaic-package.R
@@ -96,12 +96,12 @@ bf3b3aa99482c2bc3f734811938bd477 *demo/histogram.R
 6911fe0519d85bc2887eeb99098e909b *inst/CITATION
 4839349f39d89b494f037c916bf18b4d *inst/doc/MinimalRgg.R
 96fd5b6ff8ad1eef6f9ade7b63ed04c8 *inst/doc/MinimalRgg.Rnw
-d640e92170b4705b86ef243f56a15953 *inst/doc/MinimalRgg.pdf
+74820dfcda3cb5d160d6ea2e56deffcf *inst/doc/MinimalRgg.pdf
 180f1413c14041d65fe4d49492c7a8ae *inst/doc/Resampling.R
 42ad5f62fc294f575b6a0cac2ea33153 *inst/doc/Resampling.Rmd
-b305af44457c97695a5ef0c29bbd90b0 *inst/doc/Resampling.html
-b6246dc306fde282172c4873ecdf6400 *inst/doc/mosaic-resources.Rmd
-e7d6f93e4d56dfa18f44c3cf0d41c64f *inst/doc/mosaic-resources.html
+6bb1bb32578ebcd4b06f9662ae5112f2 *inst/doc/Resampling.html
+0d90abeb7ed0fd8d6c541c2ce528a70f *inst/doc/mosaic-resources.Rmd
+520079cb1cedac378e3c084a199cdba2 *inst/doc/mosaic-resources.html
 b5740c3ebdb967454d4862f66ea0321c *inst/examples/tabset/server.R
 663bc7f1a726cd2586403313f7487abb *inst/examples/tabset/ui.R
 a6cf2bd2326ffd8821aa71c90b247ddc *inst/google/googlemap.html
@@ -354,7 +354,7 @@ e5970173140e09d49f1b7d1ec151fb96 *tests/testthat/test-xpnorm.R
 5793d9264e7206dbf79f2145482f2c0c *vignettes/images/MikeMcCarthy.jpg
 4b60c95f8d5004d9b3cba230d110c191 *vignettes/images/SaintExupery.jpg
 0a004e61cd5c31cefb7a46b626381907 *vignettes/language.sty
-b6246dc306fde282172c4873ecdf6400 *vignettes/mosaic-resources.Rmd
+0d90abeb7ed0fd8d6c541c2ce528a70f *vignettes/mosaic-resources.Rmd
 f8df97a8eabc13a933a8f5768995c9d2 *vignettes/mosaic.sty
 7d048f2d5179be7f047aaa5829f900db *vignettes/web-only/GraphicsWithMosaic.Rmd
 ebc8b43e6bd65a3257d51c425437bd7d *vignettes/web-only/LessVolume-MoreCreativity.Rmd
