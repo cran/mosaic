@@ -2,14 +2,39 @@
 % Please edit documentation in R/plotModel.R
 \name{plotModel}
 \alias{plotModel}
+\alias{plotModel.default}
+\alias{plotModel.parsedModel}
 \title{Plot a regression model}
 \usage{
 plotModel(mod, ...)
+
+\method{plotModel}{default}(mod, ...)
+
+\method{plotModel}{parsedModel}(
+  mod,
+  formula = NULL,
+  ...,
+  auto.key = NULL,
+  drop = TRUE,
+  max.levels = 9L,
+  system = c("ggplot2", "lattice")
+)
 }
 \arguments{
 \item{mod}{A model of type \code{\link[=lm]{lm()}} or \code{\link[=glm]{glm()}}}
 
 \item{\dots}{arguments passed to \code{\link[=xyplot]{xyplot()}} or \code{rgl::plot3d}.}
+
+\item{formula}{a formula indicating how the variables are to be displayed.  In the style of
+\code{lattice} and \code{ggformula}.}
+
+\item{auto.key}{If TRUE, automatically generate a key.}
+
+\item{drop}{If TRUE, unused factor levels are dropped from \code{interaction()}.}
+
+\item{max.levels}{currently unused}
+
+\item{system}{which of \code{ggplot2} or \code{lattice} to use for plotting}
 }
 \value{
 A lattice or ggplot2 graphics object.

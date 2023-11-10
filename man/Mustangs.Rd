@@ -6,10 +6,10 @@
 \title{Mustang Prices}
 \format{
 A data frame with 25 observations on the following 3 variables.
-\itemize{
-item{code{Age }}{age of vehicle in years}
-item{code{Miles }}{1000s of miles driven}
-item{code{Price }}{selling price in 1000s USD}
+\describe{
+\item{\code{Age }}{age of vehicle in years}
+\item{\code{Miles }}{1000s of miles driven}
+\item{\code{Price }}{selling price in 1000s USD}
 }
 }
 \source{

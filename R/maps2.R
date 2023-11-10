@@ -169,12 +169,12 @@ makeMap <- function (data = NULL, map=NULL, key=c(key.data, key.map),
   
   switch(plot, 
          borders = 
-           ggplot(data %>% group_by(group) %>% arrange(order) %>% ungroup(), 
+           ggplot(data |> group_by(group) |> arrange(order) |> ungroup(), 
                   aes(x=long, y=lat, group=group)) +
            geom_polygon(color="darkgray", fill=NA) + theme_map() +
            labs(x="", y=""),
          frame = 
-           ggplot(data %>% group_by(group) %>% arrange(order) %>% ungroup(), 
+           ggplot(data |> group_by(group) |> arrange(order) |> ungroup(), 
                   aes(x=long, y=lat, group=group)),
          none = 
            data)
@@ -208,7 +208,7 @@ makeMap <- function (data = NULL, map=NULL, key=c(key.data, key.map),
 #' 
 #' mWorldMap(gdpData, key="country", fill="GDP")
 #'
-#' gdpData <- gdpData %>% mutate(GDP5 = ntiles(-GDP, 5, format="rank")) 
+#' gdpData <- gdpData |> mutate(GDP5 = ntiles(-GDP, 5, format="rank")) 
 #' mWorldMap(gdpData, key="country", fill="GDP5")
 #'
 #' mWorldMap(gdpData, key="country", plot="frame") +
@@ -229,7 +229,7 @@ mWorldMap <- function(data = NULL, key = NA, fill = NULL, plot = c("borders", "f
     map <- map # + coord_map()   
   }
   if ( (!is.null(fill) && plot != "none") ) {
-    map <- map + geom_polygon(aes_string(fill=fill), color="darkgray")
+    map <- map + geom_polygon(aes(fill = {{ fill }}), color = "darkgray")
   }
   map
 }
@@ -261,7 +261,7 @@ mWorldMap <- function(data = NULL, key = NA, fill = NULL, plot = c("borders", "f
 #' projection.
 #'  
 #' @examples
-#' USArrests2 <- USArrests %>% mutate(state = row.names(.))
+#' USArrests2 <- USArrests |> tibble::rownames_to_column("state")
 #' mUSMap(USArrests2, key="state", fill = "UrbanPop") 
 #' @export 
 mUSMap <- function(data = NULL, key, fill = NULL, 
@@ -273,7 +273,7 @@ mUSMap <- function(data = NULL, key, fill = NULL,
   map <- makeMap(data = data, map = US_States_df, key = c(key, "STATE_ABBR"), 
               tr.data = standardState, tr.map = toupper, plot = plot)
   if ( (!is.null(fill) && plot != "none") ) {
-    map <- map + geom_polygon(aes_string(fill = fill), color = "darkgray")
+    map <- map + geom_polygon(aes(fill = .data[[{{fill}}]]), color = "darkgray")
   }
   map
 }
@@ -299,13 +299,13 @@ mUSMap <- function(data = NULL, key, fill = NULL,
 #' head(Population)
 #' 
 #' PopArea <- 
-#'   CIAdata(c("pop","area")) %>% 
+#'   CIAdata(c("pop","area")) |> 
 #'   mutate(density = pop / area)
 #' nrow(PopArea)
 #' head(PopArea)
-#' PopArea %>% 
-#'   filter(!is.na(density)) %>%
-#'   arrange(density) %>% 
+#' PopArea |> 
+#'   filter(!is.na(density)) |>
+#'   arrange(density) |> 
 #'   tail()
 #' }
 # #' @importFrom readr parse_number
@@ -363,20 +363,20 @@ CIAdata <- function (name = NULL) {
 #' information (ex: `long` and `lat`)
 #' @examples
 #'
-#' \dontrun{ 
+#' \dontrun{
 #' if(require(maptools)) {
 #'   data(wrld_simpl)
 #'   worldmap <- sp2df(wrld_simpl)
 #' }
 #' 
-#' if ( require(ggplot2) && require(maptools) ) { 
+#' if ( require(ggplot2) && require(maptools) ) {
 #'   data(wrld_simpl)
 #'   World <- sp2df(wrld_simpl)
 #'   World2 <- merge(World, Countries, by.x="NAME", by.y="maptools", all.y=FALSE)
-#'   Mdata <- merge(Alcohol, World2, by.x="country", by.y="gapminder", all.y=FALSE) 
+#'   Mdata <- merge(Alcohol, World2, by.x="country", by.y="gapminder", all.y=FALSE)
 #'   Mdata <- Mdata[order(Mdata$order),]
-#'   qplot( x=long, y=lat, fill=ntiles(alcohol,5), 
-#'          data=subset(Mdata, year==2008), group = group, 
+#'   qplot( x=long, y=lat, fill=ntiles(alcohol,5),
+#'          data=subset(Mdata, year==2008), group = group,
 #'                      geom="polygon")
 #' }
 #' }

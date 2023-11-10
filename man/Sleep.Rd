@@ -6,9 +6,9 @@
 \title{Sleep and Memory}
 \format{
 A data.frame with 24 observations on the following 2 variables.
-\itemize{
-item{code{Group }}{treatment group of the subject}
-item{code{Words }}{number of words recalled}
+\describe{
+\item{\code{Group }}{treatment group of the subject}
+\item{\code{Words }}{number of words recalled}
 }
 }
 \source{

@@ -77,7 +77,7 @@
 cdist <- function (
   dist = "norm", p, plot = TRUE, verbose = FALSE, invisible = FALSE, 
   digits = 3L, 
-  xlim, ylim,
+  xlim = NULL, ylim = NULL,
   resolution = 500L,
   return = c("values", "plot"),
   pattern = c("rings", "stripes"),
@@ -96,20 +96,22 @@ cdist <- function (
   if (verbose) {
     cat("Verbose output not yet implemented.\n")
   }
-  
-  res_plot <-
-    do.call(
-      gf_refine,
-      c(list(
-        plot_multi_dist(
-          dist = dist, p = p, 
-          xlim = xlim, ylim = ylim, 
-          digits = digits, 
-          resolution = resolution,
-          pattern = pattern,
-          ...)),
-        refinements)
-    )
+ 
+  if (return == "plot" || plot) { 
+    res_plot <-
+      do.call(
+        gf_refine,
+        c(list(
+          plot_multi_dist(
+            dist = dist, p = p, 
+            xlim = xlim, ylim = ylim, 
+            digits = digits, 
+            resolution = resolution,
+            pattern = pattern,
+            ...)),
+          refinements)
+      )
+  }
   
   if (return == "plot") {
     return(res_plot)

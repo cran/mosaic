@@ -36,12 +36,12 @@ utils::globalVariables(c("nlab", "cover"))
 #' 
 #' @examples
 #' # 1000 95% intervals using t.test; population is N(0,1)
-#' CIsim(n=10, samples=1000)    
+#' CIsim(n = 10, samples = 1000)    
 #' # this time population is Exp(1); fewer samples, so we get a plot 
-#' CIsim(n=10, samples=100, rdist=rexp, estimand=1) 
+#' CIsim(n = 10, samples = 100, rdist = rexp, estimand = 1) 
 #' # Binomial treats 1 like success, 0 like failure
-#' CIsim(n=30, samples=100, rdist=rbinom, args=list(size=1, prob=.7), 
-#'        estimand = .7, method = binom.test, method.args=list(ci = "Plus4"))  
+#' CIsim(n = 30, samples = 100, rdist = rbinom, args = list(size = 1, prob = .7), 
+#'        estimand = .7, method = binom.test, method.args = list(ci = "Plus4"))  
 #' 
 #' @keywords inference 
 #' @keywords simulation 
@@ -64,12 +64,12 @@ CIsim <-
 {
     plot <- match.arg(plot, c("draw", "horizontal", "return", "none"))
     # Grid will have a row for each simulated sample
-    Grid <- expand.grid(n = n, sample = 1:samples) %>% mutate(estimand = estimand)
+    Grid <- expand.grid(n = n, sample = 1:samples) |> mutate(estimand = estimand)
     # a list of data sets, one for each row in Grid
     sampleData <- 
       lapply(1:nrow(Grid),
              function(r) do.call(rdist, c(list(n = Grid[r, "n"]),  args)))
-    CIs <- Grid %>% mutate(
+    CIs <- Grid |> mutate(
       lower    = sapply(sampleData, function(x) { interval(x)[1] }),
       upper    = sapply(sampleData, function(x) { interval(x)[2] }),
       estimate =  sapply(sampleData, function(x) { estimate(x) }),
@@ -99,7 +99,7 @@ CIsim <-
            draw = print(plotG + facet_wrap(~ nlab)),
            none = {}
            )
-    return(invisible(CIs %>% select(-nlab)))
+    return(invisible(CIs |> select(-nlab)))
 }
 
 

@@ -105,17 +105,28 @@ utils::globalVariables(c(".group", ".color", ".cond", "mypanel"))
 
 plotModel <- function(mod, ...) { UseMethod("plotModel") }
 
+#' @rdname plotModel
 #' @export
 plotModel.default <- function(mod, ...) {
   plotModel(parseModel(mod), ...)
 }
 
+#' @rdname plotModel
+#' @param formula a formula indicating how the variables are to be displayed.  In the style of 
+#'   `lattice` and `ggformula`. 
+#' @param auto.key If TRUE, automatically generate a key.
+#' @param drop If TRUE, unused factor levels are dropped from `interaction()`. 
+#' @param max.levels currently unused
+#' @param system which of `ggplot2` or `lattice` to use for plotting
+#' @export
 plotModel.parsedModel <- 
-  function(x, formula = NULL, ..., auto.key = NULL, drop = TRUE, 
+  function(mod, formula = NULL, ..., auto.key = NULL, drop = TRUE, 
            max.levels = 9L, system=c("ggplot2", "lattice")) {
     
     system <- match.arg(system)
   
+    x <- mod # fixing variable name mis-match with generic method.
+    
     if (length(x$varTypes) < 2L) 
       stop("Only models with explanatory variables can be plotted.")
     
@@ -167,7 +178,7 @@ plotModel.parsedModel <-
 #       this determines which lines show up in which panels
     
     point_data <- 
-      x$data %>%
+      x$data |>
       mutate(
         .color = my_interaction(x$data[, intersect(discreteVars, restVars), 
                                        drop = FALSE]),
@@ -230,7 +241,7 @@ plotModel.parsedModel <-
     }
     
     line_data <- 
-      line_data %>%
+      line_data |>
       mutate(
         .color = my_interaction(line_data[, restVars, drop = FALSE]),
         .group = my_interaction(line_data[, c(coVars, restVars, condVars), drop = FALSE]),
@@ -244,10 +255,10 @@ plotModel.parsedModel <-
                ...) {
         panel.xyplot(x, y, type = "p", ...)
         line_data <- 
-          line_data %>% 
+          line_data |> 
           arrange(.color, .group, x) 
         if (! is.null(group.value) ) {
-          line_data <- line_data %>% filter(as.numeric(.cond) == packet.number())
+          line_data <- line_data |> filter(as.numeric(.cond) == packet.number())
         }
         ncolors <- length(unique(line_data$.color))
         ngroups <- length(unique(line_data$.group))
@@ -264,22 +275,26 @@ plotModel.parsedModel <-
     if (system == "ggplot2") {
       if (length(unique(point_data$.color)) < 2L) {
         ggplot() +
-          geom_point(aes_string(y = x$responseName, x = key), size=1.2,
-                     data = point_data %>% droplevels()) +
-          geom_line (aes_string(y = x$responseName, x = key), size=0.5,
-                     data = line_data %>% droplevels())
+          geom_point(aes(y = .data[[x$responseName]], x = .data[[key]]), 
+                     size = 1.2,
+                     data = point_data |> droplevels()) +
+          geom_line (aes(y = .data[[x$responseName]], x = .data[[key]]), 
+                     linewidth = 0.5,
+                     data = line_data |> droplevels())
       } else {
         ggplot() +
-          geom_point(aes_string(y = x$responseName, x = key, colour=".color", group=".group"), size=1.2,
-                     data = point_data %>% droplevels()) +
-          geom_line (aes_string(y = x$responseName, x = key, colour=".color", group = ".group"), size=0.5,
-                     data = line_data %>% droplevels())
+          geom_point(aes(y = .data[[x$responseName]], x = .data[[key]], 
+                         colour = .data[[".color"]], group = .data[[".group"]]), 
+                     size=1.2, data = point_data |> droplevels()) +
+          geom_line (aes(y = .data[[x$responseName]], x = .data[[key]], 
+                         colour = .data[[".color"]], group = .data[[".group"]]), 
+                     linewidth = 0.5, data = line_data |> droplevels())
       }
     } else {
       xyplot(formula, 
-             data = point_data %>% droplevels(),
-             line_data = line_data %>% droplevels(),
-             point_data = point_data %>% droplevels(),
+             data = point_data |> droplevels(),
+             line_data = line_data |> droplevels(),
+             point_data = point_data |> droplevels(),
              groups = .color,
              auto.key = auto.key,
              ...,

@@ -14,7 +14,7 @@ theme_set(theme_bw())
 
 This R Markdown document is made interactive using Shiny. Unlike the more traditional workflow of creating static reports, you can now create documents that allow your readers to change the assumptions underlying your analysis and see the results immediately. 
 
-To learn more, see [Interactive Documents](https://rmarkdown.rstudio.com/authoring_shiny.html).
+To learn more, see [Interactive Documents](https://bookdown.org/yihui/rmarkdown/shiny-documents.html)
 
 ## Inputs and Outputs
 
@@ -65,7 +65,7 @@ renderPlot(
                 color = ~"ASH", size = 1.2)
     if ("freq" %in% input$show)
       the_plot <- the_plot %>%
-        gf_freqpoly( stat(density) ~ eruptions, data = faithful, 
+        gf_freqpoly( after_stat(density) ~ eruptions, data = faithful, 
                     binwidth = as.numeric(input$binwidth), 
                     size = 1.2, color = ~"frequency polygon",
                     alpha = 0.7,

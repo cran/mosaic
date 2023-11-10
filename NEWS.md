@@ -1,5 +1,12 @@
 # mosaic (development version)
 
+# mosaic 1.9.0
+
+* Removed dependence on maptools, which is being archived
+* Migrated some deprecated tidyverse functions to their replacements
+* Fixed a few minor bugs
+* Updated to edition 3 of tetsthat
+
 # mosaic 1.8.4
 
 * Bug fix in `mplot.lm()` for models where `broom::tidy()` doesn't record residuals.

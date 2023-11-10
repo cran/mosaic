@@ -1,15 +1,15 @@
-context("mplot")
+# context("mplot")
 
 testthat::test_that("lm mplot works", {
   
   
-  testcases1 <- lm( width ~ length * sex, data = KidsFeet) %>%
+  testcases1 <- lm( width ~ length * sex, data = KidsFeet) |>
     mplot(multiplot=FALSE, which = 1:3, id.n = 5)
   
-  testcases2 <- lm( width ~ length * sex, data = KidsFeet) %>%
+  testcases2 <- lm( width ~ length * sex, data = KidsFeet) |>
     mplot(smooth.color = "blue", smooth.size = 1.2, smooth.alpha = 0.3, id.size = 3)
   
-  singletest <- lm(width ~ length * sex, data = KidsFeet) %>%
+  singletest <- lm(width ~ length * sex, data = KidsFeet) |>
     mplot(rows = 2:3, which = 7)
   
   
@@ -49,6 +49,6 @@ testthat::test_that("lm mplot works", {
                                              "Ferrari Dino", "Maserati Bora", "Volvo 142E"), 
                                            c("wt", "mpg")))
     
-    expect_equivalent(testcase, getVarFormula( ~ wt + mpg, data = mtcars))
+    expect_equal(ignore_attr = TRUE, testcase, getVarFormula( ~ wt + mpg, data = mtcars))
   })
 })
