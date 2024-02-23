@@ -1,5 +1,11 @@
 # mosaic (development version)
 
+# mosaic 1.9.1
+
+* updated tests to match minor changes to ggdendro [See #803]
+* fixed a bug in an internal function related to computing limits 
+  for plotting distribuitons [See #802]
+
 # mosaic 1.9.0
 
 * Removed dependence on maptools, which is being archived

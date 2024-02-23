@@ -1,7 +1,7 @@
 Package: mosaic
 Type: Package
 Title: Project MOSAIC Statistics and Mathematics Teaching Utilities
-Version: 1.9.0
+Version: 1.9.1
 Description: Data sets and utilities from Project MOSAIC (<http://www.mosaic-web.org>) used
     to teach mathematics, statistics, computation and modeling.  Funded by the
     NSF, Project MOSAIC is a community of educators working to tie together
@@ -30,14 +30,14 @@ LazyData: yes
 URL: https://github.com/ProjectMOSAIC/mosaic,
         https://www.mosaic-web.org/mosaic/
 BugReports: https://github.com/ProjectMOSAIC/mosaic/issues
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Encoding: UTF-8
 Config/testthat/edition: 3
 NeedsCompilation: no
-Packaged: 2023-11-09 16:21:10 UTC; rpruim
+Packaged: 2024-02-18 03:47:21 UTC; rpruim
 Author: Randall Pruim [aut, cre],
   Daniel T. Kaplan [aut],
   Nicholas J. Horton [aut]
 Maintainer: Randall Pruim <rpruim@calvin.edu>
 Repository: CRAN
-Date/Publication: 2023-11-10 00:10:13 UTC
+Date/Publication: 2024-02-23 14:30:06 UTC

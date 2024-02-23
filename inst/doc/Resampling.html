@@ -542,11 +542,11 @@ function performs this. It can be illustrated in a very basic way on a
 small set of numbers:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>simple <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="fu">resample</span>(simple)</span>
-<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co">#&gt; [1] 5 4 1 2 3</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co">#&gt; [1] 5 3 5 1 2</span></span>
 <span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="fu">resample</span>(simple)</span>
-<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="co">#&gt; [1] 5 2 2 1 1</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="co">#&gt; [1] 1 1 4 1 3</span></span>
 <span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="fu">resample</span>(simple)</span>
-<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co">#&gt; [1] 2 5 2 2 4</span></span></code></pre></div>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co">#&gt; [1] 5 3 5 2 1</span></span></code></pre></div>
 <p>When applied to a dataframe, <code>resample()</code> selects random
 rows. It’s easy to demonstrate this with a statement such as:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">resample</span>(Mustangs)</span></code></pre></div>
@@ -1266,7 +1266,7 @@ can be found at the Project MOSAIC website: www.mosaic-web.org.</p>
 <div id="technical-information" class="section level2">
 <h2>Technical information</h2>
 <p>This document was produced using R version 4.2.1 (2022-06-23) and
-version 1.9.0 of the mosaic package.</p>
+version 1.9.1 of the mosaic package.</p>
 </div>
 <div id="references" class="section level2">
 <h2>References</h2>
